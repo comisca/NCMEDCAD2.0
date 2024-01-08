@@ -1,6 +1,6 @@
 <?php
 
-namespace [namespace];
+namespace App\Livewire;
 
 use Livewire\Attributes\On;
 use Livewire\WithPagination;
@@ -8,7 +8,7 @@ use Livewire\Component;
 use Session;
 use DB;
 
-class [class] extends Component
+class RolesComponet extends Component
 {
 
 use WithPagination;
@@ -27,7 +27,7 @@ use WithPagination;
 
     public function render()
     {
-        return view('[view]')
+        return view('livewire.roles-componet')
         ->extends('layouts.master')
         ->section('content');
     }
