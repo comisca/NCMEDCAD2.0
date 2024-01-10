@@ -1,10 +1,12 @@
-@section('title') @lang('NCMEDCAD | Roles') @endsection
+@section('title') @lang('NCMEDCAD | Oficina Virtual') @endsection
 
 @section('content')
     @component('common-components.breadcrumb')
         @slot('pagetitle') NCMEDCAD @endslot
         @slot('title') Officina Virtual @endslot
     @endcomponent
+
+
 
 
 @endsection

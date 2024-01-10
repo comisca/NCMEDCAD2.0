@@ -1,4 +1,4 @@
-<!-- start page title -->
+
 <div class="row">
     <div class="col-12">
         <div class="page-title-box d-flex align-items-center justify-content-between">
@@ -14,4 +14,3 @@
         </div>
     </div>
 </div>
-<!-- end page title -->
