@@ -14,12 +14,25 @@
                     <div class="row mb-2">
                         <div class="col-md-3">
                             <div class="mb-3">
-                                <input type="text" class="form-control rounded bg-light border-0" wire:model="roles" placeholder="Escribe un nuevo rol">
+                                <input type="text" class="form-control rounded bg-light border-0" wire:model="roles" id="roles" placeholder="Escribe un nuevo rol">
+                                @error('roles')
+                                <ul class="parsley-errors-list filled" id="parsley-id-9" aria-hidden="false">
+                                    <li class="parsley-required">{{$message}} .</li>
+                                </ul>
+                                   @enderror
+
                             </div>
                         </div>
                         <div class="col-md-3">
                             <div class="mb-3">
-                                <input type="text" class="form-control rounded bg-light border-0" wire:model="descripcion" placeholder="Escribe una descripcion">
+                                <input type="text" class="form-control rounded bg-light border-0" id="descripcion" wire:model="descripcion" placeholder="Escribe una descripcion">
+
+                                @error('descripcion')
+                                <ul class="parsley-errors-list filled" id="parsley-id-9" aria-hidden="false">
+                                    <li class="parsley-required">{{$message}} .</li>
+                                </ul>
+                                @enderror
+
                             </div>
                         </div>
                         <div class="col-md-3">
@@ -127,42 +140,55 @@
     <!-- apexcharts -->
     <script src="{{ URL::asset('assets/libs/apexcharts/apexcharts.min.js')}}"></script>
     <script src="{{ URL::asset('assets/js/pages/dashboard.init.js')}}"></script>
-    <script src="https://unpkg.com/bs5-toast/dist/bs5-toast.js"></script>
     <script>
         document.addEventListener('livewire:initialized', function () {
             @this.
             on('roles-added', (event) => {
-                // $('#add_users').modal('hide');
-                Swal.fire({
-                    position: 'top-end',
-                    icon: 'success',
-                    title: event.messages,
-                    text: "Exito!!",
-                    showConfirmButton: false,
-                    timer: 2500
+                toastr.success(event.messages, 'Exito',{
+                    "closeButton": true,
+                    "debug": false,
+                    "newestOnTop": false,
+                    "progressBar": false,
+                    "positionClass": "toast-bottom-full-width",
+                    "preventDuplicates": false,
+                    "onclick": null,
+                    "showDuration": 300,
+                    "hideDuration": 1000,
+                    "timeOut": 5000,
+                    "extendedTimeOut": 1000,
+                    "showEasing": "swing",
+                    "hideEasing": "linear",
+                    "showMethod": "fadeIn",
+                    "hideMethod": "fadeOut"
                 })
+                // Swal.fire({
+                //     position: 'top-end',
+                //     icon: 'success',
+                //     title: event.messages,
+                //     text: "Exito!!",
+                //     showConfirmButton: false,
+                //     timer: 2500
+                // })
 
-                new bs5.Toast({
-                    header: `
-		<svg width="24" height="24" class="text-success me-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-			<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
-		</svg>
-		<h6 class="mb-0">Exito!</h6>
-		<small class="ms-auto">Ahora...</small>
-		`,
-                    body: event.messages,
-                    className: 'border-0 bg-primary text-white',
-                    btnCloseWhite: true,
-                    placement: 'bottom-right',
-                }).show()
             })
             @this.on('roles-error', (event) => {
-                new bs5.Toast({
-                    body: event.messages,
-                    className: 'border-0 bg-danger text-white',
-                    btnCloseWhite: true,
-                    placement: 'bottom-right',
-                }).show()
+                toastr.error(event.messages, 'Exito',{
+                    "closeButton": true,
+                    "debug": false,
+                    "newestOnTop": false,
+                    "progressBar": false,
+                    "positionClass": "toast-bottom-full-width",
+                    "preventDuplicates": false,
+                    "onclick": null,
+                    "showDuration": 300,
+                    "hideDuration": 1000,
+                    "timeOut": 5000,
+                    "extendedTimeOut": 1000,
+                    "showEasing": "swing",
+                    "hideEasing": "linear",
+                    "showMethod": "fadeIn",
+                    "hideMethod": "fadeOut"
+                })
             })
 
             @this.on('roles-selected', (event) => {
