@@ -108,4 +108,6 @@ return [
     'write a Role'             => 'escribe un Rol',
     'write a description'             => 'escribe una descripción',
     'descriptions'          => 'descripciones',
+    'Crafted with'          => 'Creado con',
+    'by'          => 'por',
 ];
