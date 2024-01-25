@@ -29,7 +29,7 @@
             <!-- App Search-->
             <form class="app-search d-none d-lg-block">
                 <div class="position-relative">
-                    <input type="text" class="form-control" placeholder="@lang('translation.Search')...">
+                    <input type="text" class="form-control" placeholder="@lang('actions.search')...">
                     <span class="uil-search"></span>
                 </div>
             </form>
@@ -48,7 +48,7 @@
                     <form class="p-3">
                         <div class="form-group m-0">
                             <div class="input-group">
-                                <input type="text" class="form-control" placeholder="@lang('translation.Search')..." aria-label="Recipient's username">
+                                <input type="text" class="form-control" placeholder="@lang('actions.search')..." aria-label="Recipient's username">
                                 <div class="input-group-append">
                                     <button class="btn btn-primary" type="submit"><i class="mdi mdi-magnify"></i></button>
                                 </div>
@@ -72,16 +72,18 @@
                         @case('de')
                         <img src="{{ URL::asset('assets/images/flags/germany.jpg')}}" alt="Header Language" height="16">
                         @break
-                        @case('es')
-                        <img src="{{ URL::asset('assets/images/flags/spain.jpg')}}" alt="Header Language" height="16">
+                        @case('en')
+                            <img src="{{ URL::asset('assets/images/flags/us.jpg')}}" alt="Header Language" height="16">
                         @break
                         @default
-                        <img src="{{ URL::asset('assets/images/flags/us.jpg')}}" alt="Header Language" height="16">
+                            <img src="{{ URL::asset('assets/images/flags/spain.jpg')}}" alt="Header Language" height="16">
+
                     @endswitch
                 </button>
                 <div class="dropdown-menu dropdown-menu-right">
 
                     <!-- item-->
+
                     <a href="{{ url('index/en') }}" class="dropdown-item notify-item">
                         <img src="{{ URL::asset('assets/images/flags/us.jpg')}}" alt="user-image" class="mr-1" height="12"> <span class="align-middle">English</span>
                     </a>
@@ -92,19 +94,19 @@
                     </a>
 
                     <!-- item-->
-                    <a href="{{ url('index/de') }}" class="dropdown-item notify-item">
-                        <img src="{{ URL::asset('assets/images/flags/germany.jpg')}}" alt="user-image" class="mr-1" height="12"> <span class="align-middle">German</span>
-                    </a>
+{{--                    <a href="{{ url('index/de') }}" class="dropdown-item notify-item">--}}
+{{--                        <img src="{{ URL::asset('assets/images/flags/germany.jpg')}}" alt="user-image" class="mr-1" height="12"> <span class="align-middle">German</span>--}}
+{{--                    </a>--}}
 
                     <!-- item-->
-                    <a href="{{ url('index/it') }}" class="dropdown-item notify-item">
-                        <img src="{{ URL::asset('assets/images/flags/italy.jpg')}}" alt="user-image" class="mr-1" height="12"> <span class="align-middle">Italian</span>
-                    </a>
+{{--                    <a href="{{ url('index/it') }}" class="dropdown-item notify-item">--}}
+{{--                        <img src="{{ URL::asset('assets/images/flags/italy.jpg')}}" alt="user-image" class="mr-1" height="12"> <span class="align-middle">Italian</span>--}}
+{{--                    </a>--}}
 
                     <!-- item-->
-                    <a href="{{ url('index/ru') }}" class="dropdown-item notify-item">
-                        <img src="{{ URL::asset('assets/images/flags/russia.jpg')}}" alt="user-image" class="mr-1" height="12"> <span class="align-middle">Russian</span>
-                    </a>
+{{--                    <a href="{{ url('index/ru') }}" class="dropdown-item notify-item">--}}
+{{--                        <img src="{{ URL::asset('assets/images/flags/russia.jpg')}}" alt="user-image" class="mr-1" height="12"> <span class="align-middle">Russian</span>--}}
+{{--                    </a>--}}
                 </div>
             </div>
 
