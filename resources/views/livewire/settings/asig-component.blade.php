@@ -53,7 +53,7 @@
                             {{--                                </th>--}}
                             <th scope="col">ID</th>
                             <th scope="col">Permisos</th>
-                            <th scope="col">{{__('ctions.action')}}</th>
+                            <th scope="col">{{__('actions.action')}}</th>
 {{--                            <th scope="col" style="width: 200px;">{{__('actions.action')}}</th>--}}
                         </tr>
                         </thead>

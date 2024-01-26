@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Livewire\RolesComponet;
 use App\Livewire\PermissionComponent;
 use App\Livewire\AsisComponent;
+use App\Livewire\UserComponent;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -23,6 +24,7 @@ use App\Livewire\AsisComponent;
 Route::get('/roles', RolesComponet::class);
 Route::get('/permisos', PermissionComponent::class);
 Route::get('/asignar/permisos', AsisComponent::class);
+Route::get('/usuarios', UserComponent::class);
 
 
 
