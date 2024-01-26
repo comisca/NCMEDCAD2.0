@@ -106,6 +106,7 @@ return [
     'view'            => 'Ver',
     'yes'             => 'Sí',
     'write a Role'             => 'escribe un Rol',
+    'write a permission'             => 'escribe un permisos',
     'write a description'             => 'escribe una descripción',
     'descriptions'          => 'descripciones',
     'Crafted with'          => 'Creado con',

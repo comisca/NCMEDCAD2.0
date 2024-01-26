@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Livewire\RolesComponet;
+use App\Livewire\PermissionComponent;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -19,6 +20,9 @@ use App\Livewire\RolesComponet;
 
 //Rutas generadas por Henry
 Route::get('/roles', RolesComponet::class);
+Route::get('/permisos', PermissionComponent::class);
+
+
 
 
 Route::get('/', function () {
