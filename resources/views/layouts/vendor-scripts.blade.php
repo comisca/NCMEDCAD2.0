@@ -16,4 +16,6 @@
  <script src="{{ URL::asset('assets/js/app.min.js')}}"></script>
 <script src="{{ URL::asset('assets/libs/toastr/toastr.min.js')}}"></script>
 <script src="{{ URL::asset('assets/js/pages/toastr.init.js')}}"></script>
+
+<script src="{{ asset('assets/js/keypress.js') }}"></script>
  @yield('script-bottom')

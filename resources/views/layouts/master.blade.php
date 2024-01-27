@@ -34,5 +34,7 @@
 
     <!-- JAVASCRIPT -->
     @include('layouts.vendor-scripts')
+
+    @include('components.shortcuts')
     </body>
 </html>
