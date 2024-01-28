@@ -1,9 +1,12 @@
+
+
 <script>
 	var listener = new window.keypress.Listener();
 
-	listener.simple_combo("f6", function() {
+	listener.simple_combo("shift s", function() {
 		console.log('f6')
-        Livewire.dispatch('saveSale')
+        Livewire.dispatch('openmodal')
+        // document.getElementById('searchInput').focus()
 	})
 
 	listener.simple_combo("f8", function() {

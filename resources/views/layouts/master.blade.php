@@ -9,6 +9,7 @@
 <body>
     <!-- Begin page -->
     <div id="layout-wrapper">
+
             @include('layouts.topbar')
             @include('layouts.sidebar')
             <!-- ============================================================== -->
@@ -18,11 +19,15 @@
             <div class="page-content">
                 <div class="container-fluid">
                     @yield('content')
+
                 </div>
                 <!-- container-fluid -->
+
             </div>
+
             <!-- End Page-content -->
             @include('layouts.footer')
+
             </div>
             <!-- end main content-->
     </div>
@@ -34,6 +39,7 @@
 
     <!-- JAVASCRIPT -->
     @include('layouts.vendor-scripts')
+
 
     @include('components.shortcuts')
     </body>
