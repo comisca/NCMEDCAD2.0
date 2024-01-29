@@ -1,5 +1,16 @@
 @section('title') @lang('NCMEDCAD | Tiitle') @endsection
 
+    <div class="row">
+
+
+
+
+
+
+         <livewire:search-universal></livewire:search-universal>
+        </div>
+
+
 @section('script')
     <!-- apexcharts -->
     <script src="{{ URL::asset('assets/libs/apexcharts/apexcharts.min.js')}}"></script>

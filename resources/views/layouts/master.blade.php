@@ -4,6 +4,20 @@
     <head>
         @include('layouts.title-meta')
         @include('layouts.head')
+        <style>
+
+            *:focus{
+            !important;
+                border: 1px solid #1670BE;
+                box-shadow: 0 0 3px #1670BE;
+                outline-offset: 0px;
+                outline: none;
+
+            }
+
+
+
+        </style>
     </head>
 
 <body>
@@ -42,5 +56,6 @@
 
 
     @include('components.shortcuts')
+
     </body>
 </html>

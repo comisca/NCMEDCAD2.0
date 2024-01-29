@@ -132,6 +132,7 @@
             </div>
         </div>
     </div>
+    <livewire:search-universal></livewire:search-universal>
 </div>
 
 

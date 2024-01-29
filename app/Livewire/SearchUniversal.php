@@ -2,6 +2,7 @@
 
 namespace App\Livewire;
 
+use App\Models\SearchMenu;
 use Livewire\Attributes\On;
 use Livewire\WithPagination;
 use Livewire\Component;
@@ -27,7 +28,14 @@ use WithPagination;
 
     public function render()
     {
-        return view('livewire.settings.search-universal');
+        if (strlen($this->searchInput) > 0) {
+            $menus = SearchMenu::where('name', 'like', '%' . $this->searchInput . '%')
+                ->paginate($this->Pagination);
+
+        } else {
+            $menus = SearchMenu::orderBy('id', 'desc')->paginate($this->Pagination);
+        }
+        return view('livewire.settings.search-universal',['data' => $menus]);
     }
     #[On('openmodal')]
        public function openmodals()

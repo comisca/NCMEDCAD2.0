@@ -1,16 +1,13 @@
 @section('title') @lang('NCMEDCAD | Roles') @endsection
 
 
-{{--    @component('common-components.breadcrumb')--}}
-{{--        @slot('pagetitle') NCMEDCAD @endslot--}}
-{{--        @slot('title') Officina Virtual @endslot--}}
-{{--    @endcomponent--}}
-
 
 <div class="row">
+
     <div class="col-lg-12">
         <div class="card">
             <div class="card-body">
+
                 <div class="row mb-2">
 
 
@@ -109,6 +106,9 @@
             </div>
         </div>
     </div>
+
+
+    <livewire:search-universal></livewire:search-universal>
     @include('livewire.users.formuser')
 </div>
 

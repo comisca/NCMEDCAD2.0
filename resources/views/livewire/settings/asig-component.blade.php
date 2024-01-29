@@ -90,11 +90,14 @@
                     @if(!empty($permisos))
                         {{ $permisos->links() }}
                     @endif
+
                 </div>
 
             </div>
         </div>
+
     </div>
+<livewire:search-universal></livewire:search-universal>
 </div>
 
 
@@ -248,3 +251,4 @@
         }
     </script>
 @endsection
+
