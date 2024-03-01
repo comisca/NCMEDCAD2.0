@@ -27,12 +27,12 @@
             </button>
 
             <!-- App Search-->
-            <form class="app-search d-none d-lg-block">
+            {{-- <form class="app-search d-none d-lg-block">
                 <div class="position-relative">
                     <input type="text" class="form-control" placeholder="@lang('actions.search')...">
                     <span class="uil-search"></span>
                 </div>
-            </form>
+            </form> --}}
         </div>
 
         <div class="d-flex">
@@ -58,7 +58,7 @@
                 </div>
             </div>
 
-            <div class="dropdown d-inline-block language-switch">
+            {{-- <div class="dropdown d-inline-block language-switch">
                 <button type="button" class="btn header-item waves-effect"
                     data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     @php $locale = session()->get('locale'); @endphp
@@ -94,23 +94,23 @@
                     </a>
 
                     <!-- item-->
-{{--                    <a href="{{ url('index/de') }}" class="dropdown-item notify-item">--}}
-{{--                        <img src="{{ URL::asset('assets/images/flags/germany.jpg')}}" alt="user-image" class="mr-1" height="12"> <span class="align-middle">German</span>--}}
-{{--                    </a>--}}
+                    <a href="{{ url('index/de') }}" class="dropdown-item notify-item">
+                        <img src="{{ URL::asset('assets/images/flags/germany.jpg')}}" alt="user-image" class="mr-1" height="12"> <span class="align-middle">German</span>
+                    </a>
 
                     <!-- item-->
-{{--                    <a href="{{ url('index/it') }}" class="dropdown-item notify-item">--}}
-{{--                        <img src="{{ URL::asset('assets/images/flags/italy.jpg')}}" alt="user-image" class="mr-1" height="12"> <span class="align-middle">Italian</span>--}}
-{{--                    </a>--}}
+                    <a href="{{ url('index/it') }}" class="dropdown-item notify-item">
+                        <img src="{{ URL::asset('assets/images/flags/italy.jpg')}}" alt="user-image" class="mr-1" height="12"> <span class="align-middle">Italian</span>
+                    </a>
 
                     <!-- item-->
-{{--                    <a href="{{ url('index/ru') }}" class="dropdown-item notify-item">--}}
-{{--                        <img src="{{ URL::asset('assets/images/flags/russia.jpg')}}" alt="user-image" class="mr-1" height="12"> <span class="align-middle">Russian</span>--}}
-{{--                    </a>--}}
+                    <a href="{{ url('index/ru') }}" class="dropdown-item notify-item">
+                        <img src="{{ URL::asset('assets/images/flags/russia.jpg')}}" alt="user-image" class="mr-1" height="12"> <span class="align-middle">Russian</span>
+                    </a>
                 </div>
-            </div>
+            </div> --}}
 
-            <div class="dropdown d-none d-lg-inline-block ml-1">
+            {{-- <div class="dropdown d-none d-lg-inline-block ml-1">
                 <button type="button" class="btn header-item noti-icon waves-effect"
                     data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     <i class="uil-apps"></i>
@@ -160,7 +160,7 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> --}}
 
             <div class="dropdown d-none d-lg-inline-block ml-1">
                 <button type="button" class="btn header-item noti-icon waves-effect" data-toggle="fullscreen">
@@ -168,7 +168,7 @@
                 </button>
             </div>
 
-            <div class="dropdown d-inline-block">
+            {{-- <div class="dropdown d-inline-block">
                 <button type="button" class="btn header-item noti-icon waves-effect" id="page-header-notifications-dropdown"
                     data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     <i class="uil-bell"></i>
@@ -253,7 +253,7 @@
                         </a>
                     </div>
                 </div>
-            </div>
+            </div> --}}
 
             <div class="dropdown d-inline-block">
                 <button type="button" class="btn header-item waves-effect" id="page-header-user-dropdown"
@@ -276,11 +276,11 @@
                 </div>
             </div>
 
-            <div class="dropdown d-inline-block">
+            {{-- <div class="dropdown d-inline-block">
                 <button type="button" class="btn header-item noti-icon right-bar-toggle waves-effect">
                     <i class="uil-cog"></i>
                 </button>
-            </div>
+            </div> --}}
 
         </div>
     </div>
