@@ -5,6 +5,8 @@ use App\Livewire\RolesComponet;
 use App\Livewire\PermissionComponent;
 use App\Livewire\AsisComponent;
 use App\Livewire\UserComponent;
+use App\Livewire\Instituciones\InstitucionesComponent;
+use App\Livewire\Allproducts;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -25,6 +27,12 @@ Route::get('/roles', RolesComponet::class);
 Route::get('/permisos', PermissionComponent::class);
 Route::get('/asignar/permisos', AsisComponent::class);
 Route::get('/usuarios', UserComponent::class);
+
+//Rutas por Hector
+//Instituciones
+Route::get('/instituciones', InstitucionesComponent::class);
+Route::get('/products', Allproducts::class);
+
 
 
 
