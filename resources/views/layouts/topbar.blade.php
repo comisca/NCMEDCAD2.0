@@ -260,7 +260,7 @@
                     data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     <img class="rounded-circle header-profile-user" src="{{ URL::asset('assets/images/users/avatar-4.jpg')}}"
                         alt="Header Avatar">
-                    <span class="d-none d-xl-inline-block ml-1 font-weight-medium font-size-15">Henry Orellana</span>
+                    <span class="d-none d-xl-inline-block ml-1 font-weight-medium font-size-15">{{ Session::get('name_user') }}</span>
                     <i class="uil-angle-down d-none d-xl-inline-block font-size-15"></i>
                 </button>
                 <div class="dropdown-menu dropdown-menu-right">
@@ -269,7 +269,7 @@
                     <a class="dropdown-item" href="#"><i class="uil uil-wallet font-size-18 align-middle mr-1 text-muted"></i> <span class="align-middle">@lang('translation.My_Wallet')</span></a>
                     <a class="dropdown-item d-block" href="#"><i class="uil uil-cog font-size-18 align-middle mr-1 text-muted"></i> <span class="align-middle">@lang('translation.Settings')</span> <span class="badge badge-soft-success badge-pill mt-1 ml-2">03</span></a>
                     <a class="dropdown-item" href="#"><i class="uil uil-lock-alt font-size-18 align-middle mr-1 text-muted"></i> <span class="align-middle">@lang('translation.Lock_screen')</span></a>
-                    <a class="dropdown-item" href="javascript:void();" onclick="event.preventDefault(); document.getElementById('logout-form').submit();"><i class="uil uil-sign-out-alt font-size-18 align-middle mr-1 text-muted"></i> <span class="align-middle">@lang('translation.Sign_out')</span></a>
+                    <a class="dropdown-item" href="/logout/user" ><i class="uil uil-sign-out-alt font-size-18 align-middle mr-1 text-muted"></i> <span class="align-middle">Cerrar Session</span></a>
 {{--                    <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">--}}
 {{--                        @csrf--}}
 {{--                    </form>--}}
