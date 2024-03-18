@@ -1,6 +1,6 @@
 @section('title') @lang('NCMEDCAD | Tiitle') @endsection
 <div class="row">
-    <div class="col-lg-12">
+    <div class="col-12">
         <div class="card">
             <div class="card-body">
                 <div class="row mb-2">
@@ -22,10 +22,9 @@
 
                         </div> --}}
                     </div>
-                    <did class="col-md-3"></did>
-                    <did class="col-md-2"></did>
+                    
 
-                    <div class="col-md-3">
+                    {{-- <div class="col-md-3">
                         <div class="form-inline float-md-right mb-3">
                             <div class="search-box ml-2">
                                 <div class="position-relative">
@@ -35,16 +34,17 @@
                             </div>
 
                         </div>
-                    </div>
+                    </div> --}}
                 </div>
                 <!-- end row -->
-                <div class="table-responsive mb-4">
-                    <table id="instituciones" class="table table-centered table-nowrap mb-0">
+                <div class="table-responsive">
+                    <table id="instituciones" class="table table-bordered dt-responsive nowrap"  style="border-collapse: collapse; border-spacing: 0; width: 100%;">
                         <thead>
                             <tr>
                                 <th scope="col">ID</th>
                                 <th scope="col">Institución</th>
-                                <th scope="col" style="width: 200px;">{{__('actions.action')}}</th>
+                                <th scope="col">País</th>
+                                <th scope="col" style="width: 200px;">Acciones</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -57,14 +57,17 @@
                                         <a href="#" class="text-body">{{ $items->id }}</a>
                                     </td>
                                     <td>{{ $items->institucion }}</td>
-        
+                                    <td>{{$items->paises->pais}}</td>
                                     <td>
                                         <ul class="list-inline mb-0">
                                             <li class="list-inline-item">
-                                                <a href="#" wire:click="edit({{$items->id}})" class="px-2 text-primary" data-toggle="tooltip" data-placement="top" title="{{__('actions.edit')}}"><i class="uil uil-pen font-size-18"></i></a>
+                                                <a href="#" @click="$dispatch('add-beneficiario',{id:{{$items->id}}})" class="px-2 text-primary" data-toggle="tooltip" data-placement="top" title="Agregar Institución"><i class="uil uil-plus-circle font-size-18"></i></a>
                                             </li>
                                             <li class="list-inline-item">
-                                                <a href="javascript:void(0);" onclick="confirm({{ $items->id }})"  class="px-2 text-danger" data-toggle="tooltip" data-placement="top" title="{{__('actions.delete')}}"><i class="uil uil-trash-alt font-size-18"></i></a>
+                                                <a href="#" wire:click="edit({{$items->id}})" class="px-2 text-primary" data-toggle="tooltip" data-placement="top" title="{{__('Editar Institución')}}"><i class="uil uil-pen font-size-18"></i></a>
+                                            </li>
+                                            <li class="list-inline-item">
+                                                <a href="javascript:void(0);" onclick="confirm({{ $items->id }})"  class="px-2 text-danger" data-toggle="tooltip" data-placement="top" title="Eliminar Institución"><i class="uil uil-trash-alt font-size-18"></i></a>
                                             </li>
                                         </ul>
                                     </td>
@@ -90,6 +93,9 @@
     <!-- apexcharts -->
     <script src="{{ URL::asset('assets/libs/apexcharts/apexcharts.min.js')}}"></script>
     <script src="{{ URL::asset('assets/js/pages/dashboard.init.js')}}"></script>
+    <script src="{{ URL::asset('assets/js/pages/datatables.init.js')}}"></script>
+    <script src="{{ URL::asset('assets/libs/datatables/datatables.min.js')}}"></script>
+    <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>  
     <script>
         document.addEventListener('livewire:initialized', function () {
             @this.
@@ -182,7 +188,24 @@
             });
 
         }
-        
+        var table;
+        $(document).ready(function() {
+
+
+            table = $('#instituciones').DataTable({
+                select: true,
+                "order": [[ 0, "desc" ]],
+                
+                language:{url:'https://cdn.datatables.net/plug-ins/1.10.20/i18n/Spanish.json'},
+                
+                //Configuracion Inicial
+                    
+                    "lengthMenu": [[10, 25, 50, 100, -1], [10, 25, 50, 100, 'Todos  * ']]
+            });
+        });
+        // function seleccion(id){
+		//     var cell=l_Item = table.row(".selected").data()[0];
+        // }
         
     </script>
 @endsection

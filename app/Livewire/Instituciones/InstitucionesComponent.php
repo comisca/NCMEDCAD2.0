@@ -18,9 +18,10 @@ use WithPagination;
     public $pagination = 10;
     public $idSelecte;
     public $namePage, $tittleModal, $detailModal, $searchQuety;
-    public $id_pais, $institucion, $id_institucion_padre, $paga_cuota, $cuota_pagada, $es_minsa, $encabezado_nota_cobro, $paises;
+    public $id_pais, $institucion, $id_institucion_padre, $paga_cuota, $cuota_pagada, $es_minsa, $encabezado_nota_cobro, $paises, $institucionBeneficiaria;
     public $modalVisibility = false;
     public $options = [];
+    public $addInstitucion;
     public function paginationView()
     {
         return 'vendor.livewire.bootstrap';
@@ -83,8 +84,9 @@ use WithPagination;
             $institucionCreate = Instituciones::create([
                 'id_pais' => $this->id_pais,
                 'institucion' => $this->institucion, 
+                'cuota_pagada' => $this->cuota_pagada, 
                 'paga_cuota' => $this->paga_cuota, 
-                'es_minsa' => $this->cuota_pagada, 
+                'es_minsa' => $this->es_minsa, 
                 'encabezado_nota_cobro' => $this->encabezado_nota_cobro, 
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now()
@@ -109,6 +111,10 @@ use WithPagination;
     }
 
     public function edit($id){
+
+        $this->tittleModal = 'Editar Institución';
+        $this->detaiModal = 'Formulario para editar una nueva Institución';
+
         $institucion = Instituciones::where('id', '=', $id)->first();
         
 
@@ -204,6 +210,84 @@ use WithPagination;
         $this->es_minsa = '';
         $this->encabezado_nota_cobro = '';
         $this->idSelecte = 0;
+    }
+    public function resetBeneficiario()
+    {
+        
+        $this->paga_cuota = '';
+        $this->cuota_pagada = '';
+        $this->es_minsa = '';
+        $this->encabezado_nota_cobro = '';
+        $this->institucionBeneficiaria='';
+      
+    }
+    #[On('add-beneficiario')]
+    public function addInstitucion($id){
+
+        $this->tittleModal = 'Agregar Institución Beneficiaria';
+        $this->detaiModal = 'Formulario para agregar una nueva Institución beneficiaria';
+        $this->idSelecte = 0;
+
+        $institucion = Instituciones::where('id', '=', $id)->first();
+        $this->resetBeneficiario();
+
+        $this->id_pais = $institucion->id_pais;
+        $this->institucion = $institucion->institucion;
+        $this->addInstitucion = $id;
+        
+
+        $this->dispatch('institucion-edit');
+    }
+    #[On('save-beneficiario')]
+    public function createBeneficiario()
+    {
+        $rules = [
+            'id_pais' => 'required',
+            'institucionBeneficiaria' => 'required',
+            'paga_cuota' => 'required',
+            'cuota_pagada' => 'required',
+            'encabezado_nota_cobro' => 'nullable',
+        ];
+
+        $messages = [
+            'id_pais.required' => 'El país debe ser seleccionado.',
+            'institucionBeneficiaria.required' => 'El nombre de la institución es requerido.',
+            'paga_cuota.required' => 'La opción paga cuota es requerido.',
+            'cuota_pagada.required' => 'La opción de cuota pagada es requerido.',
+        ];
+
+
+        $this->validate($rules, $messages);
+        try {
+            //este metodo lo que hace es inicailizar las transacciones en la base de datos
+            DB::beginTransaction();
+            $institucionCreate = Instituciones::create([
+                'id_pais' => $this->id_pais,
+                'id_institucion_padre' => $this->addInstitucion,
+                'institucion' => $this->institucionBeneficiaria, 
+                'paga_cuota' => $this->paga_cuota, 
+                'cuota_pagada' => $this->cuota_pagada, 
+                'encabezado_nota_cobro' => $this->encabezado_nota_cobro, 
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now()
+            ]);
+            $institucionCreate->save();
+
+            //Aqui se escribe el codigo que se desea hacer en la transaccion
+            
+
+            //este metodo lo que hace es guardar los cambios en la base de datos
+            DB::commit();
+            $this->resetBeneficiario();
+            $this->dispatch('message-exito', messages: 'Institución registrada correctamente');
+
+        }catch (\Throwable $e) {
+            //este metodo lo que hace es deshacer los cambios en la base de datos
+            DB::rollback();
+            $this->dispatch('message-error', messages: 'Ocurrio un problema, comunicate con soporte');
+            //este metodo lo que hace es mostrar el error en la consola
+            dd($e->getMessage());
+        }
     }
 
 
