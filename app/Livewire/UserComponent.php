@@ -20,7 +20,7 @@ class UserComponent extends Component
     public $idSelecte;
     public $namePage, $nameModal;
     public $pagination = 10;
-    public $email,$password,$name,$lastName,$dui,$phone,$role_id,$firts_name;
+    public $email,$password,$name,$lastName,$dui,$phone,$role_id,$firts_name, $addInstitucion;
     public function paginationView()
     {
         return 'vendor.livewire.bootstrap';

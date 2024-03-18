@@ -37,11 +37,17 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/asignar/permisos', AsisComponent::class);
     Route::get('/create/bussines', CreateBussines::class);
     Route::get('/logout/user', 'App\Http\Controllers\Controller@logout');
+
+
+
+    //Rutas por Hector
+    //Instituciones
+    Route::get('/instituciones', InstitucionesComponent::class);
+
+
 });
 
-//Rutas por Hector
-//Instituciones
-Route::get('/instituciones', InstitucionesComponent::class);
+
 
 
 
