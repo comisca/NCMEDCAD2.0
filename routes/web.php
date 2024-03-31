@@ -43,10 +43,7 @@ Route::middleware(['auth'])->group(function () {
     //Rutas por Hector
     //Instituciones
     Route::get('/instituciones', InstitucionesComponent::class);
-
-
 });
-
 
 
 

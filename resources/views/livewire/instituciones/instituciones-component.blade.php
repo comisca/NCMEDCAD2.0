@@ -23,8 +23,16 @@
                         </div> --}}
                     </div>
                     
-
-                    {{-- <div class="col-md-3">
+                    <div class="col-md-3">
+                        <select wire:model="searchPais" class="custom-select custom-select-lg mb-3">
+                            <option selected>Buscar Pais</option>
+                            @foreach ($dataPaises as $item)
+                                    <option value="{{$item->id_pais}}">{{$item->pais}}</option>
+                                @endforeach
+                            
+                          </select>
+                    </div>
+                    <div class="col-md-3">
                         <div class="form-inline float-md-right mb-3">
                             <div class="search-box ml-2">
                                 <div class="position-relative">
@@ -34,7 +42,7 @@
                             </div>
 
                         </div>
-                    </div> --}}
+                    </div>
                 </div>
                 <!-- end row -->
                 <div class="table-responsive">
@@ -56,8 +64,8 @@
                                     <td>
                                         <a href="#" class="text-body">{{ $items->id }}</a>
                                     </td>
-                                    <td>{{ $items->institucion }}</td>
-                                    <td>{{$items->paises->pais}}</td>
+                                    <td wire:click="setBeneficiario({{$items->id}})">{{ $items->institucion }}</td>
+                                    <td wire:click="setBeneficiario({{$items->id}})">{{$items->paises->pais}}</td>
                                     <td>
                                         <ul class="list-inline mb-0">
                                             <li class="list-inline-item">
@@ -82,6 +90,50 @@
                         {{ $data->links() }}
                     @endif
                 </div>
+                @if ($showBeneficiario == true)
+                    <div class="table-responsive">
+                        <table id="institucionesBeneficiario" class="table table-bordered dt-responsive nowrap"  style="border-collapse: collapse; border-spacing: 0; width: 100%;">
+                            <thead>
+                                <tr>
+                                    <th scope="col">ID</th>
+                                    <th scope="col">Institución2</th>
+                                    <th scope="col">País</th>
+                                    <th scope="col" style="width: 200px;">Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            @if(!empty($institucionBeneficiaria))
+
+                                @foreach($institucionBeneficiaria as $items)
+                                    <tr>
+        
+                                        <td>
+                                            <a href="#" class="text-body">{{ $items->id }}</a>
+                                        </td>
+                                        <td>{{ $items->institucion }}</td>
+                                        <td>{{$items->paises->pais}}</td>
+                                        <td>
+                                            <ul class="list-inline mb-0">
+                                                <li class="list-inline-item">
+                                                    <a href="#" wire:click="edit({{$items->id}})" class="px-2 text-primary" data-toggle="tooltip" data-placement="top" title="{{__('Editar Institución')}}"><i class="uil uil-pen font-size-18"></i></a>
+                                                </li>
+                                                <li class="list-inline-item">
+                                                    <a href="javascript:void(0);" onclick="confirm({{ $items->id }})"  class="px-2 text-danger" data-toggle="tooltip" data-placement="top" title="Eliminar Institución"><i class="uil uil-trash-alt font-size-18"></i></a>
+                                                </li>
+                                            </ul>
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            @endif
+
+                            </tbody>
+                        </table>
+
+                        {{-- @if(!empty($institucionBeneficiaria))
+                            {{ $institucionBeneficiaria->links() }}
+                        @endif --}}
+                    </div>
+                @endif
             </div>
         </div>
     </div>
@@ -93,9 +145,6 @@
     <!-- apexcharts -->
     <script src="{{ URL::asset('assets/libs/apexcharts/apexcharts.min.js')}}"></script>
     <script src="{{ URL::asset('assets/js/pages/dashboard.init.js')}}"></script>
-    <script src="{{ URL::asset('assets/js/pages/datatables.init.js')}}"></script>
-    <script src="{{ URL::asset('assets/libs/datatables/datatables.min.js')}}"></script>
-    <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>  
     <script>
         document.addEventListener('livewire:initialized', function () {
             @this.

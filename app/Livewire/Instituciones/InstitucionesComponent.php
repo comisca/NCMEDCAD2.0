@@ -18,10 +18,10 @@ use WithPagination;
     public $pagination = 10;
     public $idSelecte;
     public $namePage, $tittleModal, $detailModal, $searchQuety;
-    public $id_pais, $institucion, $id_institucion_padre, $paga_cuota, $cuota_pagada, $es_minsa, $encabezado_nota_cobro, $paises, $institucionBeneficiaria;
+    public $id_pais, $institucion=null, $id_institucion_padre, $paga_cuota, $cuota_pagada, $es_minsa, $encabezado_nota_cobro, $paises, $institucionBeneficiaria;
     public $modalVisibility = false;
     public $options = [];
-    public $addInstitucion;
+    public $addInstitucion, $showBeneficiario, $searchPais='';
     public function paginationView()
     {
         return 'vendor.livewire.bootstrap';
@@ -288,6 +288,12 @@ use WithPagination;
             //este metodo lo que hace es mostrar el error en la consola
             dd($e->getMessage());
         }
+    }
+    //#[On('show-beneficiario')]
+    public function setBeneficiario($id){
+        $this->showBeneficiario = true;
+        $this->institucionBeneficiaria = Instituciones::where('id_institucion_padre', '=', $id)->orderBy('id', 'desc')->get();
+        
     }
 
 
