@@ -58,7 +58,7 @@
                     </a>
                     <ul class="sub-menu" aria-expanded="false">
                         <li><a href="{{url('/instituciones')}}">@lang('translation.Registro de Instituciones')</a></li>
-                        <li><a href="layouts-dark-sidebar">@lang('translation.Catálogo de Productos')</a></li>
+                        <li><a href="{{url('/medicamentos')}}">@lang('translation.Catálogo de Productos')</a></li>
                     </ul>
                 </li>
 

@@ -16,7 +16,7 @@ return new class extends Migration
             $table->unsignedBigInteger('id_familia_producto')->nullable();
             $table->foreign('id_familia_producto')->references('id')->on('familia_producto');
             $table->unsignedBigInteger('id_grupo_familia')->nullable();
-            $table->foreign('id_grupo_familia')->references('id')->on('familia_producto');
+            $table->foreign('id_grupo_familia')->references('id')->on('grupos_productos');
             $table->unsignedBigInteger('id_grupo_requerimiento')->nullable();
             $table->foreign('id_grupo_requerimiento')->references('id')->on('grupos_requisitos');
             $table->string('cod_medicamento',15);

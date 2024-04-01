@@ -138,8 +138,8 @@
         </div>
     </div>
 
-@include('livewire.instituciones.instituciones-create')
-{{-- <livewire:search-universal></livewire:search-universal> --}}
+    @include('livewire.instituciones.instituciones-create')
+    {{-- <livewire:search-universal></livewire:search-universal> --}}
 </div>
 @section('script')
     <!-- apexcharts -->
