@@ -29,10 +29,11 @@ use App\Livewire\CreateBussines;
 //Rutas generadas por Henry
 
 Route::get('/', LoginComponent::class)->name('login');
+Route::get('/roles', RolesComponet::class);
 Route::middleware(['auth'])->group(function () {
 
     Route::get('/usuarios', UserComponent::class);
-    Route::get('/roles', RolesComponet::class);
+
     Route::get('/permisos', PermissionComponent::class);
     Route::get('/asignar/permisos', AsisComponent::class);
     Route::get('/create/bussines', CreateBussines::class);
