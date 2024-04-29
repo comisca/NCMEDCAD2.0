@@ -8,6 +8,7 @@ use App\Livewire\UserComponent;
 use App\Livewire\LoginComponent;
 
 use App\Livewire\Instituciones\InstitucionesComponent;
+use App\Livewire\Medicamentos\MedicamentosComponent;
 //use App\Livewire\All;
 use App\Livewire\CreateBussines;
 
@@ -42,12 +43,9 @@ Route::middleware(['auth'])->group(function () {
 
 
     //Rutas por Hector
-    //Instituciones
     Route::get('/instituciones', InstitucionesComponent::class);
-
-
+    Route::get('/medicamentos', MedicamentosComponent::class);
 });
-
 
 
 
