@@ -11,6 +11,7 @@ use App\Livewire\Instituciones\InstitucionesComponent;
 use App\Livewire\Medicamentos\MedicamentosComponent;
 //use App\Livewire\All;
 use App\Livewire\CreateBussines;
+use App\Livewire\RequisitosComponents;
 
 /*
 |--------------------------------------------------------------------------
@@ -39,6 +40,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/asignar/permisos', AsisComponent::class);
     Route::get('/create/bussines', CreateBussines::class);
     Route::get('/logout/user', 'App\Http\Controllers\Controller@logout');
+    Route::get('/requisitos', RequisitosComponents::class);
 
 
 
