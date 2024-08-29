@@ -12,7 +12,9 @@ use App\Livewire\Medicamentos\MedicamentosComponent;
 //use App\Livewire\All;
 use App\Livewire\CreateBussines;
 use App\Livewire\HomeComponent;
+use App\Livewire\ListCompanyComponent;
 use App\Livewire\RegisterComponent;
+use App\Livewire\RegisterDistribuidorComponent;
 use App\Livewire\RequisitosComponents;
 
 /*
@@ -53,6 +55,8 @@ Route::middleware(['auth'])->group(function () {
 
 Route::get('/home', HomeComponent::class);
 Route::get('/register', RegisterComponent::class);
+Route::get('/registerDistribuidor', RegisterDistribuidorComponent::class);
+Route::get('/listCompany', ListCompanyComponent::class);
 
 
 

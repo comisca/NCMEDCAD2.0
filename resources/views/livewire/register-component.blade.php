@@ -1,70 +1,84 @@
 @section('title') @lang('NCMEDCAD | Tiitle') @endsection
 
-    <div class="row">
 
+   <div class="row">
+    
+        <!--Fomrulario-->
+        <div class="container">
+          <form>
+            <fieldset class="form-group">
+              <legend>Registro de Participante</legend>
+            <div class="form-row">
+              <div class="form-group col-12">
+                <label for="inputNameCompany">Nombre de la Compañia</label>
+                <input type="text" class="form-control" id="inputAddress" placeholder="SICA SA de CV">
+              </div>
+              <div class="form-group col-3">
+                <select id="inputState" class="form-control">
+                  <option selected>Seleccione Pais</option>
+                  <option>...</option>
+                </select>
+              </div>
+              <div class="form-group col-3">
+                <select id="inputState" class="form-control">
+                  <option selected>Provincia o Municipio</option>
+                  <option>...</option>
+                </select>
+              </div>
+              <div class="form-group col-6">
+              <!--<label for="inputAddress">Dirección</label>-->
+              <input type="text" class="form-control" id="inputAddress" placeholder="Escribe tu Dirección" required>
+            </div>
+              <div class="form-group col-6">
+                <label for="inputEmail4">Teléfono</label>
+                <input type="tel" class="form-control" id="inputEmail4">
+              </div>
+              <div class="form-group col-6">
+                <label for="inputPassword4">Facsímile</label>
+                <input type="number" class="form-control" id="inputPassword4">
+              </div>
+            </div>
+          </fieldset>
+
+          <!--Segunda parte del Formulario Persona de CONTACTO -->
+          <fieldset class="form-group">
+            <legend>Persona de Contacto</legend>
+          <div class="form-row">
+            <div class="form-group col-4">
+              <label for="inputNameCompany">Nombre</label>
+              <input type="text" class="form-control" id="inputAddress" placeholder="SICA SA de CV">
+            </div>
+            <div class="form-group col-4">
+              <label for="inputNameCompany">Apellido</label>
+              <input type="text" class="form-control" id="inputAddress" placeholder="SICA SA de CV">
+            </div>
+            <div class="form-group col-4">
+              <label for="inputNameCompany">E-mail:</label>
+              <input type="mail" class="form-control" id="inputAddress" placeholder="SICA SA de CV">
+            </div>
+          </fieldset>
+
+        <!--Tercera parte del Formulario Datos de Ingreso-->
+        <fieldset class="form-group ">
+          <legend>Datos de ingreso</legend>
         
-        <fieldset>
-            <legend>Registro de Participante</legend>
-        <form class="row g-3">
-            <div class="col-md-12">
-              <label for="inputNameCompany" class="form-label">Nombre de la compañia:</label>
-              <input type="text" class="form-control" id="inputEmail4" placeholder="ABZ.SA de CV" >
+          <div class="form-group row">
+            <label for="inputUser" class="col-sm-2">Usuario</label>
+            <div class="col-sm-4">
+              <input type="email" class="form-control" id="inputEmail3">
             </div>
-            <div class="col-12">
-                <label for="inputAddress" class="form-label">Dirección:</label>
-                <input type="text" class="form-control" id="inputAddress" placeholder="El Salvador, segunda calle poniente 2-3.">
-              </div>
-            <div class="col-md-6">
-              <label for="inputPassword4" class="form-label">Teléfono</label>
-              <input type="phone" class="form-control" id="inputPassword4">
-            </div>
-            <div class="col-md-6">
-                <label for="inputPassword4" class="form-label">Facsímile</label>
-                <input type="phone" class="form-control" id="inputPassword4">
-              </div>
-            <div class="col-12">
-              <label for="inputAddress" class="form-label">Address</label>
-              <input type="text" class="form-control" id="inputAddress" placeholder="1234 Main St">
-            </div>
-            <div class="col-12">
-              <label for="inputAddress2" class="form-label">Address 2</label>
-              <input type="text" class="form-control" id="inputAddress2" placeholder="Apartment, studio, or floor">
-            </div>
-            <div class="col-md-6">
-              <label for="inputCity" class="form-label">City</label>
-              <input type="text" class="form-control" id="inputCity">
-            </div>
-            <div class="col-md-4">
-              <label for="inputState" class="form-label">State</label>
-              <select id="inputState" class="form-select">
-                <option selected>Choose...</option>
-                <option>...</option>
-              </select>
-            </div>
-            <div class="col-md-2">
-              <label for="inputZip" class="form-label">Zip</label>
-              <input type="text" class="form-control" id="inputZip">
-            </div>
-            <div class="col-12">
-              <div class="form-check">
-                <input class="form-check-input" type="checkbox" id="gridCheck">
-                <label class="form-check-label" for="gridCheck">
-                  Check me out
-                </label>
-              </div>
-            </div>
-            <div class="col-12">
-              <button type="submit" class="btn btn-primary">Sign in</button>
-            </div>
-          </form>
+
+            <button type="submit" class="btn btn-primary">Guardar</button>
+            <button type="submit" class="btn btn-danger">Cancelar</button>
         </fieldset>
-
-
-
-
-         <livewire:search-universal></livewire:search-universal>
-       
+          </form>
         </div>
+        
+    
+        <!--Fin del comentario-->
+
+
+    </div>
 
 
 @section('script')
