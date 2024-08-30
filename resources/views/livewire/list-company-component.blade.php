@@ -6,6 +6,15 @@
             <p>Estamos aceptando solicitudes de fabricantes, distribuidores o representantes interesados en colaborar con nosotros. Para ser considerados en las futuras subastas:</p>
 
             <div class="container">
+                <form>
+                    <fieldset class="form-group">
+                        <div class="form-group col-12">
+                            <label for="inputNameCompany">Buscador</label>
+                            <input wire:model.live="searchInput" type="text" class="form-control" id="inputAddress" placeholder="BUSCA LA EMPRESA...">
+
+                        </div>
+                    </fieldset>
+                </form>
                 <table class="table align-middle mb-0 bg-white">
                     <thead class="bg-light">
                       <tr>
@@ -17,6 +26,9 @@
                       </tr>
                     </thead>
                     <tbody>
+
+                    @foreach($companies as $items)
+
                       <tr>
                         <td>
                           <div class="d-flex align-items-center">
@@ -27,17 +39,36 @@
                                 class="rounded-circle"
                                 />
                             <div class="ms-3">
-                              <p class="fw-bold mb-1">Ejemplo de Nombre</p>
-                              <p class="text-muted mb-0">correo@gmail.com</p>
-                              <p class="text-muted mb-0">+503 78567898</p>
+                              <p class="fw-bold mb-1">{{ $items->legal_name }}</p>
+                              <p class="text-muted mb-0">{{$items->email}}</p>
+                              <p class="text-muted mb-0">+{{ $items->phone }}</p>
                             </div>
                           </div>
                         </td>
                         <td>
-                          <p class="fw-normal mb-1">FABRICANTE</p>
+                          <p class="fw-normal mb-1">
+                              @if($items->type_company == 'D')
+                                    DISTRIBUIDOR
+                              @else
+                                  FABRICANTE
+                              @endif
+
+
+                          </p>
                         </td>
                         <td>
+                            @if($items->status == 1)
+
                           <span class="badge badge-success rounded-pill d-inline">Active</span>
+
+                            @elseif($items->status == 2)
+                                <span class="badge badge-warning rounded-pill d-inline">Pendiente</span>
+
+                            @elseif($items->status == 0)
+                                <span class="badge badge-danger rounded-pill d-inline">Rechazado</span>
+
+                            @endif
+
                         </td>
                         <td>
                             <button type="button" class="btn btn-link btn-sm btn-rounded">
@@ -45,15 +76,17 @@
                               </button>
                         </td>
                         <td>
-                          <button type="button" class="btn btn-link btn-sm btn-rounded">
+                          <button type="button" wire:click="acceptedComapny({{$items->id}})" class="btn btn-link btn-sm btn-rounded">
                             Aceptar
                           </button>
-                          <button type="button" class="btn btn-link btn-sm btn-rounded">
+                          <button type="button" wire:click="rejectedCompany({{$items->id}})" class="btn btn-link btn-sm btn-rounded">
                             Rechazar
                           </button>
                         </td>
                       </tr>
                       <tr>
+
+                    @endforeach
                     </tbody>
                   </table>
             </div>
@@ -72,7 +105,7 @@
     <script>
         document.addEventListener('livewire:initialized', function () {
             @this.
-            on('messages-succes', (event) => {
+            on('success_messages', (event) => {
                 toastr.success(event.messages, 'Exito',{
                     "closeButton": true,
                     "debug": false,
@@ -100,7 +133,7 @@
                 // })
 
             })
-            @this.on('messages-error', (event) => {
+            @this.on('error_messages', (event) => {
                 toastr.error(event.messages, 'Exito',{
                     "closeButton": true,
                     "debug": false,
