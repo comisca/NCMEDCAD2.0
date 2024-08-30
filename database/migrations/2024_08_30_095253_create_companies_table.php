@@ -18,14 +18,14 @@ return new class extends Migration
             $table->string('city');
             $table->string('address');
             $table->string('phone');
-            $table->string('facsimile');
-            $table->string('website');
+            $table->string('facsimile')->nullable();
+            $table->string('website')->nullable();
             $table->string('first_name');
             $table->string('last_name');
             $table->string('email');
             $table->string('phone_contact');
             $table->string('user_name')->nullable();
-            $table->string('password');
+            $table->string('password')->nullable();
             $table->string('type_company');
             $table->string('logo_companies')->nullable();
             $table->integer('status');
