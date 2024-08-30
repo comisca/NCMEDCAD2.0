@@ -19,6 +19,13 @@
                     <span class="text-danger">{{$message}}</span>
                     @enderror
                 </div>
+                  <div class="form-group col-12">
+                      <label for="inputNameCompany">Logo de la empresa</label>
+                      <input wire:model="avatar" type="file" class="form-control @error('avatar') is-invalid @enderror" id="inputAddress" placeholder="SICA SA de CV">
+                      @error('avatar')
+                      <span class="text-danger">{{$message}}</span>
+                      @enderror
+                  </div>
                 <div class="form-group col-3">
                   <select id="inputState" wire:model="country" class="form-control @error('country') is-invalid @enderror">
                     <option selected>Seleccione Pais</option>

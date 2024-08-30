@@ -24,6 +24,7 @@ class Companies extends Model
         'user_name',
         'password',
         'type_company',
-        'status'
+        'status',
+        'logo_companies'
     ];
 }

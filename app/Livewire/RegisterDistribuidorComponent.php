@@ -4,6 +4,7 @@ namespace App\Livewire;
 
 use App\Models\Companies;
 use Livewire\Attributes\On;
+use Livewire\WithFileUploads;
 use Livewire\WithPagination;
 use Livewire\Component;
 use Session;
@@ -13,11 +14,13 @@ class RegisterDistribuidorComponent extends Component
 {
 
 use WithPagination;
+use WithFileUploads;
+
     public $Pagination = 10;
     public $searchInput;
     public $bandera = 0;
     public $BusinnessName,$country,$city,$address,$phone,$facsimile,$website;
-    public $firstName,$lastName,$email,$phoneContact,$userName,$typeCompany;
+    public $firstName,$lastName,$email,$phoneContact,$userName,$typeCompany,$avatar;
     public function paginationView()
     {
         return 'vendor.livewire.bootstrap';
@@ -77,6 +80,14 @@ use WithPagination;
 
 
             try {
+
+                if ($this->avatar) {
+                    //Guardamos la imagen en la carpeta publica
+                    $avatar_name = 'companies_' . uniqid() . '.' . $this->avatar->extension();
+                    $avatarurl = $this->avatar->storeAs('public/logo/companies', $avatar_name);
+                } else {
+                    $avatar_name = 'default.png';
+                }
                 //este metodo lo que hace es inicailizar las transacciones en la base de datos
                 DB::beginTransaction();
 
@@ -95,7 +106,8 @@ use WithPagination;
                     'user_name' => $this->userName,
                     'password' => '123456',
                     'type_company' => $this->typeCompany == 'DISTRIBUIDOR' ? 'D' : 'F',
-                    'status' => 2
+                    'status' => 2,
+                    'logo_companies' => $avatar_name
                 ]);
 
 

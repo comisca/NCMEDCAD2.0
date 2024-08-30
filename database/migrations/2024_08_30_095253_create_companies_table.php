@@ -27,6 +27,7 @@ return new class extends Migration
             $table->string('user_name')->nullable();
             $table->string('password');
             $table->string('type_company');
+            $table->string('logo_companies')->nullable();
             $table->integer('status');
             $table->timestamps();
         });

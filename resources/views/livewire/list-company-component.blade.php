@@ -32,8 +32,9 @@
                       <tr>
                         <td>
                           <div class="d-flex align-items-center">
+
                             <img
-                                src="https://mdbootstrap.com/img/new/avatars/8.jpg"
+                                src="/storage/logo/companies/{{$items->logo_companies}}"
                                 alt=""
                                 style="width: 45px; height: 45px"
                                 class="rounded-circle"
