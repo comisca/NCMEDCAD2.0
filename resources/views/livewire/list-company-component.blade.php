@@ -47,7 +47,7 @@
                           </div>
                         </td>
                         <td>
-                          <p class="fw-normal mb-1">
+                          <p class="fw-normal mb-1">≈
                               @if($items->type_company == 'D')
                                     DISTRIBUIDOR
                               @else

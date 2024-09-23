@@ -33,7 +33,7 @@
                     <option value="GUATEMALA">GUATEMALA</option>
                     <option value="HONDURAS">HONDURAS</option>
                     <option value="NICARAGUA">NICARAGUA</option>
-                    <option value="COSTA RICA">COSTA RICA</option>
+                    <option value="COSTA RICA">COSTA RICA</option>s
                     <option value="PANAMA">PANAMA</option>
                     <option value="BELICE">BELICE</option>
                   </select>
@@ -79,7 +79,7 @@
                 </div>
                 <div class="form-group col-6">
                   <label for="inputPassword4">Facsímile</label>
-                  <input type="number" wire:model="facsimile" class="form-control" id="inputPassword4">
+                  <input type="phone" wire:model="facsimile" class="form-control" id="inputPassword4">
 
                 </div>
                 <div class="form-group col-12">
@@ -137,6 +137,7 @@
               </div>
 
               <button type="button" wire:click="create()" class="btn btn-primary">Guardar</button>
+              
               <button type="button" class="btn btn-danger">Cancelar</button>
           </fieldset>
             </form>
