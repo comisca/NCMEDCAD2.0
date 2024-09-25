@@ -1,4 +1,4 @@
-@section('title') @lang('NCMEDCAD | Tiitle') @endsection
+{{-- @section('title') @lang('NCMEDCAD | Tiitle') @endsection
 
     <div class="row">
 
@@ -92,4 +92,4 @@
 
         }
     </script>
-@endsection
+@endsection --}}
