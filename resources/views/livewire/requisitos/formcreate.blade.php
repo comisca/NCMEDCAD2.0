@@ -11,7 +11,7 @@
     <div class="row">
     <div class=" col-md-6">
         <label for="exampleInputEmail1" class="form-label">Familia de Productos</label>
-        <select name="GrupoRequisitoId" id="GrupoRequisitoId" class="form-control" wire:model="GrupoRequisitoId">
+        <select name="GrupoRequisitoId" id="GrupoRequisitoId" class="form-control" wire:model="groupFamilyId">
             @if ($grupo_familia->count() == 0)
                 <option value="#">Seleccione</option>
             @endif
@@ -26,7 +26,7 @@
 
     <div class=" col-md-6">
         <label for="exampleInputEmail1" class="form-label">Código</label>
-        <input wire:model="cod_medicamento" type="text" class="form-control @error('cod_medicamento') is-invalid @enderror" >
+        <input wire:model="codRequisitos" type="text" class="form-control @error('cod_medicamento') is-invalid @enderror" >
         @error('cod_medicamento')
         <span class="text-danger">{{$message}}</span>
         @enderror
@@ -61,7 +61,7 @@
 
         <div class=" col-md-6">
             <label for="exampleInputEmail1" class="form-label">Grupo de requisitos</label>
-            <select name="GrupoRequisitoId" id="GrupoRequisitoId" class="form-control" wire:model="GrupoRequisitoId">
+            <select name="grupoRequisitoId" id="grupoRequisitoId" class="form-control" wire:model="GrupoRequisitoId">
                 @if ($grupo_requisitos->count() == 0)
                     <option value="#">Seleccione</option>
                 @endif
@@ -69,7 +69,7 @@
                     <option value="{{$item->id}}">{{$item->grupo}}</option>
                 @endforeach
             </select>
-            @error('GrupoRequisitoId')
+            @error('grupoRequisitoId')
             <span class="text-danger">{{$message}}</span>
             @enderror
         </div>
@@ -99,8 +99,8 @@
     </div>
         <div class="col-md-6">
             <label for="exampleInputEmail1" class="form-label">Mensaje no cumple</label>
-            <textarea wire:model="mesagesno" class="form-control @error('mesagesno') is-invalid @enderror" rows="3"></textarea>
-            @error('mesagesno')
+            <textarea wire:model="messagesno" class="form-control @error('mesagesno') is-invalid @enderror" rows="3"></textarea>
+            @error('messagesno')
             <span class="text-danger">{{$message}}</span>
             @enderror
         </div>
@@ -116,22 +116,22 @@
         </div>
         <div class=" col-md-3">
             <label for="exampleInputEmail1" class="form-label">Aplica a fichas y aplicaiones?</label>
-            <input wire:model="obligatorio" type="checkbox" class="@error('obligatorio') is-invalid @enderror" >
-            @error('obligatorio')
+            <input wire:model="fichaAplicacion" type="checkbox" class="@error('obligatorio') is-invalid @enderror" >
+            @error('fichaAplicacion')
             <span class="text-danger">{{$message}}</span>
             @enderror
         </div>
         <div class=" col-md-3">
             <label for="exampleInputEmail1" class="form-label">Vence?</label>
-            <input wire:model="obligatorio" type="checkbox" class="@error('obligatorio') is-invalid @enderror" >
-            @error('obligatorio')
+            <input wire:model="vencimiento" type="checkbox" class="@error('obligatorio') is-invalid @enderror" >
+            @error('vencimiento')
             <span class="text-danger">{{$message}}</span>
             @enderror
         </div>
         <div class=" col-md-3">
             <label for="exampleInputEmail1" class="form-label">Entregable?</label>
-            <input wire:model="obligatorio" type="checkbox" class=" @error('obligatorio') is-invalid @enderror" >
-            @error('obligatorio')
+            <input wire:model="entregable" type="checkbox" class=" @error('obligatorio') is-invalid @enderror" >
+            @error('entregable')
             <span class="text-danger">{{$message}}</span>
             @enderror
         </div>

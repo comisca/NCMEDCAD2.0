@@ -1,5 +1,5 @@
-
-<div class="modal fade bs-example-modal-xl" wire:ignore.self id="modalUniversal"  role="dialog" aria-labelledby="exampleModalScrollableTitle" aria-hidden="true">
+<div class="modal fade bs-example-modal-xl" wire:ignore.self id="modalUniversal" role="dialog"
+     aria-labelledby="exampleModalScrollableTitle" aria-hidden="true">
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <div class="modal-header">

@@ -1,4 +1,6 @@
-@section('title') @lang('NCMEDCAD | Iniciar Session') @endsection
+@section('title')
+    @lang('NCMEDCAD | Iniciar Session')
+@endsection
 
 
 
@@ -16,7 +18,8 @@
                 <div class="col-lg-12">
                     <div class="text-center">
                         <a href="#" class="mb-5 d-block auth-logo">
-                            <img src="{{ asset('assets/images/bannersinergia.png')}}" alt="" height="68" class="logo logo-dark">
+                            <img src="{{ asset('assets/images/bannersinergia.png')}}" alt="" height="68"
+                                 class="logo logo-dark">
                             {{--                                <img src="{{ URL::asset('assets/images/logo-light.png')}}" alt="" height="22" class="logo logo-light">--}}
                         </a>
                     </div>
@@ -35,7 +38,10 @@
 
                                 <div class="form-group">
                                     <label for="email">email</label>
-                                    <input wire:model="email" id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="email" autofocus placeholder="Enter Email address">
+                                    <input wire:model="email" id="email" type="email"
+                                           class="form-control @error('email') is-invalid @enderror" name="email"
+                                           value="{{ old('email') }}" required autocomplete="email" autofocus
+                                           placeholder="Enter Email address">
                                     @error('email')
                                     <span class="invalid-feedback" role="alert">
                                             <strong>{{ $message }}</strong>
@@ -52,7 +58,9 @@
                                         @endif
                                     </div>
                                     <label for="password">Password</label>
-                                    <input wire:model="password" id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" required autocomplete="current-password" placeholder="Enter password">
+                                    <input wire:model="password" id="password" type="password"
+                                           class="form-control @error('password') is-invalid @enderror" name="password"
+                                           required autocomplete="current-password" placeholder="Enter password">
 
                                     @error('password')
                                     <span class="invalid-feedback" role="alert">
@@ -61,11 +69,14 @@
                                     @enderror
                                 </div>
                                 <div class="custom-control custom-checkbox">
-                                    <input type="checkbox" class="custom-control-input" id="auth-remember-check" name="remember" {{ old('remember') ? 'checked' : '' }}>
+                                    <input type="checkbox" class="custom-control-input" id="auth-remember-check"
+                                           name="remember" {{ old('remember') ? 'checked' : '' }}>
                                     <label class="custom-control-label" for="auth-remember-check">Recuerdame</label>
                                 </div>
                                 <div class="mt-3 text-right">
-                                    <button wire:click="create()" class="btn btn-primary w-sm waves-effect waves-light" type="button">Iniciar</button>
+                                    <button wire:click="create()" class="btn btn-primary w-sm waves-effect waves-light"
+                                            type="button">Iniciar
+                                    </button>
                                 </div>
                                 {{--                                        <div class="mt-4 text-center">--}}
                                 {{--                                            <div class="signin-other-title">--}}
@@ -100,7 +111,8 @@
                         </div>
                     </div>
                     <div class="mt-5 text-center">
-                        <script>document.write(new Date().getFullYear())</script> © Sinerpgia 2.0.0.
+                        <script>document.write(new Date().getFullYear())</script>
+                        © Sinerpgia 2.0.0.
                     </div>
                 </div>
             </div>
@@ -118,7 +130,7 @@
         document.addEventListener('livewire:initialized', function () {
             @this.
             on('messages-succes', (event) => {
-                toastr.success(event.messages, 'Exito',{
+                toastr.success(event.messages, 'Exito', {
                     "closeButton": true,
                     "debug": false,
                     "newestOnTop": false,
@@ -146,7 +158,7 @@
 
             })
             @this.on('messages-error', (event) => {
-                toastr.error(event.messages, 'Exito',{
+                toastr.error(event.messages, 'Exito', {
                     "closeButton": true,
                     "debug": false,
                     "newestOnTop": false,

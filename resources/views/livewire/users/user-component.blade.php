@@ -1,4 +1,6 @@
-@section('title') @lang('SMYE | Usuarios') @endsection
+@section('title')
+    @lang('SMYE | Usuarios')
+@endsection
 
 
 
@@ -15,7 +17,9 @@
 
                         <div class="mb-3">
 
-                            <a href="#"  data-toggle="modal" data-target="#modalUniversal" class="btn btn-primary waves-effect waves-light"><i class="mdi mdi-plus mr-2"></i> {{__('actions.create')}}</a>
+                            <a href="#" data-toggle="modal" data-target="#modalUniversal"
+                               class="btn btn-primary waves-effect waves-light"><i
+                                    class="mdi mdi-plus mr-2"></i> {{__('actions.create')}}</a>
 
 
                         </div>
@@ -25,7 +29,9 @@
                         <div class="form-inline float-md-right mb-3">
                             <div class="search-box ml-2">
                                 <div class="position-relative">
-                                    <input type="text" wire:model.live="searchQuety" class="form-control rounded bg-light border-0" placeholder="{{__('actions.search')}} Usuarios">
+                                    <input type="text" wire:model.live="searchQuety"
+                                           class="form-control rounded bg-light border-0"
+                                           placeholder="{{__('actions.search')}} Usuarios">
                                     <i class="mdi mdi-magnify search-icon"></i>
                                 </div>
                             </div>
@@ -64,7 +70,8 @@
                                         </div>
                                     </th>
                                     <td>
-                                        <img src="{{ URL::asset('assets/images/users/avatar-2.jpg')}}" alt="" class="avatar-xs rounded-circle mr-2">
+                                        <img src="{{ URL::asset('assets/images/users/avatar-2.jpg')}}" alt=""
+                                             class="avatar-xs rounded-circle mr-2">
                                         <a href="#" class="text-body">{{ $permisoitems->id }}</a>
                                     </td>
                                     <td>{{ $permisoitems->first_name }} {{ $permisoitems->last_name }}</td>
@@ -73,10 +80,16 @@
                                     <td>
                                         <ul class="list-inline mb-0">
                                             <li class="list-inline-item">
-                                                <a href="#" wire:click="editRoles({{$permisoitems->id}})" class="px-2 text-primary" data-toggle="tooltip" data-placement="top" title="{{__('actions.edit')}}"><i class="uil uil-pen font-size-18"></i></a>
+                                                <a href="#" wire:click="editRoles({{$permisoitems->id}})"
+                                                   class="px-2 text-primary" data-toggle="tooltip" data-placement="top"
+                                                   title="{{__('actions.edit')}}"><i
+                                                        class="uil uil-pen font-size-18"></i></a>
                                             </li>
                                             <li class="list-inline-item">
-                                                <a href="javascript:void(0);" onclick="confirm({{ $permisoitems->id }})"  class="px-2 text-danger" data-toggle="tooltip" data-placement="top" title="{{__('actions.delete')}}"><i class="uil uil-trash-alt font-size-18"></i></a>
+                                                <a href="javascript:void(0);" onclick="confirm({{ $permisoitems->id }})"
+                                                   class="px-2 text-danger" data-toggle="tooltip" data-placement="top"
+                                                   title="{{__('actions.delete')}}"><i
+                                                        class="uil uil-trash-alt font-size-18"></i></a>
                                             </li>
                                             {{--                                                                                    <li class="list-inline-item dropdown">--}}
                                             {{--                                                                                        <a class="text-muted dropdown-toggle font-size-18 px-2" onclick="confirm({{ $permisoitems->id }})" href="#" role="button" data-toggle="dropdown" aria-haspopup="true">--}}
@@ -122,7 +135,7 @@
         document.addEventListener('livewire:initialized', function () {
             @this.
             on('usuario-added', (event) => {
-                toastr.success(event.messages, 'Exito',{
+                toastr.success(event.messages, 'Exito', {
                     "closeButton": true,
                     "debug": false,
                     "newestOnTop": false,
@@ -150,7 +163,7 @@
 
             })
             @this.on('roles-error', (event) => {
-                toastr.error(event.messages, 'Exito',{
+                toastr.error(event.messages, 'Exito', {
                     "closeButton": true,
                     "debug": false,
                     "newestOnTop": false,

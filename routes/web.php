@@ -9,6 +9,7 @@ use App\Livewire\LoginComponent;
 
 use App\Livewire\Instituciones\InstitucionesComponent;
 use App\Livewire\Medicamentos\MedicamentosComponent;
+
 //use App\Livewire\All;
 use App\Livewire\CreateBussines;
 use App\Livewire\DocumentsCompanyComponent;
@@ -30,9 +31,6 @@ use App\Livewire\RequisitosComponents;
 */
 
 
-
-
-
 //Rutas generadas por Henry
 
 Route::get('/', LoginComponent::class)->name('login');
@@ -48,7 +46,6 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/requisitos', RequisitosComponents::class);
 
 
-
     //Rutas por Hector
     Route::get('/instituciones', InstitucionesComponent::class);
     Route::get('/medicamentos', MedicamentosComponent::class);
@@ -59,10 +56,12 @@ Route::get('/register', RegisterComponent::class);
 Route::get('/registerDistribuidor', RegisterDistribuidorComponent::class);
 Route::get('/listCompany', ListCompanyComponent::class);
 Route::get('/DocumentsCompany', DocumentsCompanyComponent::class);
+Route::get('/family/products', \App\Livewire\FamilyComponent::class);
+Route::get('/family/group', \App\Livewire\GroupFamilyComponent::class);
+
+
+
 //Route::get('/DocumentsValidation', DocumentsValidationComponent::class);
-
-
-
 
 
 //Route::get('/', function () {
