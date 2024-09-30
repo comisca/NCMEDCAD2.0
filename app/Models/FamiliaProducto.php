@@ -8,6 +8,11 @@ use Illuminate\Database\Eloquent\Model;
 class FamiliaProducto extends Model
 {
     use HasFactory;
+
     protected $table = 'familia_producto';
 
+    protected $fillable = [
+        'familia_producto',
+        'status'
+    ];
 }

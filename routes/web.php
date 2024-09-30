@@ -18,6 +18,7 @@ use App\Livewire\ListCompanyComponent;
 use App\Livewire\RegisterComponent;
 use App\Livewire\RegisterDistribuidorComponent;
 use App\Livewire\RequisitosComponents;
+use App\Livewire\FamilyComponent;
 
 /*
 |--------------------------------------------------------------------------
@@ -38,14 +39,13 @@ Route::get('/roles', RolesComponet::class);
 Route::middleware(['auth'])->group(function () {
 
     Route::get('/usuarios', UserComponent::class);
-
     Route::get('/permisos', PermissionComponent::class);
     Route::get('/asignar/permisos', AsisComponent::class);
     Route::get('/create/bussines', CreateBussines::class);
     Route::get('/logout/user', 'App\Http\Controllers\Controller@logout');
     Route::get('/requisitos', RequisitosComponents::class);
-
-
+    Route::get('/families/products', FamilyComponent::class);
+    Route::get('/family/group', \App\Livewire\GroupFamilyComponent::class);
     //Rutas por Hector
     Route::get('/instituciones', InstitucionesComponent::class);
     Route::get('/medicamentos', MedicamentosComponent::class);
@@ -56,8 +56,8 @@ Route::get('/register', RegisterComponent::class);
 Route::get('/registerDistribuidor', RegisterDistribuidorComponent::class);
 Route::get('/listCompany', ListCompanyComponent::class);
 Route::get('/DocumentsCompany', DocumentsCompanyComponent::class);
-Route::get('/family/products', \App\Livewire\FamilyComponent::class);
-Route::get('/family/group', \App\Livewire\GroupFamilyComponent::class);
+
+
 
 
 
