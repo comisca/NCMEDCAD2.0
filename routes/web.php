@@ -19,6 +19,7 @@ use App\Livewire\RegisterComponent;
 use App\Livewire\RegisterDistribuidorComponent;
 use App\Livewire\RequisitosComponents;
 use App\Livewire\FamilyComponent;
+use App\Livewire\GroupRequisitosFamily;
 
 /*
 |--------------------------------------------------------------------------
@@ -46,6 +47,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/requisitos', RequisitosComponents::class);
     Route::get('/families/products', FamilyComponent::class);
     Route::get('/family/group', \App\Livewire\GroupFamilyComponent::class);
+    Route::get('/rquisitos/group', GroupRequisitosFamily::class);
     //Rutas por Hector
     Route::get('/instituciones', InstitucionesComponent::class);
     Route::get('/medicamentos', MedicamentosComponent::class);
