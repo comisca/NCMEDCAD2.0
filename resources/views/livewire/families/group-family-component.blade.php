@@ -80,13 +80,14 @@
                                     <td>
                                         <ul class="list-inline mb-0">
                                             <li class="list-inline-item">
-                                                <a href="#" wire:click="editFamily({{$permisoitems->id}})"
+                                                <a href="#" wire:click="addGroups({{$permisoitems->id}})"
                                                    class="px-2 text-primary" data-toggle="tooltip" data-placement="top"
                                                    title="Agregar Grupos"><i
                                                         class="bx bx-plus font-size-18"></i></a>
                                             </li>
                                             <li class="list-inline-item">
-                                                <a href="javascript:void(0);" onclick="confirm({{ $permisoitems->id }})"
+                                                <a href="javascript:void(0);"
+                                                   onclick="seeViewDetail({{ $permisoitems->id }})"
                                                    class="px-2 text-success" data-toggle="tooltip" data-placement="top"
                                                    title="Ver Detalles"><i
                                                         class="bx bx-detail font-size-18"></i></a>
@@ -118,6 +119,8 @@
             </div>
         </div>
     </div>
+    @include('livewire.families.formadd')
+    @include('livewire.families.formdetail')
     {{--         <livewire:search-universal></livewire:search-universal>--}}
 </div>
 
@@ -177,17 +180,26 @@
                 })
             })
 
-            @this.on('roles-selected', (event) => {
-                document.getElementById("nameFamily").focus();
+            @this.on('addGroupsAnwers', (event) => {
+                $('#modalAddGroup').modal('show');
+
+            })
+
+            @this.on('addGroupsDetail', (event) => {
+                $('#modalDetailGroup').modal('show');
 
             })
 
         });
 
+        function seeViewDetail(id) {
+            Livewire.dispatch('seeViewDetail', {idFamily: id})
+        }
+
         function confirm(id) {
             Swal.fire({
-                title: 'Eliminar familia?',
-                text: "Estas seguro de eliminar esta familia de productos?",
+                title: 'Eliminar Grupo?',
+                text: "Estas seguro de eliminar este grupo de familia de productos?",
                 type: 'question',
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',
@@ -196,7 +208,7 @@
                 cancelButtonText: 'No, Cancelar'
             }).then((result) => {
                 if (result.value) {
-                    Livewire.dispatch('deleterfamily', {postId: id})
+                    Livewire.dispatch('deleteGroupFamily', {postId: id})
                     swal.close();
                 }
             });

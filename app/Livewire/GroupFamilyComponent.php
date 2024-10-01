@@ -3,6 +3,7 @@
 namespace App\Livewire;
 
 use App\Models\FamiliaProducto;
+use App\Models\GrupoFamilia;
 use Livewire\Attributes\On;
 use Livewire\WithPagination;
 use Livewire\Component;
@@ -15,7 +16,7 @@ class GroupFamilyComponent extends Component
     use WithPagination;
 
     public $Pagination = 10;
-    public $searchQuety;
+    public $searchQuety, $descriptionGroup, $idSelecte = 0, $nameGroup, $dataGroup, $idSelectedGroup;
 
     public function paginationView()
     {
@@ -48,16 +49,49 @@ class GroupFamilyComponent extends Component
             ->section('content');
     }
 
+    public function addGroups($id)
+    {
+        $this->idSelecte = $id;
+        $this->dispatch('addGroupsAnwers', $id);
+
+    }
+
     public function create()
     {
+
+        $rules = [
+            'nameGroup' => 'required|min:2|unique:grupos_productos,grupo',
+            'descriptionGroup' => 'required',
+        ];
+        $messages = [
+            'nameGroup.required' => 'El nombre del grupo de productos es requerido',
+            'nameGroup.min' => 'El nombre del grupo de productos debe se mayor a 2 caracteres',
+            'nameGroup.unique' => 'Este nombre de grupo de productos ya existe en la bade de datos',
+            'descriptionGroup.required' => 'La descripcion del grupo de productos es requerida',
+
+        ];
+
+        $this->validate($rules, $messages);
+
+
         try {
             //este metodo lo que hace es inicailizar las transacciones en la base de datos
             DB::beginTransaction();
+
+            GrupoFamilia::create([
+                'id_familia_producto' => $this->idSelecte,
+                'grupo' => $this->nameGroup,
+                'descripcion' => $this->descriptionGroup,
+                'status' => 1
+            ]);
 
             //Aqui se escribe el codigo que se desea hacer en la transaccion
 
             //este metodo lo que hace es guardar los cambios en la base de datos
             DB::commit();
+
+            $this->resetUI();
+            $this->dispatch('messages-succes', messages: 'El grupo de productos se ha creado correctamente');
 
         } catch (\Throwable $e) {
             //este metodo lo que hace es deshacer los cambios en la base de datos
@@ -66,6 +100,19 @@ class GroupFamilyComponent extends Component
             //este metodo lo que hace es mostrar el error en la consola
             dd($e->getMessage());
         }
+    }
+
+    #[On('seeViewDetail')]
+    public function seeDetail($idFamily)
+    {
+        //dd($idFamily);
+        $this->idSelectedGroup = $idFamily;
+        $this->dataGroup = GrupoFamilia::where('id_familia_producto', $idFamily)
+            ->where('status', 1)
+            ->orderBy('id', 'desc')
+            ->get();
+
+        $this->dispatch('addGroupsDetail', $idFamily);
     }
 
 
@@ -89,17 +136,25 @@ class GroupFamilyComponent extends Component
         }
     }
 
-
-    public function deletexid()
+    #[On('deleteGroupFamily')]
+    public function deletexid($postId)
     {
         try {
             //este metodo lo que hace es inicailizar las transacciones en la base de datos
             DB::beginTransaction();
 
+            GrupoFamilia::where('id', $postId)->update(['status' => 0]);
+
+
+            $this->dataGroup = GrupoFamilia::where('id_familia_producto', $this->idSelectedGroup)
+                ->where('status', 1)
+                ->orderBy('id', 'desc')
+                ->get();
             //Aqui se escribe el codigo que se desea hacer en la transaccion
 
             //este metodo lo que hace es guardar los cambios en la base de datos
             DB::commit();
+            $this->dispatch('messages-succes', messages: 'El grupo de productos se ha eliminado correctamente');
 
         } catch (\Throwable $e) {
             //este metodo lo que hace es deshacer los cambios en la base de datos
@@ -114,6 +169,9 @@ class GroupFamilyComponent extends Component
     public function resetUI()
     {
 
+        $this->nameGroup = '';
+        $this->descriptionGroup = '';
+        $this->idSelecte = 0;
 
     }
 
