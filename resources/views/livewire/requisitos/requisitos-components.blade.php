@@ -66,7 +66,7 @@
                                     <td>{{ $items->codigo }}</td>
                                     <td>{{$items->descripcion}}</td>
                                     <td>{{$items->tipo_requisitos}}</td>
-                                    <td>{{$items->grupo}}</td>
+                                    <td>{{$items->grupo_requisito}}</td>
                                     <td>{{$items->tipo_validacion}}</td>
                                     <td>
                                         <ul class="list-inline mb-0">
@@ -191,4 +191,5 @@
 
         }
     </script>
+
 @endsection
