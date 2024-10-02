@@ -47,8 +47,10 @@
                         <span>@lang('translation.Seguridad')</span>
                     </a>
                     <ul class="sub-menu" aria-expanded="false">
-                        <li><a href="layouts-horizontal">@lang('translation.Opcion 1')</a></li>
-                        <li><a href="layouts-dark-sidebar">@lang('translation.Opcion 2')</a></li>
+                        <li><a href="/roles">Roles</a></li>
+                        <li><a href="/permisos">Permisos</a></li>
+                        <li><a href="/asignar/permisos">Asignar Permisos</a></li>
+                        <li><a href="/usuarios">Usuarios</a></li>
                     </ul>
                 </li>
                 <li>
@@ -59,10 +61,14 @@
                     <ul class="sub-menu" aria-expanded="false">
                         <li><a href="{{url('/instituciones')}}">@lang('translation.Registro de Instituciones')</a></li>
                         <li><a href="{{url('/medicamentos')}}">@lang('translation.Catálogo de Productos')</a></li>
+                        <li><a href="{{url('/families/products')}}">Famila de Productos</a></li>
+                        <li><a href="{{url('/family/group')}}">Grupos por Familias de Productos</a></li>
+                        <li><a href="{{url('/rquisitos/group')}}">Grupos de Requisitos</a></li>
+                        <li><a href="{{url('/requisitos')}}">Requisitos</a></li>
+                        <li><a href="{{url('/listCompany')}}">Listado de Intituciones</a></li>
                     </ul>
                 </li>
 
-                
 
             </ul>
         </div>
