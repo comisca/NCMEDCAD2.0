@@ -8,5 +8,13 @@ use Illuminate\Database\Eloquent\Model;
 class GrupoFamilia extends Model
 {
     use HasFactory;
+
     protected $table = 'grupos_productos';
+
+    protected $fillable = [
+        'id_familia_producto',
+        'grupo',
+        'descripcion',
+        'status'
+    ];
 }
