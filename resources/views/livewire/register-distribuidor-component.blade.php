@@ -5,15 +5,39 @@
         <div class="container">
             <form>
               <fieldset class="form-group">
-                <legend>Registro de Fabricante</legend>
-                <p>Si eres distribuidor o representante favor indicalo marcando el check; Si eres fabricante continua tu proceso con normalidad</p>
+                <legend>Solicitud de preregistro</legend>
+                <!--<p>Si eres distribuidor o representante favor indicalo marcando el check; Si eres fabricante continua tu proceso con normalidad</p>-->
               <div class="form-row">
-                <div class="form-group form-check">
+               <!--<div class="form-group form-check">
                   <input type="checkbox" value="DISTRIBUIDOR" wire:model="typeCompany" class="form-check-input" id="exampleCheck1">
                   <label class="form-check-label" for="exampleCheck1">SOY DISTRIBUIDOR/REPRESENTANTE </label>
+                </div>-->
+                <div class="form-group col-6">
+                  <label for="inputNameCompany">Productos de interes</label>
+                  <select id="inputState" wire:model="country" class="form-control @error('country') is-invalid @enderror">
+                    <option selected>Medicamentos </option>
+                        <option value="ReactivosLaboratorio">Reactivos e Insumos de Laboratorio</option>
+                        <option value="DistrideInsumos">Distribución Insumos de Medicamentos</option>
+                        <option value="Obi">OBI</option>
+                        <option value="Ejemplo">Ejemplo1</option>
+                        <option value="Ejemplo">Ejemplo2</option>
+                  </select>
+                    @error('country')
+                    <span class="text-danger">{{$message}}</span>
+                    @enderror
+                </div>
+                <div class="form-group col-6">
+                  <label for="inputNameCompany">Perfil a participar</label>
+                  <select id="inputState" wire:model="country" class="form-control @error('country') is-invalid @enderror">
+                    <option selected>Fabricantes</option>
+                        <option value="ReactivosLaboratorio">Distribuidor</option>
+                  </select>
+                    @error('country')
+                    <span class="text-danger">{{$message}}</span>
+                    @enderror
                 </div>
                 <div class="form-group col-12">
-                  <label for="inputNameCompany">Nombre de la Compañia</label>
+                  <label for="inputNameCompany">Nombre de Fabricante o Distribuidor</label>
                   <input wire:model="BusinnessName" type="text" class="form-control @error('BusinnessName') is-invalid @enderror" id="inputAddress" placeholder="SICA SA de CV">
                     @error('BusinnessName')
                     <span class="text-danger">{{$message}}</span>
@@ -70,76 +94,93 @@
                     <span class="text-danger">{{$message}}</span>
                     @enderror
                 </div>
-                <div class="form-group col-6">
+                <div class="form-group col-4">
                   <label for="inputEmail4">Teléfono</label>
                   <input type="tel" wire:model="phone" class="form-control @error('phone') is-invalid @enderror" id="inputEmail4">
                     @error('phone')
                     <span class="text-danger">{{$message}}</span>
                     @enderror
                 </div>
-                <div class="form-group col-6">
+                <div class="form-group col-4">
                   <label for="inputPassword4">Facsímile</label>
                   <input type="phone" wire:model="facsimile" class="form-control" id="inputPassword4">
-
+                </div>
+                <div class="form-group col-4">
+                  <label for="inputPassword4">Número Whatssapp</label>
+                  <input type="phone" wire:model="facsimile" class="form-control" id="inputPassword4">
                 </div>
                 <div class="form-group col-12">
-                  <label for="inputNameCompany">Dirección web de la empresa</label>
-                  <input type="text" wire:model="website" class="form-control" id="inputAddress" placeholder="SICA SA de CV">
+                  <label for="inputNameCompany">Url o dirección WEB</label>
+                  <input type="text" wire:model="website" class="form-control" id="inputAddress" placeholder="https://ejemplo.com">
                 </div>
               </div>
             </fieldset>
 
             <!--Segunda parte del Formulario Persona de CONTACTO -->
             <fieldset class="form-group">
-              <legend>Persona de Contacto</legend>
+              <legend>Contacto de registro legal</legend>
             <div class="form-row">
+              <div class="form-group col-12">
+                <label for="inputNameCompany">Adjuntar documentanción de registro legal</label>
+                <input wire:model="avatar" type="file" class="form-control @error('avatar') is-invalid @enderror" id="inputAddress" placeholder="Documentos.pdf">
+                @error('avatar')
+                <span class="text-danger">{{$message}}</span>
+                @enderror
+              </div>
               <div class="form-group col-6">
                 <label for="inputNameCompany">Nombre</label>
-                <input type="text" wire:model="firstName" class="form-control @error('firstName') is-invalid @enderror" id="inputAddress" placeholder="SICA SA de CV">
+                <input type="text" wire:model="firstName" class="form-control @error('firstName') is-invalid @enderror" id="inputAddress" placeholder="Ejemplo SA de CV">
                   @error('firstName ')
                   <span class="text-danger">{{$message}}</span>
                   @enderror
               </div>
-              <div class="form-group col-6">
-                <label for="inputNameCompany">Apellido</label>
+              <div class="form-group col-3">
+                <label for="inputNameCompany">Número de contacto</label>
                 <input type="text" wire:model="lastName" class="form-control @error('lastName') is-invalid @enderror" id="inputAddress" placeholder="SICA SA de CV">
                   @error('lastName ')
                   <span class="text-danger">{{$message}}</span>
                   @enderror
               </div>
-              <div class="form-group col-6">
+              <div class="form-group col-3">
                 <label for="inputNameCompany">E-mail:</label>
                 <input type="mail" wire:model="email" class="form-control @error('email') is-invalid @enderror" id="inputAddress" placeholder="SICA SA de CV">
                   @error('email ')
                   <span class="text-danger">{{$message}}</span>
                   @enderror
               </div>
-              <div class="form-group col-6">
-                <label for="inputNameCompany">Telefonó de contacto rápido</label>
-                <input type="tel" wire:model="phoneContact" class="form-control @error('phoneContact') is-invalid @enderror" id="inputAddress" placeholder="+503 78005678">
-                  @error('phoneContact ')
-                  <span class="text-danger">{{$message}}</span>
-                  @enderror
+            </fieldset>
+            <fieldset class="form-group">
+              <legend>Adjuntar documentación</legend>
+            <div class="form-row">
+              <div class="form-group col-4">
+                <label for="inputNameCompany">Documento de Identidad</label>
+                <input wire:model="avatar" type="file" class="form-control @error('avatar') is-invalid @enderror" id="inputAddress" placeholder="Documentos.pdf">
+                @error('avatar')
+                <span class="text-danger">{{$message}}</span>
+                @enderror
+              </div>
+              <div class="form-group col-4">
+                <label for="inputNameCompany">Poder de Representación</label>
+                <input wire:model="avatar" type="file" class="form-control @error('avatar') is-invalid @enderror" id="inputAddress" placeholder="Documentos.pdf">
+                @error('avatar')
+                <span class="text-danger">{{$message}}</span>
+                @enderror
+              </div>
+              <div class="form-group col-4">
+                <label for="inputNameCompany">Licencia de Funcionamiento</label>
+                <input wire:model="avatar" type="file" class="form-control @error('avatar') is-invalid @enderror" id="inputAddress" placeholder="Documentos.pdf">
+                @error('avatar')
+                <span class="text-danger">{{$message}}</span>
+                @enderror
               </div>
             </fieldset>
 
-          <!--Tercera parte del Formulario Datos de Ingreso-->
-          <fieldset class="form-group">
-            <legend>Datos de ingreso</legend>
-
-            <div class="form-group row">
-              <label for="inputUser" class="col-sm-2">Usuario</label>
-              <div class="col-sm-4">
-                <input type="text" wire:model="userName" class="form-control @error('userName') is-invalid @enderror" id="inputEmail3">
-                  @error('userName ')
-                  <span class="text-danger">{{$message}}</span>
-                  @enderror
-              </div>
-
-              <button type="button" wire:click="create()" class="btn btn-primary">Guardar</button>
+            <button type="button" wire:click="create()" class="btn btn-primary">Guardar</button>
               
               <button type="button" class="btn btn-danger">Cancelar</button>
-          </fieldset>
+
+          <!--Tercera parte del Formulario Datos de Ingreso-->
+          
             </form>
           </div>
 

@@ -40,8 +40,6 @@ class LoginComponent extends Component
 
        public function create()
        {
-
-        dd('prueba si llega');
            $rule = [
                'email' => 'required|min:3',
                'password' => 'required|min:3',

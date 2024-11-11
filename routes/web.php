@@ -19,7 +19,9 @@ use App\Livewire\RegisterComponent;
 use App\Livewire\RegisterDistribuidorComponent;
 use App\Livewire\RequisitosComponents;
 use App\Livewire\FamilyComponent;
+use App\Livewire\FichaTecnicaComponent;
 use App\Livewire\GroupRequisitosFamily;
+use League\CommonMark\Node\Block\Document;
 
 /*
 |--------------------------------------------------------------------------
@@ -34,6 +36,8 @@ use App\Livewire\GroupRequisitosFamily;
 
 
 //Rutas generadas por Henry
+//Route::get('/usuarios', UserComponent::class);
+Route::get('/fichatecnica', FichaTecnicaComponent::class);
 
 Route::get('/', LoginComponent::class)->name('login');
 Route::get('/roles', RolesComponet::class);
@@ -58,6 +62,7 @@ Route::get('/register', RegisterComponent::class);
 Route::get('/registerDistribuidor', RegisterDistribuidorComponent::class);
 Route::get('/listCompany', ListCompanyComponent::class);
 Route::get('/DocumentsCompany', DocumentsCompanyComponent::class);
+//Route::get('/fichatecnica', FichaTecnicaComponent::class);
 
 
 
@@ -69,3 +74,5 @@ Route::get('/DocumentsCompany', DocumentsCompanyComponent::class);
 //Route::get('/', function () {
 //    return view('welcome');
 //});
+
+
