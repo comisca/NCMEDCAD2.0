@@ -45,7 +45,7 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('/usuarios', UserComponent::class);
     Route::get('/permisos', PermissionComponent::class);
-    Route::get('/asignar/permisos', AsisComponent::class);
+    Route::get('/asignar/  ', AsisComponent::class);
     Route::get('/create/bussines', CreateBussines::class);
     Route::get('/logout/user', 'App\Http\Controllers\Controller@logout');
     Route::get('/requisitos', RequisitosComponents::class);

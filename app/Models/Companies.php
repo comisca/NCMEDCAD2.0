@@ -9,6 +9,7 @@ class Companies extends Model
 {
     use HasFactory;
 
+    protected $table = 'companies';
     protected $fillable = [
         'legal_name',
         'country',
@@ -25,6 +26,10 @@ class Companies extends Model
         'password',
         'type_company',
         'status',
-        'logo_companies'
+        'logo_companies',
+        'country_id',
+        'state_id',
+        'family_id',
+        'phone_whatsapp'
     ];
 }
