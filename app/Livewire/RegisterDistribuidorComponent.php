@@ -226,11 +226,14 @@ class RegisterDistribuidorComponent extends Component
             //este metodo lo que hace es guardar los cambios en la base de datos
             DB::commit();
 
-            $this->resetUI();
-            $this->dispatch('success_messages',
-                messages: 'La solicitud para registrarte en la base de datos de Negosacion Conjunta ha sido enviada correctamente, se te notificara cuando haya sido aprobada');
+//            $this->resetUI();
+//            $this->dispatch('success_messages',
+//                messages: 'La solicitud para registrarte en la base de datos de Negosacion Conjunta ha sido enviada correctamente, se te notificara cuando haya sido aprobada');
 
 //                $this->dispatchBrowserEvent('message-success', ['message' => 'Distribuidor registrado correctamente']);
+
+            return redirect('/')->with('messagerSucess',
+                'En estos momentos los datos fueron enviados correctamente, su aplicacion estara pendiente de aprobacion!!');
 
         } catch (\Throwable $e) {
             //este metodo lo que hace es deshacer los cambios en la base de datos

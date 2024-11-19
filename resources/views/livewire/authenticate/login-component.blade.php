@@ -32,6 +32,12 @@
                             <div class="text-center mt-2">
                                 <h5 class="text-primary">Bienvenidos</h5>
                                 <p class="text-muted">Inicio de Session</p>
+                                @session('messagerSucess')
+                                <div class="alert alert-danger" role="alert">
+                                    {{ $value }}
+                                </div>
+                                @endsession
+
                             </div>
                             <div class="p-2 mt-4">
 
