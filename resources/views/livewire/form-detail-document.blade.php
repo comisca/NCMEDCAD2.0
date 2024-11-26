@@ -1,4 +1,4 @@
-<div class="modal fade bs-example-modal-lg" tabindex="-1" wire:ignore.self id="modalUniversalfullwith" role="dialog"
+<div class="modal fade bs-example-modal-lg" tabindex="-1" wire:ignore.self id="modalDetailDocuments" role="dialog"
      aria-labelledby="exampleModalScrollableTitle" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
@@ -9,10 +9,13 @@
                 {{--                </button>--}}
             </div>
             <div class="modal-body">
+                <div>
 
-
-                {{--                Aqui es donde va el contenido del modal--}}
-
+                    @if(!empty($viewVisorPdf))
+                        <iframe src="{{Storage::url('document/companies/'.$viewVisorPdf->attachment)}}" width="100%"
+                                height="600px"></iframe>
+                    @endif
+                </div>
 
             </div>
             <div class="modal-footer">
@@ -20,7 +23,6 @@
 
 
             </div>
-        </div><!-- /.modal-content -->
-    </div><!-- /.modal-dialog -->
-</div><!-- /.modal -->
+        </div>
+    </div>
 </div>
