@@ -62,10 +62,8 @@ Route::get('/register', RegisterComponent::class);
 Route::get('/registerDistribuidor', RegisterDistribuidorComponent::class);
 Route::get('/listCompany', ListCompanyComponent::class);
 Route::get('/DocumentsCompany', DocumentsCompanyComponent::class);
+Route::get('/configuracion/ficha/tecnica', \App\Livewire\ConfigRequisitos::class);
 //Route::get('/fichatecnica', FichaTecnicaComponent::class);
-
-
-
 
 
 //Route::get('/DocumentsValidation', DocumentsValidationComponent::class);
@@ -74,5 +72,3 @@ Route::get('/DocumentsCompany', DocumentsCompanyComponent::class);
 //Route::get('/', function () {
 //    return view('welcome');
 //});
-
-

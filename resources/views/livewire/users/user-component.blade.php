@@ -121,7 +121,7 @@
     </div>
 
     @include('livewire.users.formuser')
-    <livewire:search-universal></livewire:search-universal>
+    {{--    <livewire:search-universal></livewire:search-universal>--}}
 
 </div>
 
