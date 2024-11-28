@@ -5,6 +5,7 @@ namespace App\Livewire;
 use App\Models\FamiliaProducto;
 use App\Models\GrupoRequisitos;
 use App\Models\Medicamentos;
+use App\Models\ReqRelationProduts;
 use App\Models\Requisitos;
 use Livewire\Attributes\On;
 use Livewire\WithPagination;
@@ -20,7 +21,7 @@ class ConfigRequisitos extends Component
     public $Pagination = 10;
     public $searchInput;
     public $familySelectedId, $groupSelectedId, $groupDataSelected, $productsDataSelected, $productSelectInput;
-    public $requisitodDataSelected;
+    public $requisitodDataSelected, $productDataTable;
 
     public function paginationView()
     {
@@ -58,6 +59,104 @@ class ConfigRequisitos extends Component
             ->where('status', 1)
             ->orderBy('id', 'asc')
             ->get();
+        $this->productDataTable =
+            ReqRelationProduts::join('requisitos', 'requisitos.id', '=', 'req_relation_produts.requirement_id')
+                ->join('medicamentos', 'medicamentos.id', '=', 'req_relation_produts.product_id')
+                ->where('req_relation_produts.product_id', $this->productSelectInput)
+                ->where('req_relation_produts.status', 1)
+                ->select('req_relation_produts.id',
+                    'requisitos.codigo',
+                    'requisitos.descripcion')->get();
+
+
+    }
+
+    public function addGroupRequeriment()
+    {
+
+        $rules = [
+            'productSelectInput' => 'required',
+            'groupSelectedId' => 'required',
+        ];
+        $messages = [
+            'productSelectInput.required' => 'Debe estar un producto seleccionado',
+            'groupSelectedId.required' => 'Debes seleccionar un grupo de requerimientos',
+        ];
+
+        $this->validate($rules, $messages);
+
+        try {
+            DB::beginTransaction();
+
+            foreach ($this->requisitodDataSelected as $itemInsertRequeriment) {
+                $validateRelations = ReqRelationProduts::where('product_id', $this->productSelectInput)
+                    ->where('requirement_id', $itemInsertRequeriment->id)
+                    ->where('status', 1)
+                    ->first();
+
+                if (empty($validateRelations)) {
+
+                    $newRelartion = ReqRelationProduts::create([
+                        'product_id' => $this->productSelectInput,
+                        'requirement_id' => $itemInsertRequeriment->id,
+                        'status' => 1
+                    ]);
+
+                }
+            }
+
+            DB::commit();
+            $this->dispatch('messages-succes',
+                messages: 'El requerimiento ha sido asignado correctamente al producto');
+        } catch (\Throwable $e) {
+            DB::rollback();
+            dd($e->getMessage());
+        }
+
+
+    }
+
+    public function addRequerimentOne($idRequeriment)
+    {
+        $rules = [
+            'productSelectInput' => 'required',
+        ];
+        $messages = [
+            'productSelectInput.required' => 'Debe estar un producto seleccionado',
+        ];
+
+        $this->validate($rules, $messages);
+
+        try {
+
+            DB::beginTransaction();
+            $validateRelations = ReqRelationProduts::where('product_id', $this->productSelectInput)
+                ->where('requirement_id', $idRequeriment)
+                ->where('status', 1)
+                ->first();
+
+            if (empty($validateRelations)) {
+
+                $newRelartion = ReqRelationProduts::create([
+                    'product_id' => $this->productSelectInput,
+                    'requirement_id' => $idRequeriment,
+                    'status' => 1
+                ]);
+
+            }
+
+            DB::commit();
+            $this->dispatch('messages-succes',
+                messages: 'El requerimiento ha sido asignado correctamente al producto');
+
+        } catch (\Throwable $e) {
+            //este metodo lo que hace es deshacer los cambios en la base de datos
+            DB::rollback();
+
+            //este metodo lo que hace es mostrar el error en la consola
+            dd($e->getMessage());
+        }
+
 
     }
 

@@ -30,7 +30,8 @@
                         <div class="form-group row">
                             <label class="col-md-2 col-form-label">Grupo de Requisitos</label>
                             <div class="col-md-7">
-                                <select wire:model.live="groupSelectedId" class="form-control">
+                                <select wire:model.live="groupSelectedId"
+                                        class="form-control @error('groupSelectedId') is-invalid @enderror">
                                     <option value="0">Selecciona un grupo</option>
                                     @if(!empty($groupDataSelected))
                                         @foreach($groupDataSelected as $itemsgroupDataSelected)
@@ -39,9 +40,14 @@
                                         @endforeach
                                     @endif
                                 </select>
+                                @error('groupSelectedId')
+                                <span class="text-danger">{{$message}}</span>
+                                @enderror
                             </div>
                             <div class="col-md-3">
-                                <button type="button" class="btn btn-success">Agregar >>></button>
+                                <button wire:click="addGroupRequeriment()" type="button" class="btn
+                                btn-success">Agregar >>>
+                                </button>
                             </div>
                         </div>
 
@@ -76,7 +82,10 @@
                                             </td>
 
                                             <td>
-                                                <button type="button" class="btn btn-link btn-sm
+                                                <button
+                                                    wire:click="addRequerimentOne({{$itemsrequisitodDataSelected->id}})"
+                                                    type="button" class="btn
+                                                btn-link btn-sm
                         btn-rounded">
                                                     Agregar
                                                 </button>
@@ -100,7 +109,8 @@
                         <div class="form-group row">
                             <label class="col-md-2 col-form-label">Productos a Seleccionar</label>
                             <div class="col-md-8">
-                                <select wire:model.live="productSelectInput" class="form-control">
+                                <select wire:model.live="productSelectInput"
+                                        class="form-control @error('productSelectInput') is-invalid @enderror">
                                     <option value="0">Selecciona un producto</option>
                                     @if(!empty($productsDataSelected))
                                         @foreach($productsDataSelected as $itemsproductsDataSelected)
@@ -109,8 +119,61 @@
                                         @endforeach
                                     @endif
                                 </select>
+                                @error('productSelectInput')
+                                <span class="text-danger">{{$message}}</span>
+                                @enderror
                             </div>
 
+                        </div>
+
+                        <div class="col-lg-12">
+
+                            <table class="table align-middle mb-0 bg-white">
+                                <thead class="bg-light">
+                                <tr>
+                                    <th>COD</th>
+                                    <th>Requisito</th>
+                                    <th>Accion</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+
+                                @if(!empty($productDataTable))
+                                    @foreach($productDataTable as $itemsproductDataTable)
+                                        <tr>
+                                            <td>
+                                                <div class="d-flex align-items-center">
+
+                                                    {{$itemsproductDataTable->id}}
+
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <p class="fw-normal mb-1">
+                                                    {{$itemsproductDataTable->descripcion}}
+
+
+                                                </p>
+                                            </td>
+
+                                            <td>
+                                                <button
+                                                    wire:click="addRequerimentOne({{$itemsproductDataTable->id}})"
+                                                    type="button" class="btn
+                                                btn-link btn-sm
+                        btn-rounded">
+                                                    Eliminar
+                                                </button>
+                                            </td>
+
+                                        </tr>
+
+                                    @endforeach
+                                @endif
+
+
+                                </tbody>
+                            </table>
                         </div>
 
                     </div>
