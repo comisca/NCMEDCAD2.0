@@ -20,79 +20,78 @@
                 <form>
 
                     <div class="mb-3">
-                        <label for="nameGroup" class="form-label">Nombre Comercial</label>
+                        <label for="legalName" class="form-label">Nombre Comercial</label>
 
-                        <input wire:model="nameGroup" type="text"
-                               class="form-control @error('nameGroup') is-invalid @enderror">
+                        <input wire:model="legalName" type="text"
+                               class="form-control @error('legalName') is-invalid @enderror">
 
 
-                        @error('nameGroup')
+                        @error('legalName')
                         <span class="text-danger">{{$message}}</span>
                         @enderror
                     </div>
 
                     <div class="mb-3">
-                        <label for="nameGroup" class="form-label">Numero de Registros de Salud</label>
+                        <label for="numRegisterSalud" class="form-label">Numero de Registros de Salud</label>
 
-                        <input wire:model="nameGroup" type="text"
-                               class="form-control @error('nameGroup') is-invalid @enderror">
+                        <input wire:model="numRegisterSalud" type="text"
+                               class="form-control @error('numRegisterSalud') is-invalid @enderror">
 
 
-                        @error('nameGroup')
+                        @error('numRegisterSalud')
                         <span class="text-danger">{{$message}}</span>
                         @enderror
                     </div>
 
                     <div class="mb-3">
-                        <label for="nameGroup" class="form-label">Seleccione el pais de registro</label>
-                        <select id="inputState" wire:model="country"
-                                class="form-control @error('country') is-invalid @enderror">
+                        <label for="countryRegister" class="form-label">Seleccione el pais de registro</label>
+                        <select id="inputState" wire:model="countryRegister"
+                                class="form-control @error('countryRegister') is-invalid @enderror">
                             <option selected>Seleccione Pais</option>
-                            <option value="EL SALVADOR">EL SALVADOR</option>
-                            <option value="GUATEMALA">GUATEMALA</option>
-                            <option value="HONDURAS">HONDURAS</option>
-                            <option value="NICARAGUA">NICARAGUA</option>
-                            <option value="COSTA RICA">COSTA RICA</option>
-                            s
-                            <option value="PANAMA">PANAMA</option>
-                            <option value="BELICE">BELICE</option>
+                            <option value="1">EL SALVADOR</option>
+                            <option value="2">GUATEMALA</option>
+                            <option value="2">HONDURAS</option>
+                            <option value="3">NICARAGUA</option>
+                            <option value="4">COSTA RICA</option>
+                            <option value="5">PANAMA</option>
+                            <option value="6">BELICE</option>
                         </select>
 
 
-                        @error('nameGroup')
+                        @error('countryRegister')
                         <span class="text-danger">{{$message}}</span>
                         @enderror
                     </div>
 
                     <div class="mb-3">
-                        <label for="nameGroup" class="form-label">Numero de registro</label>
+                        <label for="registerNumber" class="form-label">Numero de registro</label>
 
-                        <input wire:model="nameGroup" type="text"
-                               class="form-control @error('nameGroup') is-invalid @enderror">
+                        <input wire:model="registerNumber" type="text"
+                               class="form-control @error('registerNumber') is-invalid @enderror">
 
 
-                        @error('nameGroup')
+                        @error('registerNumber')
                         <span class="text-danger">{{$message}}</span>
                         @enderror
                     </div>
                     <div class="mb-3">
-                        <label for="nameGroup" class="form-label">Fabricante</label>
-                        <select id="inputState" wire:model="country"
-                                class="form-control @error('country') is-invalid @enderror">
+                        <label for="companieF" class="form-label">Fabricante</label>
+                        <select id="companieF" wire:model="companieF"
+                                class="form-control @error('companieF') is-invalid @enderror">
                             <option selected>Selecciona un Fabricante</option>
                             @if(!@empty($bussinessFabricante))
-                            @foreach ($bussinessFabricante as $itemsBussinessFabricante)
-                                
-                        
-                            <option value="{{ $itemsBussinessFabricante->id }}">{{ $itemsBussinessFabricante->legal_name }}</option>
+                                @foreach ($bussinessFabricante as $itemsBussinessFabricante)
 
-                              @endforeach
-                                @endif
+                                    <option
+                                        value="{{ $itemsBussinessFabricante->id }}">{{ $itemsBussinessFabricante->legal_name }}</option>
+
+                                @endforeach
+                            @endif
 
                         </select>
 
 
-                        @error('nameGroup')
+                        @error('companieF')
                         <span class="text-danger">{{$message}}</span>
                         @enderror
                     </div>

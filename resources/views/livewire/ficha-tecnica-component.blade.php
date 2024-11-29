@@ -58,8 +58,43 @@
                                         <th scope="row">{{$itemsDataProdt->id}}</th>
                                         <td>{{$itemsDataProdt->descripcion}} ({{$itemsDataProdt->cod_medicamento}})</td>
                                         <td>
-                                            <button type="button" class="btn btn-success" data-bs-toggle="modal"
-                                                    data-bs-target="#modalFichaTecnica">Agregar
+                                            <button wire:click="showDetailFicha({{$itemsDataProdt->id}})" type="button"
+                                                    class="btn btn-success">Agregar
+                                            </button>
+                                        </td>
+
+                                    </tr>
+                                @endforeach
+                            @endif
+
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="col-12">
+                        <label for="ejemplo">LISTA DE APLICACIONES</label>
+                        <table class="table">
+                            <thead class="thead-dark">
+                            <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">Nombre Comercial</th>
+                                <th scope="col">Producto</th>
+                                <th scope="col">Acción</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            @if(!empty($dataApplicationSelected))
+                                @foreach($dataApplicationSelected as $itemsdataApplicationSelected)
+                                    <tr>
+                                        <th scope="row">{{$itemsdataApplicationSelected->id}}</th>
+                                        <td>{{$itemsdataApplicationSelected->trade_name}}</td>
+                                        <td>{{$itemsdataApplicationSelected->descripcion}}
+                                            ({{$itemsdataApplicationSelected->cod_medicamento}})
+                                        </td>
+                                        <td>
+                                            <button wire:click="showDetailFicha({{$itemsdataApplicationSelected->id}})"
+                                                    type="button"
+                                                    class="btn btn-success">ELIMINAR
                                             </button>
                                         </td>
 
@@ -72,9 +107,9 @@
                     </div>
 
 
-                    <button type="button" wire:click="create()" class="btn btn-primary">Guardar</button>
+                {{--                    <button type="button" wire:click="create()" class="btn btn-primary">Guardar</button>--}}
 
-                    <button type="button" class="btn btn-danger">Cancelar</button>
+                {{--                    <button type="button" class="btn btn-danger">Cancelar</button>--}}
             </fieldset>
         </form>
     </div>
@@ -110,16 +145,29 @@
                     "showMethod": "fadeIn",
                     "hideMethod": "fadeOut"
                 })
-                // Swal.fire({
-                //     position: 'top-end',
-                //     icon: 'success',
-                //     title: event.messages,
-                //     text: "Exito!!",
-                //     showConfirmButton: false,
-                //     timer: 2500
-                // })
-
             })
+
+            @this.on('messages-succes-fichatec', (event) => {
+                $('#modalFichaTecnica').modal('hide');
+                toastr.success(event.messages, 'Exito', {
+                    "closeButton": true,
+                    "debug": false,
+                    "newestOnTop": false,
+                    "progressBar": false,
+                    "positionClass": "toast-bottom-full-width",
+                    "preventDuplicates": false,
+                    "onclick": null,
+                    "showDuration": 300,
+                    "hideDuration": 1000,
+                    "timeOut": 5000,
+                    "extendedTimeOut": 1000,
+                    "showEasing": "swing",
+                    "hideEasing": "linear",
+                    "showMethod": "fadeIn",
+                    "hideMethod": "fadeOut"
+                })
+            })
+
             @this.on('messages-error', (event) => {
                 toastr.error(event.messages, 'Exito', {
                     "closeButton": true,
@@ -142,6 +190,11 @@
 
             @this.on('roles-selected', (event) => {
                 document.getElementById("roles").focus();
+
+            })
+
+            @this.on('showDetailFichaEvent', (event) => {
+                $('#modalFichaTecnica').modal('show');
 
             })
 

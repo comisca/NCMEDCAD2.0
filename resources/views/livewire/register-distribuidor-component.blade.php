@@ -210,7 +210,7 @@
     </div>
 
 
-    <livewire:search-universal></livewire:search-universal>
+    {{--    <livewire:search-universal></livewire:search-universal>--}}
 </div>
 
 
