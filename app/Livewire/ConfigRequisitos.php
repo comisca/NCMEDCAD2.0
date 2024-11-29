@@ -62,11 +62,19 @@ class ConfigRequisitos extends Component
         $this->productDataTable =
             ReqRelationProduts::join('requisitos', 'requisitos.id', '=', 'req_relation_produts.requirement_id')
                 ->join('medicamentos', 'medicamentos.id', '=', 'req_relation_produts.product_id')
+                ->join('grupos_requisitos', 'grupos_requisitos.id', '=', 'requisitos.grupo_requisito_id')
                 ->where('req_relation_produts.product_id', $this->productSelectInput)
                 ->where('req_relation_produts.status', 1)
-                ->select('req_relation_produts.id',
+                ->select(
+                    'grupos_requisitos.grupo as grupo_nombre',
+                    'req_relation_produts.id',
                     'requisitos.codigo',
-                    'requisitos.descripcion')->get();
+                    'requisitos.descripcion'
+                )
+                ->orderBy('grupos_requisitos.grupo')
+                ->get()
+                ->groupBy('grupo_nombre') // Agrupa por 'grupo_nombre' en lugar de 'grupos_requisitos.grupo'
+                ->collect(); // Convierte a colección de soporte
 
 
     }

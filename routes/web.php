@@ -55,6 +55,7 @@ Route::middleware(['auth'])->group(function () {
     //Rutas por Hector
     Route::get('/instituciones', InstitucionesComponent::class);
     Route::get('/medicamentos', MedicamentosComponent::class);
+
 });
 
 Route::get('/home', HomeComponent::class);

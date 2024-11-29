@@ -2,6 +2,7 @@
 
 namespace App\Livewire;
 
+use App\Models\Companies;
 use App\Models\FamiliaProducto;
 use App\Models\Medicamentos;
 use Livewire\Attributes\On;
@@ -24,10 +25,7 @@ class FichaTecnicaComponent extends Component
         return 'vendor.livewire.bootstrap';
     }
 
-    public function mount()
-    {
-
-    }
+    public function mount() {}
 
     public function updated()
     {
@@ -36,14 +34,17 @@ class FichaTecnicaComponent extends Component
             ->where('id_familia_producto', $this->inputFamilyProduct)
             ->orderBy('id', 'desc')
             ->get();
-
     }
 
 
     public function render()
     {
         $familyProducts = FamiliaProducto::where('status', 1)->get();
-        return view('livewire.ficha-tecnica-component', ['familyProducts' => $familyProducts])
+        $bussinessFabricante = Companies::where('status', 1)
+            ->where('type_company', 'F')
+            ->get();
+
+        return view('livewire.ficha-tecnica-component', ['familyProducts' => $familyProducts, 'bussinessFabricante' => $bussinessFabricante])
             ->extends('layouts.master')
             ->section('content');
     }
@@ -58,7 +59,6 @@ class FichaTecnicaComponent extends Component
 
             //este metodo lo que hace es guardar los cambios en la base de datos
             DB::commit();
-
         } catch (\Throwable $e) {
             //este metodo lo que hace es deshacer los cambios en la base de datos
             DB::rollback();
@@ -79,7 +79,6 @@ class FichaTecnicaComponent extends Component
 
             //este metodo lo que hace es guardar los cambios en la base de datos
             DB::commit();
-
         } catch (\Throwable $e) {
             //este metodo lo que hace es deshacer los cambios en la base de datos
             DB::rollback();
@@ -100,7 +99,6 @@ class FichaTecnicaComponent extends Component
 
             //este metodo lo que hace es guardar los cambios en la base de datos
             DB::commit();
-
         } catch (\Throwable $e) {
             //este metodo lo que hace es deshacer los cambios en la base de datos
             DB::rollback();
@@ -111,10 +109,5 @@ class FichaTecnicaComponent extends Component
     }
 
 
-    public function resetUI()
-    {
-
-
-    }
-
+    public function resetUI() {}
 }

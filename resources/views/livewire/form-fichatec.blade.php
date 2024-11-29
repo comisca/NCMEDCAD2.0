@@ -4,7 +4,7 @@
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title mt-0" id="exampleModalScrollableTitle">Detalles de medicamento</h5>
+                <h5 class="modal-title mt-0" id="exampleModalScrollableTitle">Creacion de aplicacion</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -45,16 +45,18 @@
 
                     <div class="mb-3">
                         <label for="nameGroup" class="form-label">Seleccione el pais de registro</label>
-                        <select id="inputState" wire:model="country" class="form-control @error('country') is-invalid @enderror">
+                        <select id="inputState" wire:model="country"
+                                class="form-control @error('country') is-invalid @enderror">
                             <option selected>Seleccione Pais</option>
                             <option value="EL SALVADOR">EL SALVADOR</option>
                             <option value="GUATEMALA">GUATEMALA</option>
                             <option value="HONDURAS">HONDURAS</option>
                             <option value="NICARAGUA">NICARAGUA</option>
-                            <option value="COSTA RICA">COSTA RICA</option>s
+                            <option value="COSTA RICA">COSTA RICA</option>
+                            s
                             <option value="PANAMA">PANAMA</option>
                             <option value="BELICE">BELICE</option>
-                          </select>
+                        </select>
 
 
                         @error('nameGroup')
@@ -74,17 +76,20 @@
                         @enderror
                     </div>
                     <div class="mb-3">
-                        <label for="nameGroup" class="form-label">Pais de registro</label>
-                        <select id="inputState" wire:model="country" class="form-control @error('country') is-invalid @enderror">
-                            <option selected>Seleccione Pais</option>
-                            <option value="EL SALVADOR">EL SALVADOR</option>
-                            <option value="GUATEMALA">GUATEMALA</option>
-                            <option value="HONDURAS">HONDURAS</option>
-                            <option value="NICARAGUA">NICARAGUA</option>
-                            <option value="COSTA RICA">COSTA RICA</option>s
-                            <option value="PANAMA">PANAMA</option>
-                            <option value="BELICE">BELICE</option>
-                          </select>
+                        <label for="nameGroup" class="form-label">Fabricante</label>
+                        <select id="inputState" wire:model="country"
+                                class="form-control @error('country') is-invalid @enderror">
+                            <option selected>Selecciona un Fabricante</option>
+                            @if(!@empty($bussinessFabricante))
+                            @foreach ($bussinessFabricante as $itemsBussinessFabricante)
+                                
+                        
+                            <option value="{{ $itemsBussinessFabricante->id }}">{{ $itemsBussinessFabricante->legal_name }}</option>
+
+                              @endforeach
+                                @endif
+
+                        </select>
 
 
                         @error('nameGroup')

@@ -127,53 +127,86 @@
                         </div>
 
                         <div class="col-lg-12">
+                            @if(!empty($productDataTable))
+                                <div class="accordion" id="accordionExample">
+                                    @foreach ($productDataTable as $grupo => $items)
+                                        <div class="card">
+                                            <div class="card-header" id="heading{{ $loop->index }}">
+                                                <h2 class="mb-0">
+                                                    <button
+                                                        class="btn btn-link btn-block text-left {{ $loop->first ? '' : 'collapsed' }}"
+                                                        type="button" data-toggle="collapse"
+                                                        data-target="#collapse{{ $loop->index }}"
+                                                        aria-expanded="{{ $loop->first ? 'true' : 'false' }}"
+                                                        aria-controls="collapse{{ $loop->index }}">
+                                                        {{ $grupo }}
+                                                    </button>
+                                                </h2>
+                                            </div>
 
-                            <table class="table align-middle mb-0 bg-white">
-                                <thead class="bg-light">
-                                <tr>
-                                    <th>COD</th>
-                                    <th>Requisito</th>
-                                    <th>Accion</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-
-                                @if(!empty($productDataTable))
-                                    @foreach($productDataTable as $itemsproductDataTable)
-                                        <tr>
-                                            <td>
-                                                <div class="d-flex align-items-center">
-
-                                                    {{$itemsproductDataTable->id}}
-
+                                            <div id="collapse{{ $loop->index }}"
+                                                 class="collapse {{ $loop->first ? 'show' : '' }}"
+                                                 aria-labelledby="heading{{ $loop->index }}"
+                                                 data-parent="#accordionExample">
+                                                <div class="card-body">
+                                                    <ul>
+                                                        @foreach ($items as $item)
+                                                            <li>{{ $item->codigo }} - {{ $item->descripcion }}</li>
+                                                        @endforeach
+                                                    </ul>
                                                 </div>
-                                            </td>
-                                            <td>
-                                                <p class="fw-normal mb-1">
-                                                    {{$itemsproductDataTable->descripcion}}
-
-
-                                                </p>
-                                            </td>
-
-                                            <td>
-                                                <button
-                                                    wire:click="addRequerimentOne({{$itemsproductDataTable->id}})"
-                                                    type="button" class="btn
-                                                btn-link btn-sm
-                        btn-rounded">
-                                                    Eliminar
-                                                </button>
-                                            </td>
-
-                                        </tr>
-
+                                            </div>
+                                        </div>
                                     @endforeach
-                                @endif
+                                </div>
+                            @endif
+
+                            {{--                            <table class="table align-middle mb-0 bg-white">--}}
+                            {{--                                <thead class="bg-light">--}}
+                            {{--                                <tr>--}}
+                            {{--                                    <th>COD</th>--}}
+                            {{--                                    <th>Requisito</th>--}}
+                            {{--                                    <th>Accion</th>--}}
+                            {{--                                </tr>--}}
+                            {{--                                </thead>--}}
+                            {{--                                <tbody>--}}
+
+                            {{--                                @if(!empty($productDataTable))--}}
+                            {{--                                    @foreach($productDataTable as $itemsproductDataTable)--}}
+                            {{--                                        <tr>--}}
+                            {{--                                            <td>--}}
+                            {{--                                                <div class="d-flex align-items-center">--}}
+
+                            {{--                                                    {{$itemsproductDataTable->id}}--}}
+
+                            {{--                                                </div>--}}
+                            {{--                                            </td>--}}
+                            {{--                                            <td>--}}
+                            {{--                                                <p class="fw-normal mb-1">--}}
+                            {{--                                                    {{$itemsproductDataTable->descripcion}}--}}
 
 
-                                </tbody>
-                            </table>
+                            {{--                                                </p>--}}
+                            {{--                                            </td>--}}
+
+                            {{--                                            <td>--}}
+                            {{--                                                <button--}}
+                            {{--                                                    wire:click="addRequerimentOne({{$itemsproductDataTable->id}})"--}}
+                            {{--                                                    type="button" class="btn--}}
+                            {{--                                                btn-link btn-sm--}}
+                            {{--                        btn-rounded">--}}
+                            {{--                                                    Eliminar--}}
+                            {{--                                                </button>--}}
+                            {{--                                            </td>--}}
+
+                            {{--                                        </tr>--}}
+
+                            {{--                                    @endforeach--}}
+                            {{--                                @endif--}}
+
+
+                            {{--                                </tbody>--}}
+                            {{--                            </table>--}}
                         </div>
 
                     </div>
