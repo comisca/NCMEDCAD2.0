@@ -1,4 +1,6 @@
-@section('title') @lang('NCMEDCAD | Asignar Permisos') @endsection
+@section('title')
+    @lang('NCMEDCAD | Asignar Permisos')
+@endsection
 
 <div class="row">
     <div class="col-lg-12">
@@ -10,16 +12,18 @@
                             <div class="form-group row">
                                 <label class="col-md-2 col-form-label">Selecciona el rol</label>
                                 <div class="col-md-10">
-                                <select wire:model.live="roleSelect"  class="custom-select" >
-                                    <option value="Elegir" selected >Selecciona un rol</option>
-                                    @foreach($roles as $role)
-                                        <option value="{{$role->id}}"> {{$role->name}}</option>
-                                    @endforeach
-                                </select>
+                                    <select wire:model.live="roleSelect" class="custom-select">
+                                        <option value="Elegir" selected>Selecciona un rol</option>
+                                        @foreach($roles as $role)
+                                            <option value="{{$role->id}}"> {{$role->name}}</option>
+                                        @endforeach
+                                    </select>
                                 </div>
                             </div>
-                                <button type="button" wire:click.prevent="synAll()" class="btn btn-success"> Sincronizar Todos</button>
-                                <button type="button" onclick="confirm()"  class="btn btn-danger"> Revocar Todos</button>
+                            <button type="button" wire:click.prevent="synAll()" class="btn btn-success"> Sincronizar
+                                Todos
+                            </button>
+                            <button type="button" onclick="confirm()" class="btn btn-danger"> Revocar Todos</button>
 
 
                         </div>
@@ -30,7 +34,9 @@
                         <div class="form-inline float-md-right mb-3">
                             <div class="search-box ml-2">
                                 <div class="position-relative">
-                                    <input type="text" wire:model.live="searchQuety" class="form-control rounded bg-light border-0" placeholder="{{__('actions.search')}} Permisos">
+                                    <input type="text" wire:model.live="searchQuety"
+                                           class="form-control rounded bg-light border-0"
+                                           placeholder="{{__('actions.search')}} Permisos">
                                     <i class="mdi mdi-magnify search-icon"></i>
                                 </div>
                             </div>
@@ -54,7 +60,7 @@
                             <th scope="col">ID</th>
                             <th scope="col">Permisos</th>
                             <th scope="col">{{__('actions.action')}}</th>
-{{--                            <th scope="col" style="width: 200px;">{{__('actions.action')}}</th>--}}
+                            {{--                            <th scope="col" style="width: 200px;">{{__('actions.action')}}</th>--}}
                         </tr>
                         </thead>
                         <tbody>
@@ -73,10 +79,12 @@
                                         <a href="#" class="text-body">{{ $itempermisos->id }}</a>
                                     </td>
                                     <td>{{ $itempermisos->name }}</td>
-{{--                                    <td>{{$itempermisos->description}}</td>--}}
+                                    {{--                                    <td>{{$itempermisos->description}}</td>--}}
                                     <td>
                                         <div class="form-check">
-                                            <input type="checkbox" class="form-check-input"  id="p{{$itempermisos->id}}" wire:change="asignarpermi($('#p' + {{$itempermisos->id}}).is(':checked'),'{{$itempermisos->name}}')" value="{{$itempermisos->id}}" {{$itempermisos->checked == 1 ? 'checked' : ''}}>
+                                            <input type="checkbox" class="form-check-input" id="p{{$itempermisos->id}}"
+                                                   wire:change="asignarpermi($('#p' + {{$itempermisos->id}}).is(':checked'),'{{$itempermisos->name}}')"
+                                                   value="{{$itempermisos->id}}" {{$itempermisos->checked == 1 ? 'checked' : ''}}>
                                             <label class="form-check-label" for="flexCheckDefault">Estado</label>
                                         </div>
                                     </td>
@@ -97,25 +105,27 @@
         </div>
 
     </div>
-<livewire:search-universal></livewire:search-universal>
+    {{--<livewire:search-universal></livewire:search-universal>--}}
 </div>
 
 
 @section('script')
     <!-- apexcharts -->
-    <link href="{{ URL::asset('assets/css/bootstrap.min.css')}}" id="bootstrap-style" rel="stylesheet" type="text/css" />
-    <link href="{{ URL::asset('assets/css/icons.min.css')}}" id="icons-style" rel="stylesheet" type="text/css" />
+    <link href="{{ URL::asset('assets/css/bootstrap.min.css')}}" id="bootstrap-style" rel="stylesheet" type="text/css"/>
+    <link href="{{ URL::asset('assets/css/icons.min.css')}}" id="icons-style" rel="stylesheet" type="text/css"/>
     <!-- App Css-->
-    <link href="{{ URL::asset('assets/css/app.min.css')}}" id="app-style" rel="stylesheet" type="text/css" />
-    <link href="{{ URL::asset('assets/libs/sweetalert2/sweetalert2.min.css')}}" id="app-style" rel="stylesheet" type="text/css" />
-    <link href="{{ URL::asset('assets/libs/toastr/toastr.min.css')}}" rel="stylesheet" type="text/css" />
+    <link href="{{ URL::asset('assets/css/app.min.css')}}" id="app-style" rel="stylesheet" type="text/css"/>
+    <link href="{{ URL::asset('assets/libs/sweetalert2/sweetalert2.min.css')}}" id="app-style" rel="stylesheet"
+          type="text/css"/>
+    <link href="{{ URL::asset('assets/libs/toastr/toastr.min.css')}}" rel="stylesheet" type="text/css"/>
     <script src="{{ URL::asset('assets/libs/apexcharts/apexcharts.min.js')}}"></script>
     <script src="{{ URL::asset('assets/js/pages/dashboard.init.js')}}"></script>
     <script>
         document.addEventListener('livewire:initialized', function () {
 
-            @this.on('syncall', (event) => {
-                toastr.success(event.messages, 'Exito',{
+            @this.
+            on('syncall', (event) => {
+                toastr.success(event.messages, 'Exito', {
                     "closeButton": true,
                     "debug": false,
                     "newestOnTop": false,
@@ -134,7 +144,7 @@
                 })
             })
             @this.on('permi', (event) => {
-                toastr.success(event.messages, 'Exito',{
+                toastr.success(event.messages, 'Exito', {
                     "closeButton": true,
                     "debug": false,
                     "newestOnTop": false,
@@ -154,9 +164,8 @@
             })
 
 
-            @this.
-            on('messages-succes', (event) => {
-                toastr.success(event.messages, 'Exito',{
+            @this.on('messages-succes', (event) => {
+                toastr.success(event.messages, 'Exito', {
                     "closeButton": true,
                     "debug": false,
                     "newestOnTop": false,
@@ -185,7 +194,7 @@
             })
 
             @this.on('removeall', (event) => {
-                toastr.success(event.messages, 'Exito',{
+                toastr.success(event.messages, 'Exito', {
                     "closeButton": true,
                     "debug": false,
                     "newestOnTop": false,
@@ -205,7 +214,7 @@
             })
 
             @this.on('sync-error', (event) => {
-                toastr.error(event.messages, 'Error',{
+                toastr.error(event.messages, 'Error', {
                     "closeButton": true,
                     "debug": false,
                     "newestOnTop": false,
@@ -224,10 +233,10 @@
                 })
             })
 
-{{--            @this.on('roles-selected', (event) => {--}}
-{{--                document.getElementById("roles").focus();--}}
+            {{--            @this.on('roles-selected', (event) => {--}}
+            {{--                document.getElementById("roles").focus();--}}
 
-{{--            })--}}
+            {{--            })--}}
 
         });
 
@@ -251,4 +260,3 @@
         }
     </script>
 @endsection
-

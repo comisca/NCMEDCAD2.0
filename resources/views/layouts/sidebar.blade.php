@@ -59,6 +59,7 @@
                         <span>@lang('translation.Administración')</span>
                     </a>
                     <ul class="sub-menu" aria-expanded="false">
+                        <li><a href="{{url('/registerDistribuidor')}}">Registro de empresas</a></li>
                         <li><a href="{{url('/instituciones')}}">@lang('translation.Registro de Instituciones')</a></li>
                         <li><a href="{{url('/medicamentos')}}">@lang('translation.Catálogo de Productos')</a></li>
                         <li><a href="{{url('/families/products')}}">Famila de Productos</a></li>
@@ -66,6 +67,8 @@
                         <li><a href="{{url('/rquisitos/group')}}">Grupos de Requisitos</a></li>
                         <li><a href="{{url('/requisitos')}}">Requisitos</a></li>
                         <li><a href="{{url('/listCompany')}}">Listado de Intituciones</a></li>
+                        <li><a href="{{url('/configuracion/ficha/tecnica')}}">Ficha tecnica</a></li>
+                        <li><a href="{{url('/fichatecnica')}}">Creacion de Aplicacion</a></li>
                     </ul>
                 </li>
 
