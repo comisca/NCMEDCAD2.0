@@ -1,15 +1,18 @@
-@section('title') @lang('NCMEDCAD | Tiitle') @endsection
+@section('title')
+    @lang('NCMEDCAD | Tiitle')
+@endsection
 
-    <div class="row">
-
-
-
-
-
-
-         <livewire:search-universal></livewire:search-universal>
-        </div>
-
+<div class="row justify-content-center">
+    <div class="col-12 col-md-6 text-center">
+        <img src="{{ asset('assets/images/rb_21202.png') }}" class="img-fluid" style="max-width: 75%;"
+             alt="Responsive image">
+        <h5><p class="mt-3">En estos momentos toda su informacion fue enviada para el proceso de revision, su registro
+                esta en estado PENDIENTE, y se notificara a su correo electronico cualquier cambio en el estado de su
+                registro.
+                .</p></h5>
+        <a href="{{ url('/') }}" class="btn btn-primary mt-3">Salir de este mensaje.</a>
+    </div>
+</div>
 
 @section('script')
     <!-- apexcharts -->
@@ -19,7 +22,7 @@
         document.addEventListener('livewire:initialized', function () {
             @this.
             on('messages-succes', (event) => {
-                toastr.success(event.messages, 'Exito',{
+                toastr.success(event.messages, 'Exito', {
                     "closeButton": true,
                     "debug": false,
                     "newestOnTop": false,
@@ -47,7 +50,7 @@
 
             })
             @this.on('messages-error', (event) => {
-                toastr.error(event.messages, 'Exito',{
+                toastr.error(event.messages, 'Exito', {
                     "closeButton": true,
                     "debug": false,
                     "newestOnTop": false,

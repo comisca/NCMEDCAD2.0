@@ -64,6 +64,7 @@ Route::get('/registerDistribuidor', RegisterDistribuidorComponent::class);
 Route::get('/listCompany', ListCompanyComponent::class);
 Route::get('/DocumentsCompany', DocumentsCompanyComponent::class);
 Route::get('/configuracion/ficha/tecnica', \App\Livewire\ConfigRequisitos::class);
+Route::get('/messeger/success', \App\Livewire\MessagessSucces::class);
 //Route::get('/fichatecnica', FichaTecnicaComponent::class);
 
 

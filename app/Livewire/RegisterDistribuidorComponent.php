@@ -2,11 +2,13 @@
 
 namespace App\Livewire;
 
+use App\Mail\PreRegister;
 use App\Models\Companies;
 use App\Models\Countries;
 use App\Models\DocumentsTables;
 use App\Models\FamiliaProducto;
 use App\Models\StateCountries;
+use Illuminate\Support\Facades\Mail;
 use Livewire\Attributes\On;
 use Livewire\WithFileUploads;
 use Livewire\WithPagination;
@@ -220,6 +222,8 @@ class RegisterDistribuidorComponent extends Component
 
             }
 
+            Mail::to($this->email)->send(new PreRegister($this->BusinnessName));
+
 
             //Aqui se escribe el codigo que se desea hacer en la transaccion
 
@@ -232,7 +236,7 @@ class RegisterDistribuidorComponent extends Component
 
 //                $this->dispatchBrowserEvent('message-success', ['message' => 'Distribuidor registrado correctamente']);
 
-            return redirect('/')->with('messagerSucess',
+            return redirect('/messeger/success')->with('messagerSucess',
                 'En estos momentos los datos fueron enviados correctamente, su aplicacion estara pendiente de aprobacion!!');
 
         } catch (\Throwable $e) {
