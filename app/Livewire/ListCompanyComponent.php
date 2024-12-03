@@ -2,8 +2,12 @@
 
 namespace App\Livewire;
 
+use App\Mail\StateChanges;
 use App\Models\Companies;
 use App\Models\DocumentsTables;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Str;
 use Livewire\Attributes\On;
 use Livewire\WithPagination;
 use Livewire\Component;
@@ -17,7 +21,8 @@ class ListCompanyComponent extends Component
 
     public $pagination = 10;
     public $searchInput;
-    public $companyDataDetail, $documentDataDetail, $viewVisorPdf;
+    public $companyDataDetail, $documentDataDetail, $viewVisorPdf, $messagesSends;
+    public $idCompanyChanges, $stateChangeGlobal;
 
     public function paginationView()
     {
@@ -93,6 +98,62 @@ class ListCompanyComponent extends Component
             //este metodo lo que hace es mostrar el error en la consola
             dd($e->getMessage());
         }
+    }
+
+    public function changesStates($id, $stateChanges)
+    {
+        $this->idCompanyChanges = $id;
+        $this->stateChangeGlobal = $stateChanges;
+
+        $this->dispatch('changes-states-show', ['idCompanyChanges' => $id, 'stateChangeGlobal' => $stateChanges]);
+
+
+    }
+
+    function generatePassword($minLength = 6, $maxLength = 8)
+    {
+        $length = rand($minLength, $maxLength);
+        return Str::random($length);
+    }
+
+    public function changeStateCompany()
+    {
+
+        try {
+
+            DB::beginTransaction();
+
+            if ($this->stateChangeGlobal == 1) {
+                $password = $this->generatePassword();
+                $company = Companies::find($this->idCompanyChanges);
+                $company->password = Hash::make($password);
+                $company->status = 1;
+                $company->save();
+            } else {
+                $password = $this->generatePassword();
+                $company = Companies::find($this->idCompanyChanges);
+                $company->status = 0;
+                $company->save();
+            }
+
+            Mail::to($company->email)->send(new StateChanges($company->legal_name,
+                $this->stateChangeGlobal,
+                $this->messagesSends, $password, $company->email));
+
+
+            DB::commit();
+
+            $this->dispatch('success_messages_changes',
+                messages: 'El estado de la empresa ha sido cambiado correctamente');
+
+        } catch (\Throwable $e) {
+            //este metodo lo que hace es deshacer los cambios en la base de datos
+            DB::rollback();
+
+            //este metodo lo que hace es mostrar el error en la consola
+            dd($e->getMessage());
+        }
+
     }
 
 

@@ -249,7 +249,7 @@
                                         <tr>
                                             <td align="center" valign="top"
                                                 style="font-family:'Open Sans', sans-serif, Verdana; font-size:22px; color:#4b4b4c; line-height:30px; font-weight:normal;">
-                                                Notificacion de envio! <br/>
+                                                Notificacion! <br/>
                                                 {{ $name }}
                                             </td>
                                         </tr>
@@ -259,7 +259,11 @@
                                         <tr>
                                             <td align="center" valign="top"
                                                 style="font-family:'Open Sans', sans-serif, Verdana; font-size:30px; color:#4b4b4c; line-height:30px; font-weight:bold;">
-                                                Pre-Registro
+                                                @if($status == 1)
+                                                    Aceptado
+                                                @else
+                                                    Rechazado
+                                                @endif
                                             </td>
                                         </tr>
                                         <tr>
@@ -269,11 +273,12 @@
                                             <td align="center" valign="top"
                                                 style="font-family:'Open Sans', sans-serif, Verdana; font-size:13px; color:#71746f; line-height:22px; font-weight:normal;">
 
-                                                Su datos fueron enviados a SINERPGIA, <br/>
-                                                en estos momentos su solicitud queda <br/>
-                                                en revision, se notificara por este medio <br/>
-                                                el cambio de estado de su solicitud <br/>
-                                                Greacias por el Pre-Registro.
+                                                <p>{{$messagess}}</p>
+                                                @if($status == 1)
+                                                    <h3>Datos de acceso a la plataforma</h3>
+                                                    <p>Usuario: {{$email}}</p>
+                                                    <p>Contraseña: {{$password}}</p>
+                                                @endif
                                             </td>
                                         </tr>
                                         <tr>

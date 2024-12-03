@@ -13,15 +13,20 @@ class StateChanges extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public $name, $status;
+    public $name, $status, $messagess, $password, $email;
 
     /**
      * Create a new message instance.
      */
-    public function __construct()
+    public function __construct($name, $status, $messagess, $password, $email)
     {
-        //
+        $this->name = $name;
+        $this->status = $status;
+        $this->messagess = $messagess;
+        $this->password = $password;
+        $this->email = $email;
     }
+
 
     /**
      * Get the message envelope.
@@ -42,6 +47,11 @@ class StateChanges extends Mailable
     {
         return new Content(
             view: 'mails.states-changes',
+            with: ['name' => $this->name,
+                'status' => $this->status,
+                'messagess' => $this->messagess,
+                'password' => $this->password,
+                'email' => $this->email],
         );
     }
 

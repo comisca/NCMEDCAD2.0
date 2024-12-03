@@ -13,6 +13,7 @@ use Livewire\Attributes\On;
 use Livewire\WithFileUploads;
 use Livewire\WithPagination;
 use Livewire\Component;
+use Spatie\Permission\Models\Role;
 use Session;
 use DB;
 
@@ -143,6 +144,8 @@ class RegisterDistribuidorComponent extends Component
                 'family_id' => $this->familyProductsInput,
                 'logo_companies' => $avatar_name
             ]);
+            $company->syncRoles('Company');
+            $company->save();
 
             if ($this->docRegister) {
                 $doc_rec = 'doc_' . uniqid() . '.' . $this->docRegister->extension();

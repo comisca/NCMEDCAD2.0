@@ -55,8 +55,16 @@ Route::middleware(['auth'])->group(function () {
     //Rutas por Hector
     Route::get('/instituciones', InstitucionesComponent::class);
     Route::get('/medicamentos', MedicamentosComponent::class);
+//    Route::get('/companies/dashboard', \App\Livewire\DashboardCompanies::class);
 
 });
+
+Route::middleware(['auth:company'])->group(function () {
+    // Your routes here
+
+    Route::get('/companies/dashboard', \App\Livewire\DashboardCompanies::class);
+});
+
 
 Route::get('/home', HomeComponent::class);
 Route::get('/register', RegisterComponent::class);

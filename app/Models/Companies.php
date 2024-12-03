@@ -4,12 +4,23 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Spatie\Permission\Traits\HasRoles;
+use Illuminate\Contracts\Auth\Authenticatable;
+use Illuminate\Auth\Authenticatable as AuthenticatableTrait;
 
-class Companies extends Model
+class Companies extends Model implements Authenticatable
 {
     use HasFactory;
+    use HasRoles;
+    use AuthenticatableTrait;
 
     protected $table = 'companies';
+
+    public function getAuthIdentifierName()
+    {
+        return 'id'; // Reemplaza 'id' con el nombre de la columna que usas como identificador si es diferente
+    }
+
     protected $fillable = [
         'legal_name',
         'country',
