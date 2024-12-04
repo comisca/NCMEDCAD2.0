@@ -87,6 +87,7 @@
                             <li><a href="{{url('/listCompany')}}">Listado de Intituciones</a></li>
                             <li><a href="{{url('/medicamentos')}}">@lang('translation.Catálogo de Productos')</a></li>
                             <li><a href="{{url('/configuracion/ficha/tecnica')}}">Ficha tecnica</a></li>
+
                             {{--                        <li><a href="{{url('/instituciones')}}">@lang('translation.Registro de Instituciones')</a></li>--}}
 
 
@@ -101,8 +102,9 @@
                         </a>
                         <ul class="sub-menu" aria-expanded="false">
                             {{--                            <li><a href="{{url('/registerDistribuidor')}}">Registro de empresas</a></li>--}}
+                            <li><a href="/pre/calificacion/tecnica">Precalificacion Tecnica</a></li>
                             <li><a href="#">Precalificacion Administrativa</a></li>
-                            <li><a href="#">Precalificacion Tecnica</a></li>
+
                             <li><a href="#">Configuracion Evento</a></li>
                             <li><a href="#">Eventos</a></li>
 

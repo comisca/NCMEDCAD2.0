@@ -77,11 +77,13 @@
 
                                                         </td>
                                                         <td>
-                                                            <a href="#"
-                                                               wire:click="showFormChangeState({{$item->id}})"
-                                                               type="button"
-                                                               class="btn btn-success">Cambiar Estado
-                                                            </a>
+                                                            @can('li.admin.view')
+                                                                <a href="#"
+                                                                   wire:click="showFormChangeState({{$item->id}})"
+                                                                   type="button"
+                                                                   class="btn btn-success">Cambiar Estado
+                                                                </a>
+                                                            @endcan
                                                         </td>
 
                                                     </tr>
