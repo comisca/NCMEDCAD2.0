@@ -1,5 +1,6 @@
 <?php
 
+use App\Livewire\DocumentsValidationComponent;
 use Illuminate\Support\Facades\Route;
 use App\Livewire\RolesComponet;
 use App\Livewire\PermissionComponent;
@@ -37,15 +38,15 @@ use League\CommonMark\Node\Block\Document;
 
 //Rutas generadas por Henry
 //Route::get('/usuarios', UserComponent::class);
-Route::get('/fichatecnica', FichaTecnicaComponent::class);
+
 
 Route::get('/', LoginComponent::class)->name('login');
 Route::get('/roles', RolesComponet::class);
-Route::middleware(['auth'])->group(function () {
 
+Route::middleware(['auth'])->group(function () {
     Route::get('/usuarios', UserComponent::class);
     Route::get('/permisos', PermissionComponent::class);
-    Route::get('/asignar/  ', AsisComponent::class);
+    Route::get('/asignar', AsisComponent::class);
     Route::get('/create/bussines', CreateBussines::class);
     Route::get('/logout/user', 'App\Http\Controllers\Controller@logout');
     Route::get('/requisitos', RequisitosComponents::class);
@@ -55,28 +56,35 @@ Route::middleware(['auth'])->group(function () {
     //Rutas por Hector
     Route::get('/instituciones', InstitucionesComponent::class);
     Route::get('/medicamentos', MedicamentosComponent::class);
+    Route::get('/listCompany', ListCompanyComponent::class);
+    Route::get('/configuracion/ficha/tecnica', \App\Livewire\ConfigRequisitos::class);
 //    Route::get('/companies/dashboard', \App\Livewire\DashboardCompanies::class);
-
 });
 
 Route::middleware(['auth:company'])->group(function () {
     // Your routes here
 
-    Route::get('/companies/dashboard', \App\Livewire\DashboardCompanies::class);
+    Route::get('/companies/dashboard', \App\Livewire\DocumentsCompanyComponent::class);
+    Route::get('/fichatecnica', FichaTecnicaComponent::class);
+    Route::get('/precalificacion/company', \App\Livewire\PreCalificacionTecnica::class);
 });
+
+Route::get('/documents/validation/{id}', \App\Livewire\PreCalificacionTecnicaDetail::class);
 
 
 Route::get('/home', HomeComponent::class);
 Route::get('/register', RegisterComponent::class);
 Route::get('/registerDistribuidor', RegisterDistribuidorComponent::class);
-Route::get('/listCompany', ListCompanyComponent::class);
-Route::get('/DocumentsCompany', DocumentsCompanyComponent::class);
-Route::get('/configuracion/ficha/tecnica', \App\Livewire\ConfigRequisitos::class);
+
+//Route::get('/DocumentsCompany', DocumentsCompanyComponent::class);
+
 Route::get('/messeger/success', \App\Livewire\MessagessSucces::class);
+
+
 //Route::get('/fichatecnica', FichaTecnicaComponent::class);
 
 
-//Route::get('/DocumentsValidation', DocumentsValidationComponent::class);
+//Route::get('/DocumentsValidation', DocumentsCompanyComponent::class);
 
 
 //Route::get('/', function () {

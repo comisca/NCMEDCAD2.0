@@ -1,11 +1,14 @@
-@section('title')
-    @lang('NCMEDCAD | Tiitle')
-@endsection
+@section('title') @lang('NCMEDCAD | Tiitle') @endsection
 
-<div class="row">
+    <div class="row">
 
 
-</div>
+
+
+
+
+         <livewire:search-universal></livewire:search-universal>
+        </div>
 
 
 @section('script')
@@ -16,7 +19,7 @@
         document.addEventListener('livewire:initialized', function () {
             @this.
             on('messages-succes', (event) => {
-                toastr.success(event.messages, 'Exito', {
+                toastr.success(event.messages, 'Exito',{
                     "closeButton": true,
                     "debug": false,
                     "newestOnTop": false,
@@ -44,7 +47,7 @@
 
             })
             @this.on('messages-error', (event) => {
-                toastr.error(event.messages, 'Exito', {
+                toastr.error(event.messages, 'Exito',{
                     "closeButton": true,
                     "debug": false,
                     "newestOnTop": false,

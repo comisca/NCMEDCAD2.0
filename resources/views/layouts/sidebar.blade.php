@@ -41,36 +41,76 @@
                     </a>
                 </li>
 
-                <li>
-                    <a href="javascript: void(0);" class="has-arrow waves-effect">
-                        <i class="uil-padlock"></i>
-                        <span>@lang('translation.Seguridad')</span>
-                    </a>
-                    <ul class="sub-menu" aria-expanded="false">
-                        <li><a href="/roles">Roles</a></li>
-                        <li><a href="/permisos">Permisos</a></li>
-                        <li><a href="/asignar/permisos">Asignar Permisos</a></li>
-                        <li><a href="/usuarios">Usuarios</a></li>
-                    </ul>
-                </li>
-                <li>
-                    <a href="javascript: void(0);" class="has-arrow waves-effect">
-                        <i class="uil-padlock"></i>
-                        <span>@lang('translation.Administración')</span>
-                    </a>
-                    <ul class="sub-menu" aria-expanded="false">
-                        <li><a href="{{url('/registerDistribuidor')}}">Registro de empresas</a></li>
-                        <li><a href="{{url('/instituciones')}}">@lang('translation.Registro de Instituciones')</a></li>
-                        <li><a href="{{url('/medicamentos')}}">@lang('translation.Catálogo de Productos')</a></li>
-                        <li><a href="{{url('/families/products')}}">Famila de Productos</a></li>
-                        <li><a href="{{url('/family/group')}}">Grupos por Familias de Productos</a></li>
-                        <li><a href="{{url('/rquisitos/group')}}">Grupos de Requisitos</a></li>
-                        <li><a href="{{url('/requisitos')}}">Requisitos</a></li>
-                        <li><a href="{{url('/listCompany')}}">Listado de Intituciones</a></li>
-                        <li><a href="{{url('/configuracion/ficha/tecnica')}}">Ficha tecnica</a></li>
-                        <li><a href="{{url('/fichatecnica')}}">Creacion de Aplicacion</a></li>
-                    </ul>
-                </li>
+                @can('li.admin.view')
+                    <li>
+                        <a href="javascript: void(0);" class="has-arrow waves-effect">
+                            <i class="uil-padlock"></i>
+                            <span>@lang('translation.Seguridad')</span>
+                        </a>
+                        <ul class="sub-menu" aria-expanded="false">
+                            <li><a href="/roles">Roles</a></li>
+                            <li><a href="/permisos">Permisos</a></li>
+                            <li><a href="/asignar">Asignar Permisos</a></li>
+                            <li><a href="/usuarios">Usuarios</a></li>
+                        </ul>
+                    </li>
+                @endcan
+                @if(Session::has('id_company'))
+                    <li>
+                        <a href="javascript: void(0);" class="has-arrow waves-effect">
+                            <i class="uil-padlock"></i>
+                            <span>Administracion</span>
+                        </a>
+                        <ul class="sub-menu" aria-expanded="false">
+                            <li><a href="{{url('/fichatecnica')}}">Creacion de Aplicacion</a></li>
+
+                            <li><a href="{{url('/precalificacion/company')}}">Precalificacion Tecnica</a></li>
+                            <li><a href="{{url('/precalificacion/company/admin')}}">Precalificacion
+                                    Administrativa</a></li>
+                        </ul>
+
+                    </li>
+                @endif
+                @can('li.admin.view')
+
+                    <li>
+                        <a href="javascript: void(0);" class="has-arrow waves-effect">
+                            <i class="uil-padlock"></i>
+                            <span>@lang('translation.Administración')</span>
+                        </a>
+                        <ul class="sub-menu" aria-expanded="false">
+                            {{--                            <li><a href="{{url('/registerDistribuidor')}}">Registro de empresas</a></li>--}}
+                            <li><a href="{{url('/families/products')}}">Famila de Productos</a></li>
+                            <li><a href="{{url('/family/group')}}">Grupos por Familias de Productos</a></li>
+                            <li><a href="{{url('/rquisitos/group')}}">Grupos de Requisitos</a></li>
+                            <li><a href="{{url('/requisitos')}}">Requisitos</a></li>
+                            <li><a href="{{url('/listCompany')}}">Listado de Intituciones</a></li>
+                            <li><a href="{{url('/medicamentos')}}">@lang('translation.Catálogo de Productos')</a></li>
+                            <li><a href="{{url('/configuracion/ficha/tecnica')}}">Ficha tecnica</a></li>
+                            {{--                        <li><a href="{{url('/instituciones')}}">@lang('translation.Registro de Instituciones')</a></li>--}}
+
+
+
+                            {{--                        <li><a href="{{url('/fichatecnica')}}">Creacion de Aplicacion</a></li>--}}
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="javascript: void(0);" class="has-arrow waves-effect">
+                            <i class="uil-padlock"></i>
+                            <span>Negociacion</span>
+                        </a>
+                        <ul class="sub-menu" aria-expanded="false">
+                            {{--                            <li><a href="{{url('/registerDistribuidor')}}">Registro de empresas</a></li>--}}
+                            <li><a href="#">Precalificacion Administrativa</a></li>
+                            <li><a href="#">Precalificacion Tecnica</a></li>
+                            <li><a href="#">Configuracion Evento</a></li>
+                            <li><a href="#">Eventos</a></li>
+
+                            {{--                        <li><a href="{{url('/fichatecnica')}}">Creacion de Aplicacion</a></li>--}}
+                        </ul>
+                    </li>
+
+                @endcan
 
 
             </ul>

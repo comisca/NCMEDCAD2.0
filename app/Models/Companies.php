@@ -7,10 +7,13 @@ use Illuminate\Database\Eloquent\Model;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Auth\Authenticatable as AuthenticatableTrait;
+use Illuminate\Contracts\Auth\Access\Authorizable;
+use Illuminate\Foundation\Auth\Access\Authorizable as AuthorizableTrait;
 
-class Companies extends Model implements Authenticatable
+class Companies extends Model implements Authenticatable, Authorizable
 {
     use HasFactory;
+    use AuthorizableTrait;
     use HasRoles;
     use AuthenticatableTrait;
 

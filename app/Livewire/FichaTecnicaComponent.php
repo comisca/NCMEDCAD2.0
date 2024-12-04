@@ -112,7 +112,7 @@ class FichaTecnicaComponent extends Component
                 'number_registration_fabric' => $this->registerNumber,
                 'country_id' => $this->countryRegister,
                 'fabric_id' => $this->companieF,
-                'distribution_id' => Session::get('id_user'),
+                'distribution_id' => Session::get('id_company'),
                 'states_applications' => 1,
                 'status' => 1
             ]);
@@ -130,7 +130,7 @@ class FichaTecnicaComponent extends Component
                         $reqapplicationData = ReqApplications::create([
                             'application_id' => $applicationnew->id,
                             'requirement_id' => $item->requirement_id,
-                            'distribution_id' => Session::get('id_user'),
+                            'distribution_id' => Session::get('id_company'),
                             'product_id' => $this->idSelectedProducts,
                             'fabric_id' => $this->companieF,
                             'states_req_applications' => 3,

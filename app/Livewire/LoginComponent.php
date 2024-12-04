@@ -80,7 +80,7 @@ class LoginComponent extends Component
                             return redirect('/companies/dashboard');
                         }
 
-                        
+
                     } else {
 
 
@@ -96,7 +96,7 @@ class LoginComponent extends Component
                         Session::put('id_user', $users->id);
                         Session::put('email_user', $users->email);
                         Session::put('name_user', $users->first_name . ' ' . $users->last_name);
-                        return redirect('/usuarios');
+                        return redirect('/listCompany');
                     }
                 } else {
 
