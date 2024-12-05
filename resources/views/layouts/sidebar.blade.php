@@ -35,13 +35,13 @@
                 <li class="menu-title">@lang('translation.Menu')</li>
 
                 <li>
-                    <a href="{{url('principal')}}">
+                    <a href="#">
                         <i class="uil-home-alt"></i>
                         <span>@lang('translation.Principal')</span>
                     </a>
                 </li>
 
-                @can('li.admin.view')
+                @if(Session::has('id_user'))
                     <li>
                         <a href="javascript: void(0);" class="has-arrow waves-effect">
                             <i class="uil-padlock"></i>
@@ -54,7 +54,7 @@
                             <li><a href="/usuarios">Usuarios</a></li>
                         </ul>
                     </li>
-                @endcan
+                @endif
                 @if(Session::has('id_company'))
                     <li>
                         <a href="javascript: void(0);" class="has-arrow waves-effect">
@@ -71,7 +71,7 @@
 
                     </li>
                 @endif
-                @can('li.admin.view')
+                @if(Session::has('id_user'))
 
                     <li>
                         <a href="javascript: void(0);" class="has-arrow waves-effect">
@@ -112,7 +112,7 @@
                         </ul>
                     </li>
 
-                @endcan
+                @endif
 
 
             </ul>

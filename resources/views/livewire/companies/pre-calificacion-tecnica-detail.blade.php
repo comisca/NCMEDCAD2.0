@@ -77,13 +77,13 @@
 
                                                         </td>
                                                         <td>
-                                                            @can('li.admin.view')
+                                                            @if(Session::has('id_user'))
                                                                 <a href="#"
                                                                    wire:click="showFormChangeState({{$item->id}})"
                                                                    type="button"
                                                                    class="btn btn-success">Cambiar Estado
                                                                 </a>
-                                                            @endcan
+                                                            @endif
                                                         </td>
 
                                                     </tr>
