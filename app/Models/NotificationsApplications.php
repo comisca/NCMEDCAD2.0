@@ -15,6 +15,7 @@ class NotificationsApplications extends Model
         'req_application_id',
         'distribuidor_id',
         'message',
+        'application_id',
         'status',
     ];
 }

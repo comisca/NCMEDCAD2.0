@@ -33,7 +33,7 @@ class NotificationRequeriment extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Observaciones de requerimientos',
+            subject: 'Notificaciones de requerimientos',
         );
     }
 

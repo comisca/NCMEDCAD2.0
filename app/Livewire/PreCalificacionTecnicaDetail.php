@@ -3,6 +3,7 @@
 namespace App\Livewire;
 
 use App\Mail\NotificationRequeriment;
+use App\Models\Application;
 use App\Models\DocumentApplications;
 use App\Models\NotificationsApplications;
 use App\Models\ReqApplications;
@@ -22,9 +23,9 @@ class PreCalificacionTecnicaDetail extends Component
     use WithFileUploads;
 
     public $Pagination = 10;
-    public $searchInput;
+    public $searchInput, $messagesSendsAplications, $apllicationID;
     public $apllicationI, $nameDoc, $descriptionDoc, $docFile, $reqApplicationID, $otroid;
-    public $docDatas = [], $docGlobalView, $selectStates, $messagesSends, $observacionesGlobals;
+    public $docDatas = [], $docGlobalView, $selectStates, $messagesSends, $observacionesGlobals, $sendNotificationsCompanies;
 
     public function paginationView()
     {
@@ -48,6 +49,20 @@ class PreCalificacionTecnicaDetail extends Component
     {
         $this->apllicationID = $this->otroid;
 
+        $applicationsData = Application::join('familia_producto', 'applications.family_id', '=', 'familia_producto.id')
+            ->join('medicamentos', 'applications.product_id', '=', 'medicamentos.id')
+            ->join('companies', 'applications.fabric_id', '=', 'companies.id')
+            ->select('applications.*',
+                'medicamentos.descripcion',
+                'medicamentos.cod_medicamento',
+                'companies.legal_name',
+                'companies.email',
+                'applications.id',
+                DB::raw('(SELECT COUNT(*) FROM req_applications WHERE req_applications.states_req_applications = 3 AND req_applications.application_id = applications.id) as req_applications_count'))
+            ->where('applications.id', $this->apllicationID)
+            ->where('applications.status', 1)
+            ->first();
+
         $dataApplication =
             ReqApplications::join('requisitos', 'requisitos.id', '=', 'req_applications.requirement_id')
                 ->join('medicamentos', 'medicamentos.id', '=', 'req_applications.product_id')
@@ -65,7 +80,8 @@ class PreCalificacionTecnicaDetail extends Component
                 ->get()
                 ->groupBy('grupo_nombre') // Agrupa por 'grupo_nombre' en lugar de 'grupos_requisitos.grupo'
                 ->collect(); // Convierte a colección de soporte
-        return view('livewire.companies.pre-calificacion-tecnica-detail', ['dataApplication' => $dataApplication])
+        return view('livewire.companies.pre-calificacion-tecnica-detail',
+            ['dataApplication' => $dataApplication, 'applicationsData' => $applicationsData])
             ->extends('layouts.master')
             ->section('content');
     }
@@ -76,6 +92,68 @@ class PreCalificacionTecnicaDetail extends Component
         $this->dispatch('showFormChangeState');
 
     }
+
+    public function sendSendApplicationModal()
+    {
+
+
+        $rules = [
+            'messagesSendsAplications' => 'required',
+
+
+        ];
+        $messages = [
+            'messagesSendsAplications.required' => 'El mensaje es requerido',
+        ];
+
+        $this->validate($rules, $messages);
+
+        try {
+            DB::beginTransaction();
+
+            $newNotification = NotificationsApplications::create([
+                'application_id' => $this->apllicationID,
+                'message' => $this->messagesSendsAplications,
+                'distribuidor_id' => 0,
+                'status' => 1
+            ]);
+            $dataSends =
+                Application::join('familia_producto', 'applications.family_id', '=', 'familia_producto.id')
+                    ->join('medicamentos', 'applications.product_id', '=', 'medicamentos.id')
+                    ->join('companies', 'applications.distribution_id', '=', 'companies.id')
+                    ->select('applications.*',
+                        'medicamentos.descripcion',
+                        'medicamentos.cod_medicamento',
+                        'companies.legal_name',
+                        'companies.email',
+                        'applications.id',
+                        DB::raw('(SELECT COUNT(*) FROM req_applications WHERE req_applications.states_req_applications = 3 AND req_applications.application_id = applications.id) as req_applications_count'))
+                    ->where('applications.id', $this->apllicationID)
+                    ->where('applications.status', 1)
+                    ->first();
+            Mail::to($dataSends->email)->send(new NotificationRequeriment($dataSends->cod_medicamento . '-'
+                . $dataSends->descripcion,
+                $dataSends->descripcion,
+                $this->messagesSendsAplications,
+                'Notificacion'));
+
+            DB::commit();
+
+            $this->messagesSendsAplications = '';
+
+            $this->dispatch('sendSendApplicationSuccess', message: 'Notificacion enviada correctamente');
+
+        } catch (\Throwable $e) {
+            //este metodo lo que hace es deshacer los cambios en la base de datos
+            DB::rollback();
+
+            //este metodo lo que hace es mostrar el error en la consola
+            dd($e->getMessage());
+        }
+
+
+    }
+
 
     public function chageStateRequeriment()
     {
@@ -124,11 +202,11 @@ class PreCalificacionTecnicaDetail extends Component
                             'medicamentos.descripcion as medicamento_descripcion',
                             'companies.email',
                         )->first();
-                Mail::to($dataSends->email)->send(new NotificationRequeriment($dataSends->cod_medicamento . '-'
-                    . $dataSends->medicamento_descripcion,
-                    $dataSends->descripcion,
-                    $this->messagesSends,
-                    'Observacion'));
+//                Mail::to($dataSends->email)->send(new NotificationRequeriment($dataSends->cod_medicamento . '-'
+//                    . $dataSends->medicamento_descripcion,
+//                    $dataSends->descripcion,
+//                    $this->messagesSends,
+//                    'Observacion'));
             }
 
             DB::commit();

@@ -12,9 +12,10 @@ return new class extends Migration {
     {
         Schema::create('notifications_applications', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('req_application_id')->unsigned();
+            $table->bigInteger('req_application_id')->unsigned()->nullable();
             $table->bigInteger('distribuidor_id')->unsigned();
             $table->text('message');
+            $table->bigInteger('application_id')->unsigned()->nullable();
             $table->integer('status');
             $table->timestamps();
         });

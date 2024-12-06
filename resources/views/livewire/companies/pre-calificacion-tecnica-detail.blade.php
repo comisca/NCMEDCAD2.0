@@ -2,12 +2,73 @@
     @lang('NCMEDCAD | Tiitle')
 @endsection
 <div>
-    <div wire:loading wire:target="chageStateRequeriment,createDocUp" class="loading-overlay">
+    <div wire:loading wire:target="chageStateRequeriment,createDocUp,sendSendApplicationModal" class="loading-overlay">
         <div class="spinner"></div>
         <div class="loading-text">Espera un momento, Ejecutando!!...</div>
     </div>
 
     <div class="row">
+        <div class="col-xl-12 col-md-6 mb-4">
+            <div class="card border-left-primary shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col-xl-4 col-md-4 mb-4">
+                            <div class="col mr-2">
+                                <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                    Cod/ Nombre del producto:
+                                </div>
+                                <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                    {{$applicationsData->descripcion}} ( {{$applicationsData->cod_medicamento}})
+                                </div>
+                            </div>
+                            <div class="col mr-2">
+                                <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                    ID de la Aplicacion:
+                                </div>
+                                <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                    {{$applicationsData->id}}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xl-4 col-md-4 mb-4">
+                            <div class="col mr-2">
+                                <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                    Fabricante:
+                                </div>
+                                <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                    {{$applicationsData->legal_name}}
+                                </div>
+                            </div>
+                            <div class="col mr-2">
+                                <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                    Correo Electronico:
+                                </div>
+                                <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                    {{$applicationsData->email}}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-xl-4 col-md-4 mb-4">
+                            <div class="col mr-2">
+                                <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                    Envio de Notificacion:
+                                </div>
+                                <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                    <button id="showNotificationModal" type="button" class="btn
+                                    btn-primary">Crear Notificacion
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        {{--                        <div class="col-auto">--}}
+                        {{--                            <i class="fas fa-calendar fa-2x text-gray-300"></i>--}}
+                        {{--                        </div>--}}
+                    </div>
+                </div>
+            </div>
+        </div>
         <div class="col-lg-12">
             @if(!empty($dataApplication))
                 <div class="accordion" id="accordionExample">
@@ -154,6 +215,8 @@
 
         @include('livewire.companies.form-observacions')
         @include('livewire.companies.form-change-state')
+        @include('livewire.companies.form-notifications')
+
         @include('livewire.companies.form-up-doc')
         @include('livewire.companies.form-view-doc')
         {{--         <livewire:search-universal></livewire:search-universal>--}}
@@ -162,10 +225,20 @@
 
 @section('script')
     <!-- apexcharts -->
+
+
+
+
     <script src="{{ URL::asset('assets/libs/apexcharts/apexcharts.min.js')}}"></script>
     <script src="{{ URL::asset('assets/js/pages/dashboard.init.js')}}"></script>
     <script>
         document.addEventListener('livewire:initialized', function () {
+            document.getElementById('showNotificationModal').addEventListener('click', function () {
+                $('#modalSendNotifications').modal('show');
+            });
+
+
+
             @this.
             on('messages-succes', (event) => {
                 toastr.success(event.messages, 'Exito', {
@@ -272,6 +345,8 @@
 
             })
 
+
+
             @this.on('viewDocAdmShow', (event) => {
                 $('#modalViewDocModal').modal('show');
 
@@ -282,6 +357,10 @@
             })
 
 
+            @this.on('sendSendApplicationSuccess', (event) => {
+                $('#modalSendNotifications').modal('hide');
+
+            })
 
             @this.on('roles-selected', (event) => {
                 document.getElementById("roles").focus();

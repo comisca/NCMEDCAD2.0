@@ -251,7 +251,7 @@
                                                 style="font-family:'Open Sans', sans-serif, Verdana; font-size:22px; color:#4b4b4c; line-height:30px; font-weight:normal;">
                                                 Notificacion! <br/>
                                                 Producto: {{ $products }} <br/>
-                                                Requerimiento: {{ $requeriments }}
+                                             
                                             </td>
                                         </tr>
                                         <tr>
