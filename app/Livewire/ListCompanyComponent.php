@@ -124,16 +124,20 @@ class ListCompanyComponent extends Component
             DB::beginTransaction();
 
             if ($this->stateChangeGlobal == 1) {
+
                 $password = $this->generatePassword();
                 $company = Companies::find($this->idCompanyChanges);
                 $company->password = Hash::make($password);
                 $company->status = 1;
                 $company->save();
+                
             } else {
+
                 $password = $this->generatePassword();
                 $company = Companies::find($this->idCompanyChanges);
                 $company->status = 0;
                 $company->save();
+
             }
 
             Mail::to($company->email)->send(new StateChanges($company->legal_name,

@@ -2,6 +2,8 @@
 
 namespace App\Livewire;
 
+use App\Models\Application;
+use App\Models\Companies;
 use Livewire\Attributes\On;
 use Livewire\WithPagination;
 use Livewire\Component;
@@ -30,7 +32,23 @@ class CompaniesDetailsComponents extends Component
 
     public function render()
     {
-        return view('livewire.companies.companies-details-components')
+
+        $company = Companies::where('id', $this->idCompany)->first();
+
+        $fabricData = Application::join('companies', 'applications.fabric_id', '=', 'companies.id')
+            ->select(
+                'companies.first_name',
+                'companies.last_name',
+                'companies.legal_name',
+                'companies.email',
+                'companies.phone',
+                'companies.id as id_company')
+            ->where('applications.distribution_id', $this->idCompany)
+            ->where('applications.status', 1)
+            ->distinct()
+            ->get();
+        return view('livewire.companies.companies-details-components',
+            ['company' => $company, 'fabricData' => $fabricData])
             ->extends('layouts.master')
             ->section('content');
     }
