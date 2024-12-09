@@ -138,7 +138,7 @@ class ListCompanyComponent extends Component
 
             Mail::to($company->email)->send(new StateChanges($company->legal_name,
                 $this->stateChangeGlobal,
-                $this->messagesSends, $password, $company->email));
+                $this->messagesSends, $password, $company->user_name));
 
 
             DB::commit();

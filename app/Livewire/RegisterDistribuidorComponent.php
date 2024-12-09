@@ -29,7 +29,7 @@ class RegisterDistribuidorComponent extends Component
     public $BusinnessName, $country, $city, $address, $phone, $facsimile, $website;
     public $firstName, $lastName, $email, $phoneContact, $userName, $typeCompany, $avatar;
     public $inputCountries, $inputStates, $inputCities, $whatsapp, $docRegister, $docId;
-    public $docPoder, $docLicense, $familyProductsInput;
+    public $docPoder, $docLicense, $familyProductsInput, $userNameCompany;
 
     public function paginationView()
     {
@@ -80,6 +80,7 @@ class RegisterDistribuidorComponent extends Component
             'email' => 'required',
 //            'phoneContact' => 'required',
             'lastName' => 'required',
+            'userNameCompany' => 'required',
 //            'userName' => 'required|min:2|unique:companies,user_name',
         ];
 
@@ -96,6 +97,7 @@ class RegisterDistribuidorComponent extends Component
             'email.required' => 'El correo es obligatorio',
 //            'phoneContact.required' => 'El telefono de contacto es obligatorio',
             'phone.required' => 'El telefono es obligatorio',
+            'userNameCompany.required' => 'El usuario es obligatorio',
 //            'userName.required' => 'El Objetivo es obligatorio',
 //            'userName.min' => 'El usuario debe ser mayor a 2 caracteres',
 //            'userName.unique' => 'el usuario ya existe',
@@ -135,6 +137,7 @@ class RegisterDistribuidorComponent extends Component
                 'first_name' => $this->firstName,
                 'last_name' => $this->lastName,
                 'email' => $this->email,
+                'user_name' => $this->userNameCompany,
 //                'user_name' => $this->userName,
                 'password' => '123456',
                 'type_company' => $this->typeCompany == 'DISTRIBUIDOR' ? 'D' : 'F',

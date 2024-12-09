@@ -45,7 +45,7 @@
                     <li>
                         <a href="javascript: void(0);" class="has-arrow waves-effect">
                             <i class="uil-padlock"></i>
-                            <span>@lang('translation.Seguridad')</span>
+                            <span>Seguridad</span>
                         </a>
                         <ul class="sub-menu" aria-expanded="false">
                             <li><a href="/roles">Roles</a></li>
@@ -76,17 +76,19 @@
                     <li>
                         <a href="javascript: void(0);" class="has-arrow waves-effect">
                             <i class="uil-padlock"></i>
-                            <span>@lang('translation.Administración')</span>
+                            <span>Administracion</span>
                         </a>
                         <ul class="sub-menu" aria-expanded="false">
                             {{--                            <li><a href="{{url('/registerDistribuidor')}}">Registro de empresas</a></li>--}}
                             <li><a href="{{url('/families/products')}}">Famila de Productos</a></li>
                             <li><a href="{{url('/family/group')}}">Grupos por Familias de Productos</a></li>
-                            <li><a href="{{url('/rquisitos/group')}}">Grupos de Requisitos</a></li>
-                            <li><a href="{{url('/requisitos')}}">Requisitos</a></li>
+                            <li><a href="{{url('/rquisitos/group')}}">Grupos de Requisitos por Familia de
+                                    Productos</a></li>
+                            <li><a href="{{url('/requisitos')}}">Mantenimiento de Requisitos</a></li>
                             <li><a href="{{url('/listCompany')}}">Listado de Intituciones</a></li>
-                            <li><a href="{{url('/medicamentos')}}">@lang('translation.Catálogo de Productos')</a></li>
-                            <li><a href="{{url('/configuracion/ficha/tecnica')}}">Ficha tecnica</a></li>
+                            <li><a href="{{url('/medicamentos')}}">Catalogo de Productos</a></li>
+                            <li><a href="{{url('/configuracion/ficha/tecnica')}}">Configuracion de Ficha
+                                    Tecnica</a></li>
 
                             {{--                        <li><a href="{{url('/instituciones')}}">@lang('translation.Registro de Instituciones')</a></li>--}}
 
@@ -98,7 +100,7 @@
                     <li>
                         <a href="javascript: void(0);" class="has-arrow waves-effect">
                             <i class="uil-padlock"></i>
-                            <span>Negociacion</span>
+                            <span>Procesos</span>
                         </a>
                         <ul class="sub-menu" aria-expanded="false">
                             {{--                            <li><a href="{{url('/registerDistribuidor')}}">Registro de empresas</a></li>--}}

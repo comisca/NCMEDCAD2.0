@@ -52,10 +52,10 @@
             <select name="tipopaeticipante" id="tipopaeticipante"
                     class="form-control @error('tipopaeticipante') is-invalid @enderror" wire:model="tipopaeticipante">
 
-                <option value="">Seleccione Tipo de requisito</option>
+                <option value="">Seleccione Tipo de Participantes</option>
 
-                <option value="ADMINISTRATIVOS">ADMINISTRATIVOS</option>
-                <option value="TECNICOS">TECNICOS</option>
+                <option value="FABRICANTES">FABRICANTES</option>
+                <option value="DISTRIBUIDOR/REPRESENTANTES">DISTRIBUIDOR/REPRESENTANTES</option>
 
             </select>
             @error('tipopaeticipante')

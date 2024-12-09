@@ -44,7 +44,7 @@
                             <span class="text-danger">{{$message}}</span>
                             @enderror
                         </div>
-                        <div class="form-group col-12">
+                        <div class="form-group col-8">
                             <label for="inputNameCompany">Nombre de Fabricante o Distribuidor</label>
                             <input wire:model="BusinnessName" type="text"
                                    class="form-control @error('BusinnessName') is-invalid @enderror" id="inputAddress"
@@ -53,6 +53,16 @@
                             <span class="text-danger">{{$message}}</span>
                             @enderror
                         </div>
+                        <div class="form-group col-4">
+                            <label for="inputNameCompany">Usuario de acceso</label>
+                            <input wire:model="userNameCompany" type="text"
+                                   class="form-control @error('userNameCompany') is-invalid @enderror" id="inputAddress"
+                                   placeholder="empresasv">
+                            @error('userNameCompany')
+                            <span class="text-danger">{{$message}}</span>
+                            @enderror
+                        </div>
+
                         <div class="form-group col-12">
                             <label for="inputNameCompany">Logo de la empresa</label>
                             <input wire:model="avatar" type="file"

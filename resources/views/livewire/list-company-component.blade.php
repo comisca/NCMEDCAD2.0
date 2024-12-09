@@ -33,7 +33,8 @@
                     <th>Nombre</th>
                     <th>Tipo de Solicitante</th>
                     <th>Status</th>
-                    <th>Detalles</th>
+                    <th>Doc Pre Registro</th>
+                    <th>Mas Informacion</th>
                     <th>Acción</th>
                 </tr>
                 </thead>
@@ -88,6 +89,13 @@
                         btn-rounded">
                                 Ver detalle
                             </button>
+                        </td>
+
+                        <td>
+                            <a href="/companie/info/{{$items->id}}" type="button" class="btn btn-link btn-sm
+                        btn-rounded">
+                                Ver Informacion
+                            </a>
                         </td>
                         <td>
                             <button type="button" wire:click="changesStates({{$items->id}},1)"

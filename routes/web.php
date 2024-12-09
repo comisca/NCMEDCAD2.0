@@ -71,6 +71,7 @@ Route::middleware(['auth:company'])->group(function () {
 
 Route::get('/documents/validation/{id}', \App\Livewire\PreCalificacionTecnicaDetail::class);
 Route::get('/pre/calificacion/tecnica', \App\Livewire\ApplicationAdmin::class);
+Route::get('/companie/info/{id}', \App\Livewire\CompaniesDetailsComponents::class);
 
 
 Route::get('/home', HomeComponent::class);

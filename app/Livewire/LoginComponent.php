@@ -65,7 +65,7 @@ class LoginComponent extends Component
             $users = User::where('email', '=', $this->email)->first();
 
             if (empty($users)) {
-                $companyLoging = Companies::where('email', '=', $this->email)->first();
+                $companyLoging = Companies::where('user_name', '=', $this->email)->first();
                 if (empty($companyLoging)) {
 //                    dd('no se encontro el usuario');
                     session()->flash('messages-error', 'Los datos para ingresar no coincide con la base de datos');
