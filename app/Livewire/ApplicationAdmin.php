@@ -40,7 +40,7 @@ class ApplicationAdmin extends Component
                 'medicamentos.cod_medicamento',
                 'companies.legal_name',
                 DB::raw('(SELECT COUNT(*) FROM req_applications WHERE req_applications.states_req_applications = 3 AND req_applications.application_id = applications.id) as req_applications_count'))
-            ->where('distribution_id', $this->particioanteId)
+            ->where('applications.distribution_id', $this->particioanteId)
             ->where('applications.status', 1)
             ->get();
 

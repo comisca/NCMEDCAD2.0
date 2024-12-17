@@ -46,7 +46,8 @@ class FichaTecnicaComponent extends Component
             Application::join('familia_producto', 'applications.family_id', '=', 'familia_producto.id')
                 ->join('medicamentos', 'applications.product_id', '=', 'medicamentos.id')
                 ->select('applications.*', 'medicamentos.descripcion', 'medicamentos.cod_medicamento')
-                ->where('applications.product_id', $this->inputFamilyProduct)
+                ->where('applications.family_id', $this->inputFamilyProduct)
+                ->where('applications.distribution_id', Session::get('id_company'))
                 ->where('applications.status', 1)
                 ->get();
 
@@ -152,6 +153,7 @@ class FichaTecnicaComponent extends Component
                     ->join('medicamentos', 'applications.product_id', '=', 'medicamentos.id')
                     ->select('applications.*', 'medicamentos.descripcion', 'medicamentos.cod_medicamento')
                     ->where('applications.family_id', $this->inputFamilyProduct)
+                    ->where('applications.distribution_id', Session::get('id_company'))
                     ->where('applications.status', 1)
                     ->get();
             $this->dispatch('messages-succes-fichatec', messages: 'La ficha tecnica se ha creado correctamente');
