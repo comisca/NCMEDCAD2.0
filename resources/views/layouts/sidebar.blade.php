@@ -89,6 +89,8 @@
                             <li><a href="{{url('/medicamentos')}}">Catalogo de Productos</a></li>
                             <li><a href="{{url('/configuracion/ficha/tecnica')}}">Configuracion de Ficha
                                     Tecnica</a></li>
+                            <li><a href="{{url('/configuracion/ficha/admin')}}">Configuracion de Ficha
+                                    Administrativa</a></li>
 
                             {{--                        <li><a href="{{url('/instituciones')}}">@lang('translation.Registro de Instituciones')</a></li>--}}
 

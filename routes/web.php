@@ -58,6 +58,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/medicamentos', MedicamentosComponent::class);
     Route::get('/listCompany', ListCompanyComponent::class);
     Route::get('/configuracion/ficha/tecnica', \App\Livewire\ConfigRequisitos::class);
+    Route::get('/configuracion/ficha/admin', \App\Livewire\FichaAdminComponent::class);
 //    Route::get('/companies/dashboard', \App\Livewire\DashboardCompanies::class);
 });
 
