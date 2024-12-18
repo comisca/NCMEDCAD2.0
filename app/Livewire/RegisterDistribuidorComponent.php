@@ -7,6 +7,8 @@ use App\Models\Companies;
 use App\Models\Countries;
 use App\Models\DocumentsTables;
 use App\Models\FamiliaProducto;
+use App\Models\ReqRelationProfile;
+use App\Models\ReqRelationProfileTable;
 use App\Models\StateCountries;
 use Illuminate\Support\Facades\Mail;
 use Livewire\Attributes\On;
@@ -150,6 +152,7 @@ class RegisterDistribuidorComponent extends Component
             $company->syncRoles('Company');
             $company->save();
 
+            
             if ($this->docRegister) {
                 $doc_rec = 'doc_' . uniqid() . '.' . $this->docRegister->extension();
                 $docRecUrl = $this->docRegister->storeAs('public/document/companies', $doc_rec);

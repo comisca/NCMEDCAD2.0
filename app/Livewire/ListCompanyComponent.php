@@ -5,6 +5,8 @@ namespace App\Livewire;
 use App\Mail\StateChanges;
 use App\Models\Companies;
 use App\Models\DocumentsTables;
+use App\Models\ReqRelationProfile;
+use App\Models\ReqRelationProfileTable;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
@@ -130,7 +132,24 @@ class ListCompanyComponent extends Component
                 $company->password = Hash::make($password);
                 $company->status = 1;
                 $company->save();
-                
+
+                $reqAdmin = ReqRelationProfile::where('type_profile', $company->type_company)
+                    ->where('status', 1)
+                    ->get();
+
+                if (!empty($reqAdmin)) {
+                    foreach ($reqAdmin as $itemReq) {
+
+                        ReqRelationProfileTable::create([
+                            'company_id' => $company->id,
+                            'req_id' => $itemReq->req_id,
+                            'type_profile' => $company->type_company,
+                            'status' => 1
+                        ]);
+
+                    }
+                }
+
             } else {
 
                 $password = $this->generatePassword();
