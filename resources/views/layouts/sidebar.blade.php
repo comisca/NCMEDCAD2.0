@@ -85,7 +85,7 @@
                             <li><a href="{{url('/rquisitos/group')}}">Grupos de Requisitos por Familia de
                                     Productos</a></li>
                             <li><a href="{{url('/requisitos')}}">Mantenimiento de Requisitos</a></li>
-                            <li><a href="{{url('/listCompany')}}">Listado de Intituciones</a></li>
+                            <li><a href="{{url('/listCompany')}}">Solicitudes de Pre-Registro</a></li>
                             <li><a href="{{url('/medicamentos')}}">Catalogo de Productos</a></li>
                             <li><a href="{{url('/configuracion/ficha/tecnica')}}">Configuracion de Ficha
                                     Tecnica</a></li>
@@ -105,6 +105,7 @@
                             <span>Procesos</span>
                         </a>
                         <ul class="sub-menu" aria-expanded="false">
+                            <li><a href="/recepcion/doc/list">Recepcion de Documentos</a></li>
                             {{--                            <li><a href="{{url('/registerDistribuidor')}}">Registro de empresas</a></li>--}}
                             <li><a href="/pre/calificacion/tecnica">Precalificacion Tecnica</a></li>
                             <li><a href="#">Precalificacion Administrativa</a></li>

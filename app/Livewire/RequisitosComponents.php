@@ -44,6 +44,7 @@ class RequisitosComponents extends Component
 
         $this->grupo_requisitos = GrupoRequisitos::orderBy('id', 'desc')
             ->where('id_familia_producto', $this->groupFamilyId)
+            ->where('status', 1)
             ->get();
 
     }
@@ -52,19 +53,23 @@ class RequisitosComponents extends Component
     public function render()
     {
 
-        $this->grupo_familia = FamiliaProducto::orderBy('id', 'desc')->get();
+        $this->grupo_familia = FamiliaProducto::orderBy('id', 'desc')
+            ->where('status', 1)
+            ->get();
 
 
         if (strlen($this->searchQuety) > 0) {
             $requisitos =
                 Requisitos::join('grupos_requisitos', 'requisitos.grupo_requisito_id', '=', 'grupos_requisitos.id')
                     ->where('requisitos.descripcion', 'like', '%' . $this->searchQuety . '%')
+                    ->where('requisitos.status', 1)
                     ->select('requisitos.*', 'grupos_requisitos.descripcion as grupo_requisito')
                     ->paginate($this->pagination);
         } else {
             $requisitos =
                 Requisitos::join('grupos_requisitos', 'requisitos.grupo_requisito_id', '=', 'grupos_requisitos.id')
                     ->select('requisitos.*', 'grupos_requisitos.descripcion as grupo_requisito')
+                    ->where('requisitos.status', 1)
                     ->orderBy('requisitos.id', 'desc')->paginate($this->pagination);
 
         }
@@ -140,6 +145,25 @@ class RequisitosComponents extends Component
         }
     }
 
+    public function edit($id)
+    {
+        $this->tittleModal = 'Actualizar Requisitos';
+        $this->idSelecte = $id;
+        $requisitos = Requisitos::find($id);
+        $this->groupFamilyId = $requisitos->id_familia_producto;
+        $this->grupoRequisitoId = $requisitos->grupo_requisito_id;
+        $this->codRequisitos = $requisitos->codigo;
+        $this->tiporequisito = $requisitos->tipo_requisitos;
+        $this->tipopaeticipante = $requisitos->tipo_participante;
+        $this->tipovalidacion = $requisitos->tipo_validacion;
+        $this->descripcion = $requisitos->descripcion;
+        $this->messagesno = $requisitos->mensaje_nocumple;
+        $this->obligatorio = $requisitos->obligatorio;
+        $this->fichaAplicacion = $requisitos->ficha;
+        $this->vencimiento = $requisitos->vence;
+        $this->entregable = $requisitos->entregable;
+        $this->dispatch('messages-succes-edit', messages: 'El grupo de productos se ha actualizado correctamente');
+    }
 
     public function update()
     {

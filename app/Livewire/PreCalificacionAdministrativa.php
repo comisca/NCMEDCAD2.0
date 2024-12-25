@@ -3,6 +3,10 @@
 namespace App\Livewire;
 
 use App\Models\Application;
+use App\Models\Companies;
+use App\Models\ReqApplications;
+use App\Models\ReqRelationProfile;
+use App\Models\ReqRelationProfileTable;
 use Livewire\Attributes\On;
 use Livewire\WithPagination;
 use Livewire\Component;
@@ -16,27 +20,75 @@ class PreCalificacionAdministrativa extends Component
 
     public $Pagination = 10;
     public $searchInput;
+    public $idCompany;
 
     public function paginationView()
     {
         return 'vendor.livewire.bootstrap';
     }
 
-    public function mount()
+    public function mount($id)
     {
+        $this->idCompany = $id;
 
     }
 
 
     public function render()
     {
-        $applicationsapp = Application::join('familia_producto', 'applications.family_id', '=', 'familia_producto.id')
-            ->join('medicamentos', 'applications.product_id', '=', 'medicamentos.id')
-            ->select('applications.*', 'medicamentos.descripcion', 'medicamentos.cod_medicamento')
-            ->where('distribution_id', Session::get('id'))
-            ->where('applications.status', 'id_company')
+
+        $datafill = [];
+
+        $company = Companies::where('id', $this->idCompany)->first();
+
+        $fabricData = Application::join('companies', 'applications.fabric_id', '=', 'companies.id')
+            ->select(
+                'companies.first_name',
+                'companies.last_name',
+                'companies.legal_name',
+                'companies.email',
+                'companies.phone',
+                'companies.id as id_company')
+            ->where('applications.distribution_id', $this->idCompany)
+            ->where('applications.status', 1)
+            ->distinct()
             ->get();
-        return view('livewire.companies.pre-calificacion-administrativa', ['applicationsapp' => $applicationsapp])
+
+        if (!empty($fabricData)) {
+            foreach ($fabricData as $itemsforeach) {
+                $dataApplication =
+                    ReqRelationProfileTable::join('requisitos',
+                        'requisitos.id',
+                        '=',
+                        'req_relation_profile_tables.req_id')
+//                ->join('medicamentos', 'medicamentos.id', '=', 'req_relation_produts.product_id')
+                        ->join('grupos_requisitos', 'grupos_requisitos.id', '=', 'requisitos.grupo_requisito_id')
+                        ->where('req_relation_profile_tables.company_id', $itemsforeach->id_company)
+                        ->where('req_relation_profile_tables.status', 1)
+                        ->select(
+                            'grupos_requisitos.grupo as grupo_nombre',
+                            'req_relation_profile_tables.id',
+                            'requisitos.codigo',
+                            'requisitos.descripcion'
+                        )
+                        ->orderBy('grupos_requisitos.grupo')
+                        ->get()
+                        ->groupBy('grupo_nombre') // Agrupa por 'grupo_nombre' en lugar de 'grupos_requisitos.grupo'
+                        ->collect(); // Convierte a colección de soporte
+
+                $datafill['Company'] = $itemsforeach->legal_name;
+                $datafill['DataRequeriments'] = $dataApplication;
+
+
+            }
+        } else {
+            $datafill['Company'] = '';
+            $datafill['DataRequeriments'] = '';
+        }
+
+
+        return view('livewire.companies.pre-calificacion-administrativa',
+            ['applicationsapp' => $dataApplication, 'company' => $company, 'fabricData' => $datafill])
             ->extends('layouts.master')
             ->section('content');
     }

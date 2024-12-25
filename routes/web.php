@@ -59,7 +59,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/listCompany', ListCompanyComponent::class);
     Route::get('/configuracion/ficha/tecnica', \App\Livewire\ConfigRequisitos::class);
     Route::get('/configuracion/ficha/admin', \App\Livewire\FichaAdminComponent::class);
-//    Route::get('/companies/dashboard', \App\Livewire\DashboardCompanies::class);
+    //    Route::get('/companies/dashboard', \App\Livewire\DashboardCompanies::class);
 });
 
 Route::middleware(['auth:company'])->group(function () {
@@ -71,7 +71,11 @@ Route::middleware(['auth:company'])->group(function () {
 });
 
 Route::get('/documents/validation/{id}', \App\Livewire\PreCalificacionTecnicaDetail::class);
+Route::get('/recepcion/doc/eval/{id}', \App\Livewire\RecepDocumentsDetailComponent::class);
+
+Route::get('/precalificacion/company/admin/{id}', \App\Livewire\PreCalificacionAdministrativa::class);
 Route::get('/pre/calificacion/tecnica', \App\Livewire\ApplicationAdmin::class);
+Route::get('/recepcion/doc/list', \App\Livewire\RecepDocumentsListComponent::class);
 Route::get('/companie/info/{id}', \App\Livewire\CompaniesDetailsComponents::class);
 
 

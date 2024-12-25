@@ -34,18 +34,22 @@ class MedicamentosComponent extends Component
         $this->idSelecte = 0;
         $this->tittleModal = 'Adicionar Medicamentos';
 
-        $this->familias_producto = FamiliaProducto::all();
-        $this->grupo_familia = GrupoFamilia::all();
-        $this->grupo_requisitos = GrupoRequisitos::all();
+        $this->familias_producto = FamiliaProducto::where('status', 1)->get();
+        $this->grupo_familia = GrupoFamilia::where('status', 1)->get();
+        $this->grupo_requisitos = GrupoRequisitos::where('status', 1)->get();
 
     }
 
     public function updatedFamProductoId($id): void
     {
-        $this->grupo_familia = GrupoFamilia::where('id_familia_producto', $id)->get();
+        $this->grupo_familia = GrupoFamilia::where('id_familia_producto', $id)
+            ->where('status', 1)
+            ->get();
         $this->GrupoFamiliaId = $this->grupo_familia->first()->id ?? null;
 
-        $this->grupo_requisitos = GrupoRequisitos::where('id_familia_producto', $id)->get();
+        $this->grupo_requisitos = GrupoRequisitos::where('id_familia_producto', $id)
+            ->where('status', 1)
+            ->get();
         $this->GrupoRequisitoId = $this->grupo_requisitos->first()->id ?? null;
 
     }
@@ -53,11 +57,23 @@ class MedicamentosComponent extends Component
     public function render()
     {
         if (strlen($this->searchQuety) > 0) {
-            $medicamentos = Medicamentos::where('cod_medicamento', 'like', '%' . $this->searchQuety . '%')
-                ->paginate($this->pagination);
+            $medicamentos =
+                Medicamentos::join('familia_producto', 'medicamentos.id_familia_producto', '=', 'familia_producto.id')
+                    ->join('grupos_productos', 'medicamentos.id_grupo_familia', '=', 'grupos_productos.id')
+                    ->join('grupos_requisitos', 'medicamentos.id_grupo_requerimiento', '=', 'grupos_requisitos.id')
+                    ->where('grupos_productos.status', 1)
+                    ->where('grupos_requisitos.status', 1)
+                    ->where('medicamentos.cod_medicamento', 'like', '%' . $this->searchQuety . '%')
+                    ->paginate($this->pagination);
 
         } else {
-            $medicamentos = Medicamentos::orderBy('id', 'desc')->paginate($this->pagination);
+            $medicamentos =
+                Medicamentos::join('familia_producto', 'medicamentos.id_familia_producto', '=', 'familia_producto.id')
+                    ->join('grupos_productos', 'medicamentos.id_grupo_familia', '=', 'grupos_productos.id')
+                    ->join('grupos_requisitos', 'medicamentos.id_grupo_requerimiento', '=', 'grupos_requisitos.id')
+                    ->where('grupos_productos.status', 1)
+                    ->where('grupos_requisitos.status', 1)
+                    ->orderBy('medicamentos.id', 'desc')->paginate($this->pagination);
         }
         return view('livewire.medicamentos.medicamentos-component', ['data' => $medicamentos])
             ->extends('layouts.master')

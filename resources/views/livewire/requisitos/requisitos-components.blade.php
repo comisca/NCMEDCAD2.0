@@ -161,7 +161,7 @@
                 })
             })
 
-            @this.on('medicamento-edit', (event) => {
+            @this.on('messages-succes-edit', (event) => {
                 $('#modalUniversal').modal('show');
             })
 

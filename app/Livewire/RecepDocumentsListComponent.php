@@ -4,13 +4,13 @@ namespace App\Livewire;
 
 use App\Models\Application;
 use App\Models\Companies;
-use Livewire\Attributes\On;
-use Livewire\WithPagination;
-use Livewire\Component;
-use Session;
 use DB;
+use Livewire\Attributes\On;
+use Livewire\Component;
+use Livewire\WithPagination;
+use Session;
 
-class ApplicationAdmin extends Component
+class RecepDocumentsListComponent extends Component
 {
 
     use WithPagination;
@@ -23,7 +23,10 @@ class ApplicationAdmin extends Component
         return 'vendor.livewire.bootstrap';
     }
 
-    public function mount() {}
+    public function mount()
+    {
+    }
+
 
     public function updated()
     {
@@ -44,12 +47,14 @@ class ApplicationAdmin extends Component
             ->get();
     }
 
+
     public function render()
     {
         $companies = Companies::orderBy('id', 'desc')
             ->where('status', '=', 1)
             ->paginate($this->Pagination);
-        return view('livewire.application-admin', ['companies' => $companies])
+
+        return view('livewire.recepcion.recep-documents-list-component', ['companies' => $companies])
             ->extends('layouts.master')
             ->section('content');
     }
@@ -114,5 +119,7 @@ class ApplicationAdmin extends Component
     }
 
 
-    public function resetUI() {}
+    public function resetUI()
+    {
+    }
 }

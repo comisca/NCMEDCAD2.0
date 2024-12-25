@@ -105,7 +105,7 @@
                     </div>
 
                     <div class="col-lg-6">
-                        <h5>Medicamentos</h5>
+                        <h5>Productos</h5>
                         <div class="form-group row">
                             <label class="col-md-2 col-form-label">Productos a Seleccionar</label>
                             <div class="col-md-8">
