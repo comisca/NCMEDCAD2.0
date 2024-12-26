@@ -25,9 +25,8 @@
                     <select id="inputState" wire:model="selectStates"
                             class="form-control @error('selectStates') is-invalid @enderror">
                         <option selected>Selecciona un estado</option>
-
-                        <option value="3">Observacion</option>
-                        <option value="1">Calificado</option>
+                        <option value="9">Observacion</option>
+                        <option value="5">Recibido/Conforme</option>
 
                     </select>
                     @error('selectStates')

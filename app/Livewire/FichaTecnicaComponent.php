@@ -134,7 +134,7 @@ class FichaTecnicaComponent extends Component
                             'distribution_id' => Session::get('id_company'),
                             'product_id' => $this->idSelectedProducts,
                             'fabric_id' => $this->companieF,
-                            'states_req_applications' => 3,
+                            'states_req_applications' => 9,
                             'status' => 1,
                         ]);
                     }

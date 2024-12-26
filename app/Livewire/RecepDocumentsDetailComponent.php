@@ -67,7 +67,7 @@ class RecepDocumentsDetailComponent extends Component
                 ->join('medicamentos', 'medicamentos.id', '=', 'req_applications.product_id')
                 ->join('grupos_requisitos', 'grupos_requisitos.id', '=', 'requisitos.grupo_requisito_id')
                 ->where('req_applications.application_id', $this->apllicationID)
-                ->where('req_applications.status', 1)
+                ->where('req_applications.status', '>=', 1)
                 ->select(
                     'grupos_requisitos.grupo as grupo_nombre',
                     'req_applications.id',
@@ -290,6 +290,11 @@ class RecepDocumentsDetailComponent extends Component
             }
             Db::beginTransaction();
 
+            DocumentApplications::where('req_application_id', $this->reqApplicationID)
+                ->update([
+                    'status' => 0
+                ]);
+
             $newDoc = DocumentApplications::create([
                 'req_application_id' => $this->reqApplicationID,
                 'document_name' => $this->nameDoc,
@@ -297,6 +302,11 @@ class RecepDocumentsDetailComponent extends Component
                 'attachment' => $doc_name,
                 'status' => 1
             ]);
+
+            ReqApplications::where('id', $this->reqApplicationID)
+                ->update([
+                    'states_req_applications' => 10
+                ]);
 
 
             DB::commit();

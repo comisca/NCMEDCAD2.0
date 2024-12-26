@@ -65,7 +65,7 @@
 
                             </td>
                             <td>
-                                <a href="/documents/validation/{{$itemsdataApplicationSelected->id}}"
+                                <a href="/recepcion/doc/eval/{{$itemsdataApplicationSelected->id}}"
 
                                    type="button"
                                    class="btn btn-success">Ves detalle

@@ -119,8 +119,10 @@
 
                                                         </td>
                                                         <td>
-                                                            <a href="#" wire:click="showUpDoc({{$item->id}})"> Subir
-                                                                Documentacion</a>
+                                                            @if($item->states_req_applications  == 9)
+                                                                <a href="#" wire:click="showUpDoc({{$item->id}})"> Subir
+                                                                    Documentacion</a>
+                                                            @endif
                                                         </td>
                                                         <td>
                                                             <a href="#"
@@ -129,10 +131,12 @@
                                                                 Observaciones</a>
                                                         </td>
                                                         <td>
-                                                            @if($item->states_req_applications == 1)
-                                                                Calificado
-                                                            @else
-                                                                No Calificado
+                                                            @if($item->states_req_applications  < 6)
+                                                                Recibido/Conforme
+                                                            @elseif($item->states_req_applications  == 10)
+                                                                Pendiente de revision
+                                                            @elseif($item->states_req_applications  == 9)
+                                                                Observacion
                                                             @endif
 
 
