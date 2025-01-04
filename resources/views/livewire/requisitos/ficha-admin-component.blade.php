@@ -11,42 +11,42 @@
                         <h5>Configuracion de ficha administrativa</h5>
                         <div class="form-group row">
                             <label class="col-md-2 col-form-label">Familias de Productos</label>
-                            <div class="col-md-10">
-                                <select wire:model.live="familySelectedId" class="form-control">
-                                    <option value="0">Selecciona Familia de productos</option>
-                                    @if(!empty($familyProductsData))
-                                        @foreach($familyProductsData as $itmesfamilyProductsData)
-                                            <option
-                                                value="{{$itmesfamilyProductsData->id}}">{{$itmesfamilyProductsData->familia_producto}}</option>
-                                        @endforeach
-                                    @endif
-                                </select>
-                            </div>
+                            {{--                            <div class="col-md-10">--}}
+                            {{--                                <select wire:model.live="familySelectedId" class="form-control">--}}
+                            {{--                                    <option value="0">Selecciona Familia de productos</option>--}}
+                            {{--                                    @if(!empty($familyProductsData))--}}
+                            {{--                                        @foreach($familyProductsData as $itmesfamilyProductsData)--}}
+                            {{--                                            <option--}}
+                            {{--                                                value="{{$itmesfamilyProductsData->id}}">{{$itmesfamilyProductsData->familia_producto}}</option>--}}
+                            {{--                                        @endforeach--}}
+                            {{--                                    @endif--}}
+                            {{--                                </select>--}}
+                            {{--                            </div>--}}
                         </div>
                     </div>
 
                     <div class="col-lg-6">
                         <h5>Requisitos</h5>
                         <div class="form-group row">
-                            <label class="col-md-2 col-form-label">Grupo de Requisitos</label>
-                            <div class="col-md-7">
-                                <select wire:model.live="groupSelectedId"
-                                        class="form-control @error('groupSelectedId') is-invalid @enderror">
-                                    <option value="0">Selecciona un grupo</option>
-                                    @if(!empty($groupDataSelected))
-                                        @foreach($groupDataSelected as $itemsgroupDataSelected)
-                                            <option
-                                                value="{{$itemsgroupDataSelected->id}}">{{$itemsgroupDataSelected->grupo}}</option>
-                                        @endforeach
-                                    @endif
-                                </select>
-                                @error('groupSelectedId')
-                                <span class="text-danger">{{$message}}</span>
-                                @enderror
-                            </div>
-                            <div class="col-md-3">
+                            <label class="col-md-2 col-form-label">Requisitos</label>
+                            {{--                            <div class="col-md-7">--}}
+                            {{--                                <select wire:model.live="groupSelectedId"--}}
+                            {{--                                        class="form-control @error('groupSelectedId') is-invalid @enderror">--}}
+                            {{--                                    <option value="0">Selecciona un grupo</option>--}}
+                            {{--                                    @if(!empty($groupDataSelected))--}}
+                            {{--                                        @foreach($groupDataSelected as $itemsgroupDataSelected)--}}
+                            {{--                                            <option--}}
+                            {{--                                                value="{{$itemsgroupDataSelected->id}}">{{$itemsgroupDataSelected->grupo}}</option>--}}
+                            {{--                                        @endforeach--}}
+                            {{--                                    @endif--}}
+                            {{--                                </select>--}}
+                            {{--                                @error('groupSelectedId')--}}
+                            {{--                                <span class="text-danger">{{$message}}</span>--}}
+                            {{--                                @enderror--}}
+                            {{--                            </div>--}}
+                            <div class="col-md-8">
                                 <button wire:click="addGroupRequeriment()" type="button" class="btn
-                                btn-success">Agregar >>>
+                                btn-success">Agregar todos los requisitos administrativos >>>
                                 </button>
                             </div>
                         </div>

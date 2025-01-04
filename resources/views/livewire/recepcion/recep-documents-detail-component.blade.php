@@ -47,6 +47,7 @@
                                     {{$applicationsData->email}}
                                 </div>
                             </div>
+
                         </div>
 
                         <div class="col-xl-4 col-md-4 mb-4">
@@ -62,6 +63,33 @@
                             </div>
                         </div>
 
+                        <div class="col-xl-12 col-md-12 mb-12">
+                            <div class="col mr-2">
+                                <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                    Seleciona el tipo de requerimiento:
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col-md-8">
+                                        <select wire:model.live="selectedRequeriment"
+                                                class="form-control @error('productSelectInput') is-invalid @enderror">
+                                            <option value="0">Selecciona un tipo de requisito</option>
+                                            <option
+                                                value="A">Administrativos
+                                            </option>
+                                            <option
+                                                value="T">Tecnicos
+                                            </option>
+
+                                        </select>
+                                        @error('productSelectInput')
+                                        <span class="text-danger">{{$message}}</span>
+                                        @enderror
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+
                         {{--                        <div class="col-auto">--}}
                         {{--                            <i class="fas fa-calendar fa-2x text-gray-300"></i>--}}
                         {{--                        </div>--}}
@@ -70,9 +98,9 @@
             </div>
         </div>
         <div class="col-lg-12">
-            @if(!empty($dataApplication))
+            @if(!empty($dataRequisitos))
                 <div class="accordion" id="accordionExample">
-                    @foreach ($dataApplication as $grupo => $items)
+                    @foreach ($dataRequisitos as $grupo => $items)
                         <div class="card">
                             <div class="card-header" id="heading{{ $loop->index }}">
                                 <h2 class="mb-0">
@@ -94,6 +122,7 @@
                                 <div class="card-body">
                                     <ul>
                                         @foreach ($items as $item)
+
                                             <li>
 
                                                 <table class="table">

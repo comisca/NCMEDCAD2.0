@@ -4,9 +4,12 @@ namespace App\Livewire;
 
 use App\Mail\NotificationRequeriment;
 use App\Models\Application;
+use App\Models\Companies;
 use App\Models\DocumentApplications;
 use App\Models\NotificationsApplications;
 use App\Models\ReqApplications;
+use App\Models\ReqRelationProfile;
+use App\Models\ReqRelationProfileTable;
 use Illuminate\Support\Facades\Mail;
 use Livewire\Attributes\On;
 use Livewire\WithFileUploads;
@@ -22,48 +25,29 @@ class RecepDocumentsDetailComponent extends Component
     use WithFileUploads;
 
     public $Pagination = 10;
-    public $searchInput, $messagesSendsAplications, $apllicationID;
+    public $searchInput, $messagesSendsAplications, $apllicationID, $selectedRequeriment;
     public $apllicationI, $nameDoc, $descriptionDoc, $docFile, $reqApplicationID, $otroid;
     public $docDatas = [], $docGlobalView, $selectStates, $messagesSends, $observacionesGlobals, $sendNotificationsCompanies;
+    public $dataRequisitos, $idCompany;
 
     public function paginationView()
     {
         return 'vendor.livewire.bootstrap';
     }
 
-    public function mount($id)
+    public function mount($id, $idCompany)
     {
         $this->otroid = $id;
-
+        $this->apllicationID = $this->otroid;
+        $this->idCompany = $idCompany;
     }
 
     public function updated()
     {
+        if ($this->selectedRequeriment == 'T') {
 
-
-    }
-
-
-    public function render()
-    {
-        $this->apllicationID = $this->otroid;
-
-        $applicationsData = Application::join('familia_producto', 'applications.family_id', '=', 'familia_producto.id')
-            ->join('medicamentos', 'applications.product_id', '=', 'medicamentos.id')
-            ->join('companies', 'applications.fabric_id', '=', 'companies.id')
-            ->select('applications.*',
-                'medicamentos.descripcion',
-                'medicamentos.cod_medicamento',
-                'companies.legal_name',
-                'companies.email',
-                'applications.id',
-                DB::raw('(SELECT COUNT(*) FROM req_applications WHERE req_applications.states_req_applications = 3 AND req_applications.application_id = applications.id) as req_applications_count'))
-            ->where('applications.id', $this->apllicationID)
-            ->where('applications.status', 1)
-            ->first();
-
-        $dataApplication =
-            ReqApplications::join('requisitos', 'requisitos.id', '=', 'req_applications.requirement_id')
+            $this->dataRequisitos =
+                ReqApplications::join('requisitos', 'requisitos.id', '=', 'req_applications.requirement_id')
                 ->join('medicamentos', 'medicamentos.id', '=', 'req_applications.product_id')
                 ->join('grupos_requisitos', 'grupos_requisitos.id', '=', 'requisitos.grupo_requisito_id')
                 ->where('req_applications.application_id', $this->apllicationID)
@@ -80,8 +64,74 @@ class RecepDocumentsDetailComponent extends Component
                 ->groupBy('grupo_nombre') // Agrupa por 'grupo_nombre' en lugar de 'grupos_requisitos.grupo'
                 ->collect(); // Convierte a colección de soporte
 
-        return view('livewire.recepcion.recep-documents-detail-component',
-            ['dataApplication' => $dataApplication, 'applicationsData' => $applicationsData])
+        } else {
+            $company = Companies::where('id', $this->idCompany)->first();
+
+            $this->dataRequisitos = Application::join('companies', 'applications.fabric_id', '=', 'companies.id')
+
+                ->join('req_relation_profile_tables', 'applications.fabric_id', '=', 'req_relation_profile_tables.company_id')
+                ->join('requisitos', 'requisitos.id', '=', 'req_relation_profile_tables.req_id')
+                ->where('applications.distribution_id', $this->idCompany)
+                ->where('applications.status', '>=', 1)
+                ->select(
+                    'companies.legal_name as grupo_nombre',
+                    'req_relation_profile_tables.id',
+                    'requisitos.codigo',
+                    'requisitos.descripcion',
+                    'req_relation_profile_tables.status',
+                )
+                ->orderBy('requisitos.descripcion')
+                ->get()
+                ->groupBy('grupo_nombre') // Agrupa por 'grupo_nombre' en lugar de 'grupos_requisitos.grupo'
+                ->collect(); // Convierte a colección de soporte
+
+
+        }
+    }
+
+
+    public function render()
+    {
+
+
+        $applicationsData = Application::join('familia_producto', 'applications.family_id', '=', 'familia_producto.id')
+            ->join('medicamentos', 'applications.product_id', '=', 'medicamentos.id')
+            ->join('companies', 'applications.fabric_id', '=', 'companies.id')
+            ->select(
+                'applications.*',
+                'medicamentos.descripcion',
+                'medicamentos.cod_medicamento',
+                'companies.legal_name',
+                'companies.email',
+                'applications.id',
+                DB::raw('(SELECT COUNT(*) FROM req_applications WHERE req_applications.states_req_applications = 3 AND req_applications.application_id = applications.id) as req_applications_count')
+            )
+            ->where('applications.id', $this->apllicationID)
+            ->where('applications.status', 1)
+            ->first();
+
+        //        $dataApplication =
+        //            ReqApplications::join('requisitos', 'requisitos.id', '=', 'req_applications.requirement_id')
+        //                ->join('medicamentos', 'medicamentos.id', '=', 'req_applications.product_id')
+        //                ->join('grupos_requisitos', 'grupos_requisitos.id', '=', 'requisitos.grupo_requisito_id')
+        //                ->where('req_applications.application_id', $this->apllicationID)
+        //                ->where('req_applications.status', '>=', 1)
+        //                ->select(
+        //                    'grupos_requisitos.grupo as grupo_nombre',
+        //                    'req_applications.id',
+        //                    'requisitos.codigo',
+        //                    'requisitos.descripcion',
+        //                    'req_applications.states_req_applications',
+        //                )
+        //                ->orderBy('grupos_requisitos.grupo')
+        //                ->get()
+        //                ->groupBy('grupo_nombre') // Agrupa por 'grupo_nombre' en lugar de 'grupos_requisitos.grupo'
+        //                ->collect(); // Convierte a colección de soporte
+
+        return view(
+            'livewire.recepcion.recep-documents-detail-component',
+            ['applicationsData' => $applicationsData]
+        )
             ->extends('layouts.master')
             ->section('content');
     }
@@ -90,7 +140,6 @@ class RecepDocumentsDetailComponent extends Component
     {
         $this->reqApplicationID = $id;
         $this->dispatch('showFormChangeState');
-
     }
 
     public function sendSendApplicationModal()
@@ -119,30 +168,33 @@ class RecepDocumentsDetailComponent extends Component
             ]);
             $dataSends =
                 Application::join('familia_producto', 'applications.family_id', '=', 'familia_producto.id')
-                    ->join('medicamentos', 'applications.product_id', '=', 'medicamentos.id')
-                    ->join('companies', 'applications.distribution_id', '=', 'companies.id')
-                    ->select('applications.*',
-                        'medicamentos.descripcion',
-                        'medicamentos.cod_medicamento',
-                        'companies.legal_name',
-                        'companies.email',
-                        'applications.id',
-                        DB::raw('(SELECT COUNT(*) FROM req_applications WHERE req_applications.states_req_applications = 3 AND req_applications.application_id = applications.id) as req_applications_count'))
-                    ->where('applications.id', $this->apllicationID)
-                    ->where('applications.status', 1)
-                    ->first();
-            Mail::to($dataSends->email)->send(new NotificationRequeriment($dataSends->cod_medicamento . '-'
-                . $dataSends->descripcion,
+                ->join('medicamentos', 'applications.product_id', '=', 'medicamentos.id')
+                ->join('companies', 'applications.distribution_id', '=', 'companies.id')
+                ->select(
+                    'applications.*',
+                    'medicamentos.descripcion',
+                    'medicamentos.cod_medicamento',
+                    'companies.legal_name',
+                    'companies.email',
+                    'applications.id',
+                    DB::raw('(SELECT COUNT(*) FROM req_applications WHERE req_applications.states_req_applications = 3 AND req_applications.application_id = applications.id) as req_applications_count')
+                )
+                ->where('applications.id', $this->apllicationID)
+                ->where('applications.status', 1)
+                ->first();
+            Mail::to($dataSends->email)->send(new NotificationRequeriment(
+                $dataSends->cod_medicamento . '-'
+                    . $dataSends->descripcion,
                 $dataSends->descripcion,
                 $this->messagesSendsAplications,
-                'Notificacion'));
+                'Notificacion'
+            ));
 
             DB::commit();
 
             $this->messagesSendsAplications = '';
 
             $this->dispatch('sendSendApplicationSuccess', message: 'Notificacion enviada correctamente');
-
         } catch (\Throwable $e) {
             //este metodo lo que hace es deshacer los cambios en la base de datos
             DB::rollback();
@@ -150,8 +202,6 @@ class RecepDocumentsDetailComponent extends Component
             //este metodo lo que hace es mostrar el error en la consola
             dd($e->getMessage());
         }
-
-
     }
 
 
@@ -189,24 +239,24 @@ class RecepDocumentsDetailComponent extends Component
             if ($this->selectStates == 3) {
                 $dataSends =
                     ReqApplications::join('requisitos', 'requisitos.id', '=', 'req_applications.requirement_id')
-                        ->join('medicamentos', 'medicamentos.id', '=', 'req_applications.product_id')
-                        ->join('companies', 'companies.id', '=', 'req_applications.distribution_id')
-                        ->where('req_applications.id', $this->reqApplicationID)
-                        ->where('req_applications.status', 1)
-                        ->select(
-                            'req_applications.id',
-                            'requisitos.codigo',
-                            'requisitos.descripcion',
-                            'req_applications.states_req_applications',
-                            'medicamentos.cod_medicamento',
-                            'medicamentos.descripcion as medicamento_descripcion',
-                            'companies.email',
-                        )->first();
-//                Mail::to($dataSends->email)->send(new NotificationRequeriment($dataSends->cod_medicamento . '-'
-//                    . $dataSends->medicamento_descripcion,
-//                    $dataSends->descripcion,
-//                    $this->messagesSends,
-//                    'Observacion'));
+                    ->join('medicamentos', 'medicamentos.id', '=', 'req_applications.product_id')
+                    ->join('companies', 'companies.id', '=', 'req_applications.distribution_id')
+                    ->where('req_applications.id', $this->reqApplicationID)
+                    ->where('req_applications.status', 1)
+                    ->select(
+                        'req_applications.id',
+                        'requisitos.codigo',
+                        'requisitos.descripcion',
+                        'req_applications.states_req_applications',
+                        'medicamentos.cod_medicamento',
+                        'medicamentos.descripcion as medicamento_descripcion',
+                        'companies.email',
+                    )->first();
+                //                Mail::to($dataSends->email)->send(new NotificationRequeriment($dataSends->cod_medicamento . '-'
+                //                    . $dataSends->medicamento_descripcion,
+                //                    $dataSends->descripcion,
+                //                    $this->messagesSends,
+                //                    'Observacion'));
             }
 
             DB::commit();
@@ -215,7 +265,6 @@ class RecepDocumentsDetailComponent extends Component
             $this->selectStates = '';
             $this->messagesSends = '';
             $this->dispatch('chageStateRequerimentSuccess', message: 'Estado cambiado correctamente');
-
         } catch (\Throwable $e) {
             //este metodo lo que hace es deshacer los cambios en la base de datos
             DB::rollback();
@@ -223,7 +272,6 @@ class RecepDocumentsDetailComponent extends Component
             //este metodo lo que hace es mostrar el error en la consola
             dd($e->getMessage());
         }
-
     }
 
     public function showObservacionRequerimont($id)
@@ -232,7 +280,6 @@ class RecepDocumentsDetailComponent extends Component
         $this->observacionesGlobals = NotificationsApplications::where('req_application_id', $id)->get();
 
         $this->dispatch('showObservacionRequerimont');
-
     }
 
     public function viewDocAdm($id)
@@ -240,7 +287,6 @@ class RecepDocumentsDetailComponent extends Component
 
         $this->docGlobalView = DocumentApplications::where('id', $id)->first();
         $this->dispatch('viewDocAdmShow');
-
     }
 
     public function showDoc($id)
@@ -248,18 +294,14 @@ class RecepDocumentsDetailComponent extends Component
         $this->reqApplicationID = $id;
         $this->docDatas = [];
         $this->docDatas = DocumentApplications::where('req_application_id', $id)->get();
-//        dd($this->docDatas);
+        //        dd($this->docDatas);
         $this->dispatch('showDoc');
-
-
     }
 
     public function showUpDoc($id)
     {
         $this->reqApplicationID = $id;
         $this->dispatch('showUpDoc');
-
-
     }
 
 
@@ -315,7 +357,6 @@ class RecepDocumentsDetailComponent extends Component
             $this->descriptionDoc = '';
             $this->docFile = '';
             $this->dispatch('upDocSuccess', message: 'Documento subido correctamente');
-
         } catch (\Throwable $e) {
             //este metodo lo que hace es deshacer los cambios en la base de datos
             DB::rollback();
@@ -336,7 +377,6 @@ class RecepDocumentsDetailComponent extends Component
 
             //este metodo lo que hace es guardar los cambios en la base de datos
             DB::commit();
-
         } catch (\Throwable $e) {
             //este metodo lo que hace es deshacer los cambios en la base de datos
             DB::rollback();
@@ -357,7 +397,6 @@ class RecepDocumentsDetailComponent extends Component
 
             //este metodo lo que hace es guardar los cambios en la base de datos
             DB::commit();
-
         } catch (\Throwable $e) {
             //este metodo lo que hace es deshacer los cambios en la base de datos
             DB::rollback();
@@ -378,7 +417,6 @@ class RecepDocumentsDetailComponent extends Component
 
             //este metodo lo que hace es guardar los cambios en la base de datos
             DB::commit();
-
         } catch (\Throwable $e) {
             //este metodo lo que hace es deshacer los cambios en la base de datos
             DB::rollback();
@@ -389,10 +427,5 @@ class RecepDocumentsDetailComponent extends Component
     }
 
 
-    public function resetUI()
-    {
-
-
-    }
-
+    public function resetUI() {}
 }

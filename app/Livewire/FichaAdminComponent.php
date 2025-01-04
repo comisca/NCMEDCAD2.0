@@ -38,6 +38,11 @@ class FichaAdminComponent extends Component
     public function render()
     {
         $familyProductsData = FamiliaProducto::where('status', 1)->get();
+        $this->requisitodDataSelected = Requisitos::where('status', 1)
+            ->where('tipo_requisitos', 'ADMINISTRATIVOS')
+            ->orderBy('id', 'asc')
+            ->get();
+
         return view('livewire.requisitos.ficha-admin-component', ['familyProductsData' => $familyProductsData])
             ->extends('layouts.master')
             ->section('content');

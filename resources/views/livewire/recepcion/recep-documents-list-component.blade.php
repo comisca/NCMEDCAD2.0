@@ -65,7 +65,8 @@
 
                             </td>
                             <td>
-                                <a href="/recepcion/doc/eval/{{$itemsdataApplicationSelected->id}}"
+                                <a href="/recepcion/doc/eval/{{$itemsdataApplicationSelected->id
+                                }}/{{$itemsdataApplicationSelected->distribution_id}}"
 
                                    type="button"
                                    class="btn btn-success">Ves detalle
