@@ -143,21 +143,60 @@
                                                         <th scope="row">{{$item->id}}</th>
                                                         <td> {{ $item->codigo }} - {{ $item->descripcion }}</td>
                                                         <td>
-                                                            <a href="#" wire:click="showDoc({{$item->id}})"> Ver
-                                                                Documentos</a><br>
+                                                             @if($selectedRequeriment == 'A')
+                                                                @if($item->states_req_applications  == 9)
+                                                                    <a href="#" wire:click="viewDocAdmShow({{$item->id}})"> Ver
+                                                                        Documentos</a>
+                                                                @endif
+
+                                                                @else
+
+                                                                    @if($item->states_req_applications  == 9)
+
+                                                                     <a href="#" wire:click="showDoc({{$item->id}})"> Ver
+                                                                        Documentos</a>
+                                                                       @endif
+                                        
+                                                                       @endif
 
                                                         </td>
                                                         <td>
-                                                            @if($item->states_req_applications  == 9)
-                                                                <a href="#" wire:click="showUpDoc({{$item->id}})"> Subir
-                                                                    Documentacion</a>
-                                                            @endif
+                                                             @if($selectedRequeriment == 'A')
+                                                                @if($item->states_req_applications  == 9)
+                                                                    <a href="#" wire:click="showUpDocA({{$item->id}})"> Subir
+                                                                        Documentacion</a>
+                                                                @endif
+
+                                                                @else
+
+                                                                    @if($item->states_req_applications  == 9)
+
+                                                                     <a href="#" wire:click="showUpDoc({{$item->id}})"> Subir
+                                                                        Documentacion</a>
+                                                                       @endif
+                                                                       @endif
+                                                    
                                                         </td>
                                                         <td>
-                                                            <a href="#"
+                                                            @if($selectedRequeriment == 'A')
+                                                                @if($item->states_req_applications  == 9)
+                                                                    <a href="#"
+                                                                       wire:click="showObservacionRequerimontA({{$item->id}})">
+                                                                        Ver
+                                                                        Observaciones</a>
+                                                                @endif
+
+                                                                @else
+
+                                                                    @if($item->states_req_applications  == 9)
+
+                                                                     <a href="#"
                                                                wire:click="showObservacionRequerimont({{$item->id}})">
                                                                 Ver
                                                                 Observaciones</a>
+                                                                       @endif
+                                                            @endif
+                                                       
                                                         </td>
                                                         <td>
                                                             @if($item->states_req_applications  < 6)
@@ -172,11 +211,20 @@
                                                         </td>
                                                         <td>
                                                             @if(Session::has('id_user'))
+                                                             @if($selectedRequeriment == 'A')
                                                                 <a href="#"
-                                                                   wire:click="showFormChangeState({{$item->id}})"
+                                                                   wire:click="showFormChangeStateA({{$item->id}})"
                                                                    type="button"
                                                                    class="btn btn-success">Cambiar Estado
                                                                 </a>
+                                                                @else
+                                                           
+                                                                    <a href="#"
+                                                                       wire:click="showFormChangeState({{$item->id}})"
+                                                                       type="button"
+                                                                       class="btn btn-success">Cambiar Estado
+                                                                    </a>
+                                                            @endif
                                                             @endif
                                                         </td>
 
