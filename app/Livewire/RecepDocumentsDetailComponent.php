@@ -28,7 +28,7 @@ class RecepDocumentsDetailComponent extends Component
     public $searchInput, $messagesSendsAplications, $apllicationID, $selectedRequeriment;
     public $apllicationI, $nameDoc, $descriptionDoc, $docFile, $reqApplicationID, $otroid;
     public $docDatas = [], $docGlobalView, $selectStates, $messagesSends, $observacionesGlobals, $sendNotificationsCompanies;
-    public $dataRequisitos, $idCompany;
+    public $dataRequisitos, $idCompany, $nameTableRelations, $dataVenceInput, $inputDateVence;
 
     public function paginationView()
     {
@@ -48,28 +48,34 @@ class RecepDocumentsDetailComponent extends Component
 
             $this->dataRequisitos =
                 ReqApplications::join('requisitos', 'requisitos.id', '=', 'req_applications.requirement_id')
-                ->join('medicamentos', 'medicamentos.id', '=', 'req_applications.product_id')
-                ->join('grupos_requisitos', 'grupos_requisitos.id', '=', 'requisitos.grupo_requisito_id')
-                ->where('req_applications.application_id', $this->apllicationID)
-                ->where('req_applications.status', '>=', 1)
-                ->select(
-                    'grupos_requisitos.grupo as grupo_nombre',
-                    'req_applications.id',
-                    'requisitos.codigo',
-                    'requisitos.descripcion',
-                    'req_applications.states_req_applications',
-                )
-                ->orderBy('grupos_requisitos.grupo')
-                ->get()
-                ->groupBy('grupo_nombre') // Agrupa por 'grupo_nombre' en lugar de 'grupos_requisitos.grupo'
-                ->collect(); // Convierte a colección de soporte
+                    ->join('medicamentos', 'medicamentos.id', '=', 'req_applications.product_id')
+                    ->join('grupos_requisitos', 'grupos_requisitos.id', '=', 'requisitos.grupo_requisito_id')
+                    ->where('req_applications.application_id', $this->apllicationID)
+                    ->where('req_applications.status', '>=', 1)
+                    ->select(
+                        'grupos_requisitos.grupo as grupo_nombre',
+                        'req_applications.id',
+                        'requisitos.codigo',
+                        'requisitos.descripcion',
+                        'requisitos.obligatorio',
+                        'requisitos.entregable',
+                        'requisitos.vence',
+                        'req_applications.date_vence',
+                        'req_applications.states_req_applications',
+                    )
+                    ->orderBy('grupos_requisitos.grupo')
+                    ->get()
+                    ->groupBy('grupo_nombre') // Agrupa por 'grupo_nombre' en lugar de 'grupos_requisitos.grupo'
+                    ->collect(); // Convierte a colección de soporte
 
         } else {
             $company = Companies::where('id', $this->idCompany)->first();
 
             $this->dataRequisitos = Application::join('companies', 'applications.fabric_id', '=', 'companies.id')
-
-                ->join('req_relation_profile_tables', 'applications.fabric_id', '=', 'req_relation_profile_tables.company_id')
+                ->join('req_relation_profile_tables',
+                    'applications.fabric_id',
+                    '=',
+                    'req_relation_profile_tables.company_id')
                 ->join('requisitos', 'requisitos.id', '=', 'req_relation_profile_tables.req_id')
                 ->where('applications.distribution_id', $this->idCompany)
                 ->where('applications.status', '>=', 1)
@@ -78,6 +84,10 @@ class RecepDocumentsDetailComponent extends Component
                     'req_relation_profile_tables.id',
                     'requisitos.codigo',
                     'requisitos.descripcion',
+                    'requisitos.obligatorio',
+                    'requisitos.entregable',
+                    'requisitos.vence',
+                    'req_relation_profile_tables.date_vence',
                     'req_relation_profile_tables.status',
                 )
                 ->orderBy('requisitos.descripcion')
@@ -136,9 +146,10 @@ class RecepDocumentsDetailComponent extends Component
             ->section('content');
     }
 
-    public function showFormChangeState($id)
+    public function showFormChangeState($id, $nameTable)
     {
         $this->reqApplicationID = $id;
+        $this->nameTableRelations = $nameTable;
         $this->dispatch('showFormChangeState');
     }
 
@@ -168,23 +179,23 @@ class RecepDocumentsDetailComponent extends Component
             ]);
             $dataSends =
                 Application::join('familia_producto', 'applications.family_id', '=', 'familia_producto.id')
-                ->join('medicamentos', 'applications.product_id', '=', 'medicamentos.id')
-                ->join('companies', 'applications.distribution_id', '=', 'companies.id')
-                ->select(
-                    'applications.*',
-                    'medicamentos.descripcion',
-                    'medicamentos.cod_medicamento',
-                    'companies.legal_name',
-                    'companies.email',
-                    'applications.id',
-                    DB::raw('(SELECT COUNT(*) FROM req_applications WHERE req_applications.states_req_applications = 3 AND req_applications.application_id = applications.id) as req_applications_count')
-                )
-                ->where('applications.id', $this->apllicationID)
-                ->where('applications.status', 1)
-                ->first();
+                    ->join('medicamentos', 'applications.product_id', '=', 'medicamentos.id')
+                    ->join('companies', 'applications.distribution_id', '=', 'companies.id')
+                    ->select(
+                        'applications.*',
+                        'medicamentos.descripcion',
+                        'medicamentos.cod_medicamento',
+                        'companies.legal_name',
+                        'companies.email',
+                        'applications.id',
+                        DB::raw('(SELECT COUNT(*) FROM req_applications WHERE req_applications.states_req_applications = 3 AND req_applications.application_id = applications.id) as req_applications_count')
+                    )
+                    ->where('applications.id', $this->apllicationID)
+                    ->where('applications.status', 1)
+                    ->first();
             Mail::to($dataSends->email)->send(new NotificationRequeriment(
                 $dataSends->cod_medicamento . '-'
-                    . $dataSends->descripcion,
+                . $dataSends->descripcion,
                 $dataSends->descripcion,
                 $this->messagesSendsAplications,
                 'Notificacion'
@@ -231,27 +242,37 @@ class RecepDocumentsDetailComponent extends Component
                 'status' => 1
             ]);
 
-            ReqApplications::where('id', $this->reqApplicationID)
-                ->update([
-                    'states_req_applications' => $this->selectStates
-                ]);
+            if ($this->nameTableRelations == 'req_applications') {
+
+
+                ReqApplications::where('id', $this->reqApplicationID)
+                    ->update([
+                        'states_req_applications' => $this->selectStates
+                    ]);
+
+            } elseif ($this->nameTableRelations == 'req_relation_profile_tables') {
+                ReqRelationProfileTable::where('id', $this->reqApplicationID)
+                    ->update([
+                        'status' => $this->selectStates,
+                    ]);
+            }
 
             if ($this->selectStates == 3) {
                 $dataSends =
                     ReqApplications::join('requisitos', 'requisitos.id', '=', 'req_applications.requirement_id')
-                    ->join('medicamentos', 'medicamentos.id', '=', 'req_applications.product_id')
-                    ->join('companies', 'companies.id', '=', 'req_applications.distribution_id')
-                    ->where('req_applications.id', $this->reqApplicationID)
-                    ->where('req_applications.status', 1)
-                    ->select(
-                        'req_applications.id',
-                        'requisitos.codigo',
-                        'requisitos.descripcion',
-                        'req_applications.states_req_applications',
-                        'medicamentos.cod_medicamento',
-                        'medicamentos.descripcion as medicamento_descripcion',
-                        'companies.email',
-                    )->first();
+                        ->join('medicamentos', 'medicamentos.id', '=', 'req_applications.product_id')
+                        ->join('companies', 'companies.id', '=', 'req_applications.distribution_id')
+                        ->where('req_applications.id', $this->reqApplicationID)
+                        ->where('req_applications.status', 1)
+                        ->select(
+                            'req_applications.id',
+                            'requisitos.codigo',
+                            'requisitos.descripcion',
+                            'req_applications.states_req_applications',
+                            'medicamentos.cod_medicamento',
+                            'medicamentos.descripcion as medicamento_descripcion',
+                            'companies.email',
+                        )->first();
                 //                Mail::to($dataSends->email)->send(new NotificationRequeriment($dataSends->cod_medicamento . '-'
                 //                    . $dataSends->medicamento_descripcion,
                 //                    $dataSends->descripcion,
@@ -274,11 +295,12 @@ class RecepDocumentsDetailComponent extends Component
         }
     }
 
-    public function showObservacionRequerimont($id)
+    public function showObservacionRequerimont($id, $nameTable)
     {
+
+        $this->nameTableRelations = $nameTable;
         $this->reqApplicationID = $id;
         $this->observacionesGlobals = NotificationsApplications::where('req_application_id', $id)->get();
-
         $this->dispatch('showObservacionRequerimont');
     }
 
@@ -289,17 +311,23 @@ class RecepDocumentsDetailComponent extends Component
         $this->dispatch('viewDocAdmShow');
     }
 
-    public function showDoc($id)
+    public function showDoc($id, $nameTable)
     {
+        $this->nameTableRelations = $nameTable;
         $this->reqApplicationID = $id;
         $this->docDatas = [];
-        $this->docDatas = DocumentApplications::where('req_application_id', $id)->get();
+        $this->docDatas = DocumentApplications::where('req_application_id', $id)
+            ->where('name_table', $nameTable)
+            ->get();
         //        dd($this->docDatas);
         $this->dispatch('showDoc');
     }
 
-    public function showUpDoc($id)
+    public function showUpDoc($id, $nameTable, $dataVenceparameter)
     {
+        $this->dataVenceInput = $dataVenceparameter;
+
+        $this->nameTableRelations = $nameTable;
         $this->reqApplicationID = $id;
         $this->dispatch('showUpDoc');
     }
@@ -308,17 +336,20 @@ class RecepDocumentsDetailComponent extends Component
     public function createDocUp()
     {
 
+
         $rules = [
             'nameDoc' => 'required',
             'descriptionDoc' => 'required',
             'docFile' => 'required',
-
         ];
+
+
         $messages = [
             'nameDoc.required' => 'El nombre del documento es requerido',
             'descriptionDoc.required' => 'La descripcion del documento es requerida',
             'docFile.required' => 'El documento es requerido',
         ];
+
 
         $this->validate($rules, $messages);
 
@@ -332,23 +363,52 @@ class RecepDocumentsDetailComponent extends Component
             }
             Db::beginTransaction();
 
+
             DocumentApplications::where('req_application_id', $this->reqApplicationID)
+                ->where('name_table', $this->nameTableRelations)
                 ->update([
                     'status' => 0
                 ]);
+
 
             $newDoc = DocumentApplications::create([
                 'req_application_id' => $this->reqApplicationID,
                 'document_name' => $this->nameDoc,
                 'descriptions' => $this->descriptionDoc,
                 'attachment' => $doc_name,
+                'name_table' => $this->nameTableRelations,
                 'status' => 1
             ]);
 
-            ReqApplications::where('id', $this->reqApplicationID)
-                ->update([
-                    'states_req_applications' => 10
-                ]);
+
+            if ($this->nameTableRelations == 'req_applications') {
+                if ($this->dataVenceInput == 1) {
+                    ReqApplications::where('id', $this->reqApplicationID)
+                        ->update([
+                            'states_req_applications' => 10,
+                            'date_vence' => $this->inputDateVence
+                        ]);
+                } else {
+                    ReqApplications::where('id', $this->reqApplicationID)
+                        ->update([
+                            'states_req_applications' => 10,
+                        ]);
+                }
+            } elseif ($this->nameTableRelations == 'req_relation_profile_tables') {
+                if ($this->dataVenceInput == 1) {
+                    ReqRelationProfileTable::where('id', $this->reqApplicationID)
+                        ->update([
+                            'status' => 10,
+                            'date_vence' => $this->inputDateVence
+                        ]);
+                } else {
+                    ReqRelationProfileTable::where('id', $this->reqApplicationID)
+                        ->update([
+                            'status' => 10
+                        ]);
+                }
+
+            }
 
 
             DB::commit();
@@ -427,8 +487,9 @@ class RecepDocumentsDetailComponent extends Component
     }
 
 
-    public function resetUI() {}
-
+    public function resetUI()
+    {
+    }
 
 
     public function showFormChangeStateA($id)

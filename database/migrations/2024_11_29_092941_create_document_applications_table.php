@@ -16,6 +16,7 @@ return new class extends Migration {
             $table->string('document_name');
             $table->string('attachment');
             $table->text('descriptions')->nullable();
+            $table->string('name_table')->nullable();
             $table->integer('status');
             $table->timestamps();
         });

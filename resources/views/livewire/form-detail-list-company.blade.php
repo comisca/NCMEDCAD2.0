@@ -14,6 +14,7 @@
                     <tr>
                         <th>Documento</th>
                         <th>Nombre del archivo</th>
+                        <th>Fecha de Creacion</th>
                         <th>Detalles</th>
 
                     </tr>
@@ -35,6 +36,11 @@
                                 <td>
                                     <p class="fw-normal mb-1">
                                         {{$itemsDocuments->attachment}}
+                                    </p>
+                                </td>
+                                <td>
+                                    <p class="fw-normal mb-1">
+                                        {{$itemsDocuments->created_at}}
                                     </p>
                                 </td>
 

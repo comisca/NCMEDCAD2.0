@@ -80,17 +80,17 @@
                         </a>
                         <ul class="sub-menu" aria-expanded="false">
                             {{--                            <li><a href="{{url('/registerDistribuidor')}}">Registro de empresas</a></li>--}}
-                            <li><a href="{{url('/families/products')}}">Famila de Productos</a></li>
-                            <li><a href="{{url('/family/group')}}">Grupos por Familias de Productos</a></li>
-                            <li><a href="{{url('/rquisitos/group')}}">Grupos de Requisitos por Familia de
-                                    Productos</a></li>
-                            <li><a href="{{url('/requisitos')}}">Mantenimiento de Requisitos</a></li>
-                            <li><a href="{{url('/listCompany')}}">Solicitudes de Pre-Registro</a></li>
+                            <li><a href="{{url('/families/products')}}">Categoria</a></li>
+                            <li><a href="{{url('/family/group')}}">Sub-Categoria</a></li>
+                            <li><a href="{{url('/rquisitos/group')}}">Requisitos por Categoria</a></li>
+                            <li><a href="{{url('/requisitos')}}">Catalogo de Requisitos</a></li>
+
                             <li><a href="{{url('/medicamentos')}}">Catalogo de Productos</a></li>
                             <li><a href="{{url('/configuracion/ficha/tecnica')}}">Configuracion de Ficha
                                     Tecnica</a></li>
                             <li><a href="{{url('/configuracion/ficha/admin')}}">Configuracion de Ficha
                                     Administrativa</a></li>
+
 
                             {{--                        <li><a href="{{url('/instituciones')}}">@lang('translation.Registro de Instituciones')</a></li>--}}
 
@@ -100,11 +100,12 @@
                         </ul>
                     </li>
                     <li>
-                        <a href="javascript: void(0);" class="has-arrow waves-effect">
+                        <a href="javascript: void(0);" cl ass="has-arrow waves-effect">
                             <i class="uil-padlock"></i>
                             <span>Procesos</span>
                         </a>
                         <ul class="sub-menu" aria-expanded="false">
+                            <li><a href="{{url('/listCompany')}}">Solicitudes de Pre-Registro</a></li>
                             <li><a href="/recepcion/doc/list">Recepcion de Documentos</a></li>
                             {{--                            <li><a href="{{url('/registerDistribuidor')}}">Registro de empresas</a></li>--}}
                             <li><a href="/pre/calificacion/tecnica">Precalificacion Tecnica</a></li>

@@ -20,5 +20,6 @@ class ReqApplications extends Model
         'message',
         'states_req_applications',
         'status',
+        'date_vence'
     ];
 }

@@ -15,6 +15,7 @@ return new class extends Migration {
             $table->bigInteger('req_id')->unsigned();
             $table->bigInteger('company_id')->unsigned();
             $table->string('type_profile');
+            $table->date('date_vence')->nullable();
             $table->integer('status');
             $table->timestamps();
         });

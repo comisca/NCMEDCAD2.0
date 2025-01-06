@@ -28,7 +28,17 @@
                     <span class="text-danger">{{$message}}</span>
                     @enderror
                 </div>
-
+                @if($dataVenceInput == 1)
+                    <div class="form-group col-12">
+                        <label for="inputDateVence">Vencimiento de Documento</label>
+                        <input wire:model="inputDateVence" type="date"
+                               class="form-control @error('inputDateVence') is-invalid @enderror" id="inputDateVence"
+                        >
+                        @error('inputDateVence')
+                        <span class="text-danger">{{$message}}</span>
+                        @enderror
+                    </div>
+                @endif
                 <div class="form-group col-12">
                     <label for="inputNameCompany">Seleccionar Archivo</label>
                     <input wire:model="docFile" type="file"

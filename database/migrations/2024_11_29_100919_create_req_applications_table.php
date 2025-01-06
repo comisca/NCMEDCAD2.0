@@ -18,6 +18,7 @@ return new class extends Migration {
             $table->bigInteger('product_id')->unsigned();
             $table->bigInteger('fabric_id')->unsigned();
             $table->text('message')->nullable();
+            $table->date('date_vence')->nullable();
             $table->integer('states_req_applications');
             $table->integer('status');
             $table->timestamps();

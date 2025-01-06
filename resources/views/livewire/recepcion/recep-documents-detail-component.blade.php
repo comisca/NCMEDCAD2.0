@@ -102,7 +102,7 @@
                 <div class="accordion" id="accordionExample">
                     @foreach ($dataRequisitos as $grupo => $items)
                         <div class="card">
-                            <div class="card-header" id="heading{{ $loop->index }}">
+                            <div wire:ignore.self class="card-header" id="heading{{ $loop->index }}">
                                 <h2 class="mb-0">
                                     <button
                                         class="btn btn-link btn-block text-left {{ $loop->first ? '' : 'collapsed' }}"
@@ -133,6 +133,8 @@
                                                         <th scope="col">Documentacion</th>
                                                         <th scope="col">Subir</th>
                                                         <th scope="col">Observaciones</th>
+                                                        <th scope="col">Fecha de vencimiento</th>
+                                                        <th scope="col">Obligatorio</th>
                                                         <th scope="col">Estado</th>
                                                         <th scope="col">Acción</th>
                                                     </tr>
@@ -143,88 +145,114 @@
                                                         <th scope="row">{{$item->id}}</th>
                                                         <td> {{ $item->codigo }} - {{ $item->descripcion }}</td>
                                                         <td>
-                                                             @if($selectedRequeriment == 'A')
-                                                                @if($item->states_req_applications  == 9)
-                                                                    <a href="#" wire:click="viewDocAdmShow({{$item->id}})"> Ver
-                                                                        Documentos</a>
-                                                                @endif
+                                                            @if($selectedRequeriment == 'A')
 
-                                                                @else
+                                                                <a href="#"
+                                                                   wire:click="showDoc({{$item->id}},'req_relation_profile_tables')">
+                                                                    Ver
+                                                                    Documentos</a>
 
-                                                                    @if($item->states_req_applications  == 9)
+                                                            @else
 
-                                                                     <a href="#" wire:click="showDoc({{$item->id}})"> Ver
-                                                                        Documentos</a>
-                                                                       @endif
-                                        
-                                                                       @endif
+                                                                <a href="#"
+                                                                   wire:click="showDoc({{$item->id}},'req_applications')">
+                                                                    Ver
+                                                                    Documentos</a>
 
-                                                        </td>
-                                                        <td>
-                                                             @if($selectedRequeriment == 'A')
-                                                                @if($item->states_req_applications  == 9)
-                                                                    <a href="#" wire:click="showUpDocA({{$item->id}})"> Subir
-                                                                        Documentacion</a>
-                                                                @endif
+                                                            @endif
 
-                                                                @else
-
-                                                                    @if($item->states_req_applications  == 9)
-
-                                                                     <a href="#" wire:click="showUpDoc({{$item->id}})"> Subir
-                                                                        Documentacion</a>
-                                                                       @endif
-                                                                       @endif
-                                                    
                                                         </td>
                                                         <td>
                                                             @if($selectedRequeriment == 'A')
-                                                                @if($item->states_req_applications  == 9)
+                                                                @if($item->status  == 9)
                                                                     <a href="#"
-                                                                       wire:click="showObservacionRequerimontA({{$item->id}})">
+                                                                       wire:click="showUpDoc({{$item->id}},
+                                                                       'req_relation_profile_tables',{{$item->vence  ?? 0}})">
+                                                                        Subir
+                                                                        Documentacion</a>
+                                                                @endif
+
+                                                            @else
+
+                                                                @if($item->states_req_applications  == 9)
+
+                                                                    <a href="#"
+                                                                       wire:click="showUpDoc({{$item->id}},
+                                                                       'req_applications',{{$item->vence  ?? 0}})">
+                                                                        Subir
+                                                                        Documentacion</a>
+                                                                @endif
+                                                            @endif
+
+                                                        </td>
+                                                        <td>
+                                                            @if($selectedRequeriment == 'A')
+                                                                @if($item->status  == 9)
+                                                                    <a href="#"
+                                                                       wire:click="showObservacionRequerimont({{$item->id}},'req_relation_profile_tables')">
                                                                         Ver
                                                                         Observaciones</a>
                                                                 @endif
 
-                                                                @else
+                                                            @else
 
-                                                                    @if($item->states_req_applications  == 9)
+                                                                @if($item->states_req_applications  == 9)
 
-                                                                     <a href="#"
-                                                               wire:click="showObservacionRequerimont({{$item->id}})">
-                                                                Ver
-                                                                Observaciones</a>
-                                                                       @endif
+                                                                    <a href="#"
+                                                                       wire:click="showObservacionRequerimont({{$item->id}},'req_applications')">
+                                                                        Ver
+                                                                        Observaciones</a>
+                                                                @endif
                                                             @endif
-                                                       
+
                                                         </td>
                                                         <td>
-                                                            @if($item->states_req_applications  < 6)
-                                                                Recibido/Conforme
-                                                            @elseif($item->states_req_applications  == 10)
-                                                                Pendiente de revision
-                                                            @elseif($item->states_req_applications  == 9)
-                                                                Observacion
+                                                            @if($item->vence == 1)
+                                                                {{--                                                                {{$item->date_vence}}--}}
+                                                                <input type="date" value="{{$item->date_vence}}">
                                                             @endif
-
+                                                        </td>
+                                                        <td>
+                                                            @if($item->obligatorio == 1)
+                                                                <input type="checkbox" checked disabled>
+                                                            @endif
+                                                        </td>
+                                                        <td>
+                                                            @if($selectedRequeriment == 'A')
+                                                                @if($item->status  < 6)
+                                                                    Recibido/Conforme
+                                                                @elseif($item->status  == 10)
+                                                                    Pendiente de revision
+                                                                @elseif($item->status  == 9)
+                                                                    Observacion
+                                                                @endif
+                                                            @else
+                                                                @if($item->states_req_applications  < 6)
+                                                                    Recibido/Conforme
+                                                                @elseif($item->states_req_applications  == 10)
+                                                                    Pendiente de revision
+                                                                @elseif($item->states_req_applications  == 9)
+                                                                    Observacion
+                                                                @endif
+                                                            @endif
 
                                                         </td>
                                                         <td>
                                                             @if(Session::has('id_user'))
-                                                             @if($selectedRequeriment == 'A')
-                                                                <a href="#"
-                                                                   wire:click="showFormChangeStateA({{$item->id}})"
-                                                                   type="button"
-                                                                   class="btn btn-success">Cambiar Estado
-                                                                </a>
-                                                                @else
-                                                           
+                                                                @if($selectedRequeriment == 'A')
                                                                     <a href="#"
-                                                                       wire:click="showFormChangeState({{$item->id}})"
+                                                                       wire:click="showFormChangeState({{$item->id}},'req_relation_profile_tables')"
                                                                        type="button"
                                                                        class="btn btn-success">Cambiar Estado
                                                                     </a>
-                                                            @endif
+                                                                @else
+
+                                                                    <a href="#"
+                                                                       wire:click="showFormChangeState({{$item->id}},'req_applications')"
+                                                                       type="button"
+                                                                       class="btn btn-success">Cambiar Estado
+                                                                    </a>
+                                                                @endif
                                                             @endif
                                                         </td>
 

@@ -15,6 +15,7 @@ class ReqRelationProfileTable extends Model
         'req_id',
         'company_id',
         'type_profile',
-        'status'
+        'status',
+        'date_vence'
     ];
 }

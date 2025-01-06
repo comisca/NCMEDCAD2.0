@@ -16,6 +16,8 @@
 
                             <th>Documento</th>
                             <th>Nombre del archivo</th>
+                            <th>Fecha de Creacion</th>
+                            <th>Activos</th>
                             <th>Detalles</th>
 
                         </tr>
@@ -38,6 +40,19 @@
                                         <p class="fw-normal mb-1">
                                             {{$itemsDocuments->attachment}}
                                         </p>
+                                    </td>
+                                    <td>
+                                        <p class="fw-normal mb-1">
+                                            {{$itemsDocuments->created_at}}
+                                        </p>
+                                    </td>
+                                    <td>
+                                        @if($itemsDocuments->status == 0 )
+
+
+                                        @else
+                                            <input type="checkbox" checked disabled>
+                                        @endif
                                     </td>
 
                                     <td>
