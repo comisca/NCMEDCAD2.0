@@ -428,4 +428,32 @@ class RecepDocumentsDetailComponent extends Component
 
 
     public function resetUI() {}
+
+
+
+    public function showFormChangeStateA($id)
+    {
+        $this->reqApplicationID = $id;
+        $this->dispatch('showFormChangeState');
+    }
+
+
+    public function showObservacionRequerimontA($id)
+    {
+        $this->reqApplicationID = $id;
+        $this->dispatch('showFormChangeState');
+    }
+
+    public function showUpDocA($id)
+    {
+        $this->reqApplicationID = $id;
+        $this->dispatch('showFormChangeState');
+    }
+
+
+    public function viewDocAdmShow($id)
+    {
+        $this->reqApplicationID = $id;
+        $this->dispatch('showFormChangeState');
+    }
 }
