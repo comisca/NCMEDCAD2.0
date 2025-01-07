@@ -15,28 +15,29 @@
                         <div class="col-xl-4 col-md-4 mb-4">
                             <div class="col mr-2">
                                 <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
-                                    Cod/ Nombre del producto:
+                                    Nombre Empresao:
                                 </div>
                                 <div class="h5 mb-0 font-weight-bold text-gray-800">
-                                    {{$applicationsData->descripcion}} ( {{$applicationsData->cod_medicamento}})
+                                    {{$applicationsData->legal_name}}
                                 </div>
                             </div>
                             <div class="col mr-2">
                                 <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
-                                    ID de la Aplicacion:
+                                    Direccion:
                                 </div>
                                 <div class="h5 mb-0 font-weight-bold text-gray-800">
-                                    {{$applicationsData->id}}
+                                    {{$applicationsData->address}},{{$applicationsData->city}}
+                                    ,,{{$applicationsData->country}}
                                 </div>
                             </div>
                         </div>
                         <div class="col-xl-4 col-md-4 mb-4">
                             <div class="col mr-2">
                                 <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
-                                    Fabricante:
+                                    Contacto:
                                 </div>
                                 <div class="h5 mb-0 font-weight-bold text-gray-800">
-                                    {{$applicationsData->legal_name}}
+                                    {{$applicationsData->first_name}}  {{$applicationsData->last_name}}
                                 </div>
                             </div>
                             <div class="col mr-2">
@@ -45,6 +46,24 @@
                                 </div>
                                 <div class="h5 mb-0 font-weight-bold text-gray-800">
                                     {{$applicationsData->email}}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xl-4 col-md-4 mb-4">
+                            <div class="col mr-2">
+                                <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                    Telefono:
+                                </div>
+                                <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                    {{$applicationsData->phone}}
+                                </div>
+                            </div>
+                            <div class="col mr-2">
+                                <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                    Facsimile:
+                                </div>
+                                <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                    {{$applicationsData->facsimile}}
                                 </div>
                             </div>
                         </div>
@@ -61,7 +80,6 @@
                                 </div>
                             </div>
                         </div>
-
                         <div class="col-xl-4 col-md-4 mb-4">
                             <div class="col mr-2">
                                 <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
@@ -134,7 +152,7 @@
 
                                                         </td>
                                                         <td>
-                                                            @if($item->states_req_applications == 0)
+                                                            @if($item->status == 0)
                                                                 <a href="#" wire:click="showUpDoc({{$item->id}},
                                                             {{$item->vence ?? 0}})"> Subir
                                                                     Documentacion</a>
@@ -158,9 +176,9 @@
                                                             @endif
                                                         </td>
                                                         <td>
-                                                            @if($item->states_req_applications == 1)
+                                                            @if($item->status == 1)
                                                                 SI
-                                                            @elseif($item->states_req_applications == 0)
+                                                            @elseif($item->status == 0)
                                                                 NO
                                                             @else
                                                                 N/A

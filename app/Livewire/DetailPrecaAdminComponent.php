@@ -4,10 +4,11 @@ namespace App\Livewire;
 
 use App\Mail\NotificationRequeriment;
 use App\Models\Application;
+use App\Models\Companies;
 use App\Models\DocumentApplications;
 use App\Models\NotificationsApplications;
 use App\Models\ReqApplications;
-use App\Models\ReqRelationProduts;
+use App\Models\ReqRelationProfileTable;
 use Illuminate\Support\Facades\Mail;
 use Livewire\Attributes\On;
 use Livewire\WithFileUploads;
@@ -16,7 +17,7 @@ use Livewire\Component;
 use Session;
 use DB;
 
-class PreCalificacionTecnicaDetail extends Component
+class DetailPrecaAdminComponent extends Component
 {
 
     use WithPagination;
@@ -39,63 +40,50 @@ class PreCalificacionTecnicaDetail extends Component
 
     }
 
-    public function updated()
-    {
-
-
-    }
-
 
     public function render()
     {
+
         $this->apllicationID = $this->otroid;
 
-        $applicationsData = Application::join('familia_producto', 'applications.family_id', '=', 'familia_producto.id')
-            ->join('medicamentos', 'applications.product_id', '=', 'medicamentos.id')
-            ->join('companies', 'applications.fabric_id', '=', 'companies.id')
-            ->select('applications.*',
-                'medicamentos.descripcion',
-                'medicamentos.cod_medicamento',
-                'companies.legal_name',
-                'companies.email',
-                'applications.id',
-                DB::raw('(SELECT COUNT(*) FROM req_applications WHERE req_applications.states_req_applications = 3 AND req_applications.application_id = applications.id) as req_applications_count'))
-            ->where('applications.id', $this->apllicationID)
-            ->where('applications.status', 1)
-            ->first();
-
+        $applicationsData = Companies::where('id', $this->apllicationID)->first();
         $dataApplication =
-            ReqApplications::join('requisitos', 'requisitos.id', '=', 'req_applications.requirement_id')
-                ->join('medicamentos', 'medicamentos.id', '=', 'req_applications.product_id')
-                ->join('grupos_requisitos', 'grupos_requisitos.id', '=', 'requisitos.grupo_requisito_id')
-                ->where('req_applications.application_id', $this->apllicationID)
-                ->where('req_applications.states_req_applications', '<=', 5)
+            Application::join('companies', 'applications.fabric_id', '=', 'companies.id')
+                ->join('req_relation_profile_tables',
+                    'applications.fabric_id',
+                    '=',
+                    'req_relation_profile_tables.company_id')
+                ->join('requisitos', 'requisitos.id', '=', 'req_relation_profile_tables.req_id')
+                ->where('applications.distribution_id', $this->apllicationID)
+                ->where('req_relation_profile_tables.status', '<=', 5)
                 ->select(
-                    'grupos_requisitos.grupo as grupo_nombre',
-                    'req_applications.id',
+                    'companies.legal_name as grupo_nombre',
+                    'req_relation_profile_tables.id',
                     'requisitos.codigo',
                     'requisitos.descripcion',
                     'requisitos.obligatorio',
                     'requisitos.entregable',
                     'requisitos.vence',
-                    'req_applications.date_vence',
-                    'req_applications.states_req_applications',
+                    'req_relation_profile_tables.date_vence',
+                    'req_relation_profile_tables.status',
                 )
-                ->orderBy('grupos_requisitos.grupo')
+                ->orderBy('requisitos.descripcion')
                 ->get()
                 ->groupBy('grupo_nombre') // Agrupa por 'grupo_nombre' en lugar de 'grupos_requisitos.grupo'
                 ->collect(); // Convierte a colección de soporte
-        return view('livewire.companies.pre-calificacion-tecnica-detail',
+
+        return view('livewire.detail-preca-admin-component',
             ['dataApplication' => $dataApplication, 'applicationsData' => $applicationsData])
             ->extends('layouts.master')
             ->section('content');
     }
 
+
     public function showFormChangeState($id)
     {
         $this->reqApplicationID = $id;
+        $this->nameTableRelations = 'req_relation_profile_tables';
         $this->dispatch('showFormChangeState');
-
     }
 
     public function sendSendApplicationModal()
@@ -107,7 +95,6 @@ class PreCalificacionTecnicaDetail extends Component
 
 
         ];
-
         $messages = [
             'messagesSendsAplications.required' => 'El mensaje es requerido',
         ];
@@ -127,28 +114,31 @@ class PreCalificacionTecnicaDetail extends Component
                 Application::join('familia_producto', 'applications.family_id', '=', 'familia_producto.id')
                     ->join('medicamentos', 'applications.product_id', '=', 'medicamentos.id')
                     ->join('companies', 'applications.distribution_id', '=', 'companies.id')
-                    ->select('applications.*',
+                    ->select(
+                        'applications.*',
                         'medicamentos.descripcion',
                         'medicamentos.cod_medicamento',
                         'companies.legal_name',
                         'companies.email',
                         'applications.id',
-                        DB::raw('(SELECT COUNT(*) FROM req_applications WHERE req_applications.states_req_applications = 3 AND req_applications.application_id = applications.id) as req_applications_count'))
+                        DB::raw('(SELECT COUNT(*) FROM req_applications WHERE req_applications.states_req_applications = 3 AND req_applications.application_id = applications.id) as req_applications_count')
+                    )
                     ->where('applications.id', $this->apllicationID)
                     ->where('applications.status', 1)
                     ->first();
-            Mail::to($dataSends->email)->send(new NotificationRequeriment($dataSends->cod_medicamento . '-'
+            Mail::to($dataSends->email)->send(new NotificationRequeriment(
+                $dataSends->cod_medicamento . '-'
                 . $dataSends->descripcion,
                 $dataSends->descripcion,
                 $this->messagesSendsAplications,
-                'Notificacion'));
+                'Notificacion'
+            ));
 
             DB::commit();
 
             $this->messagesSendsAplications = '';
 
             $this->dispatch('sendSendApplicationSuccess', message: 'Notificacion enviada correctamente');
-
         } catch (\Throwable $e) {
             //este metodo lo que hace es deshacer los cambios en la base de datos
             DB::rollback();
@@ -156,10 +146,7 @@ class PreCalificacionTecnicaDetail extends Component
             //este metodo lo que hace es mostrar el error en la consola
             dd($e->getMessage());
         }
-
-
     }
-
 
     public function chageStateRequeriment()
     {
@@ -187,9 +174,10 @@ class PreCalificacionTecnicaDetail extends Component
                 'status' => 1
             ]);
 
-            ReqApplications::where('id', $this->reqApplicationID)
+
+            ReqRelationProfileTable::where('id', $this->reqApplicationID)
                 ->update([
-                    'states_req_applications' => $this->selectStates
+                    'status' => $this->selectStates,
                 ]);
 
             if ($this->selectStates == 3) {
@@ -208,11 +196,11 @@ class PreCalificacionTecnicaDetail extends Component
                             'medicamentos.descripcion as medicamento_descripcion',
                             'companies.email',
                         )->first();
-//                Mail::to($dataSends->email)->send(new NotificationRequeriment($dataSends->cod_medicamento . '-'
-//                    . $dataSends->medicamento_descripcion,
-//                    $dataSends->descripcion,
-//                    $this->messagesSends,
-//                    'Observacion'));
+                //                Mail::to($dataSends->email)->send(new NotificationRequeriment($dataSends->cod_medicamento . '-'
+                //                    . $dataSends->medicamento_descripcion,
+                //                    $dataSends->descripcion,
+                //                    $this->messagesSends,
+                //                    'Observacion'));
             }
 
             DB::commit();
@@ -221,7 +209,6 @@ class PreCalificacionTecnicaDetail extends Component
             $this->selectStates = '';
             $this->messagesSends = '';
             $this->dispatch('chageStateRequerimentSuccess', message: 'Estado cambiado correctamente');
-
         } catch (\Throwable $e) {
             //este metodo lo que hace es deshacer los cambios en la base de datos
             DB::rollback();
@@ -229,16 +216,15 @@ class PreCalificacionTecnicaDetail extends Component
             //este metodo lo que hace es mostrar el error en la consola
             dd($e->getMessage());
         }
-
     }
 
     public function showObservacionRequerimont($id)
     {
+
+        $this->nameTableRelations = 'req_relation_profile_tables';
         $this->reqApplicationID = $id;
         $this->observacionesGlobals = NotificationsApplications::where('req_application_id', $id)->get();
-
         $this->dispatch('showObservacionRequerimont');
-
     }
 
     public function viewDocAdm($id)
@@ -246,44 +232,47 @@ class PreCalificacionTecnicaDetail extends Component
 
         $this->docGlobalView = DocumentApplications::where('id', $id)->first();
         $this->dispatch('viewDocAdmShow');
-
     }
 
     public function showDoc($id)
     {
+        $this->nameTableRelations = 'req_relation_profile_tables';
         $this->reqApplicationID = $id;
         $this->docDatas = [];
-        $this->docDatas = DocumentApplications::where('req_application_id', $id)->get();
-//        dd($this->docDatas);
+        $this->docDatas = DocumentApplications::where('req_application_id', $id)
+            ->where('name_table', 'req_relation_profile_tables')
+            ->get();
+        //        dd($this->docDatas);
         $this->dispatch('showDoc');
-
-
     }
-
 
     public function showUpDoc($id, $dataVenceparameter)
     {
-        $this->reqApplicationID = $id;
         $this->dataVenceInput = $dataVenceparameter;
+
+        $this->nameTableRelations = 'req_relation_profile_tables';
+        $this->reqApplicationID = $id;
         $this->dispatch('showUpDoc');
-
-
     }
+
 
     public function createDocUp()
     {
+
 
         $rules = [
             'nameDoc' => 'required',
             'descriptionDoc' => 'required',
             'docFile' => 'required',
-
         ];
+
+
         $messages = [
             'nameDoc.required' => 'El nombre del documento es requerido',
             'descriptionDoc.required' => 'La descripcion del documento es requerida',
             'docFile.required' => 'El documento es requerido',
         ];
+
 
         $this->validate($rules, $messages);
 
@@ -297,13 +286,36 @@ class PreCalificacionTecnicaDetail extends Component
             }
             Db::beginTransaction();
 
+
+            DocumentApplications::where('req_application_id', $this->reqApplicationID)
+                ->where('name_table', 'req_relation_profile_tables')
+                ->update([
+                    'status' => 0
+                ]);
+
+
             $newDoc = DocumentApplications::create([
                 'req_application_id' => $this->reqApplicationID,
                 'document_name' => $this->nameDoc,
                 'descriptions' => $this->descriptionDoc,
                 'attachment' => $doc_name,
+                'name_table' => 'req_relation_profile_tables',
                 'status' => 1
             ]);
+
+
+            if ($this->dataVenceInput == 1) {
+                ReqRelationProfileTable::where('id', $this->reqApplicationID)
+                    ->update([
+                        'status' => 5,
+                        'date_vence' => $this->inputDateVence
+                    ]);
+            } else {
+                ReqRelationProfileTable::where('id', $this->reqApplicationID)
+                    ->update([
+                        'status' => 5
+                    ]);
+            }
 
 
             DB::commit();
@@ -312,7 +324,6 @@ class PreCalificacionTecnicaDetail extends Component
             $this->descriptionDoc = '';
             $this->docFile = '';
             $this->dispatch('upDocSuccess', message: 'Documento subido correctamente');
-
         } catch (\Throwable $e) {
             //este metodo lo que hace es deshacer los cambios en la base de datos
             DB::rollback();

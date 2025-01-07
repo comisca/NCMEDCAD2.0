@@ -109,7 +109,7 @@
                             <li><a href="/recepcion/doc/list">Recepcion de Documentos</a></li>
                             {{--                            <li><a href="{{url('/registerDistribuidor')}}">Registro de empresas</a></li>--}}
                             <li><a href="/pre/calificacion/tecnica">Precalificacion Tecnica</a></li>
-                            <li><a href="#">Precalificacion Administrativa</a></li>
+                            <li><a href="/pre/calificacion/Administrativas">Precalificacion Administrativa</a></li>
 
                             <li><a href="#">Configuracion Evento</a></li>
                             <li><a href="#">Eventos</a></li>

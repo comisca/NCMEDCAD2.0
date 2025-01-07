@@ -72,9 +72,11 @@ Route::middleware(['auth:company'])->group(function () {
 
 Route::get('/documents/validation/{id}', \App\Livewire\PreCalificacionTecnicaDetail::class);
 Route::get('/recepcion/doc/eval/{id}/{idCompany}', \App\Livewire\RecepDocumentsDetailComponent::class);
+Route::get('/documents/validation/pre/admin/{id}', \App\Livewire\DetailPrecaAdminComponent::class);
 
 Route::get('/precalificacion/company/admin/{id}', \App\Livewire\PreCalificacionAdministrativa::class);
 Route::get('/pre/calificacion/tecnica', \App\Livewire\ApplicationAdmin::class);
+Route::get('/pre/calificacion/Administrativas', \App\Livewire\ListPrecAdminComponent::class);
 Route::get('/recepcion/doc/list', \App\Livewire\RecepDocumentsListComponent::class);
 Route::get('/companie/info/{id}', \App\Livewire\CompaniesDetailsComponents::class);
 
