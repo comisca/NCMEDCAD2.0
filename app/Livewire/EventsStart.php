@@ -11,9 +11,11 @@ use DB;
 class EventsStart extends Component
 {
 
-use WithPagination;
+    use WithPagination;
+
     public $Pagination = 10;
     public $searchInput;
+
     public function paginationView()
     {
         return 'vendor.livewire.bootstrap';
@@ -27,81 +29,78 @@ use WithPagination;
 
     public function render()
     {
-        return view('livewire.events-start')
-        ->extends('layouts.master')
-        ->section('content');
+        return view('livewire.events.events-start')
+            ->extends('layouts.master')
+            ->section('content');
     }
 
-       public function create()
-        {
-            try {
-                //este metodo lo que hace es inicailizar las transacciones en la base de datos
-                DB::beginTransaction();
+    public function create()
+    {
+        try {
+            //este metodo lo que hace es inicailizar las transacciones en la base de datos
+            DB::beginTransaction();
 
-                //Aqui se escribe el codigo que se desea hacer en la transaccion
+            //Aqui se escribe el codigo que se desea hacer en la transaccion
 
-                //este metodo lo que hace es guardar los cambios en la base de datos
-                DB::commit();
+            //este metodo lo que hace es guardar los cambios en la base de datos
+            DB::commit();
 
-            }catch (\Throwable $e) {
-                //este metodo lo que hace es deshacer los cambios en la base de datos
-                DB::rollback();
+        } catch (\Throwable $e) {
+            //este metodo lo que hace es deshacer los cambios en la base de datos
+            DB::rollback();
 
-                //este metodo lo que hace es mostrar el error en la consola
-               dd($e->getMessage());
-            }
+            //este metodo lo que hace es mostrar el error en la consola
+            dd($e->getMessage());
         }
+    }
 
 
-          public function update()
-            {
-                try {
-                    //este metodo lo que hace es inicailizar las transacciones en la base de datos
-                    DB::beginTransaction();
+    public function update()
+    {
+        try {
+            //este metodo lo que hace es inicailizar las transacciones en la base de datos
+            DB::beginTransaction();
 
-                    //Aqui se escribe el codigo que se desea hacer en la transaccion
+            //Aqui se escribe el codigo que se desea hacer en la transaccion
 
-                    //este metodo lo que hace es guardar los cambios en la base de datos
-                    DB::commit();
+            //este metodo lo que hace es guardar los cambios en la base de datos
+            DB::commit();
 
-                }catch (\Throwable $e) {
-                    //este metodo lo que hace es deshacer los cambios en la base de datos
-                    DB::rollback();
+        } catch (\Throwable $e) {
+            //este metodo lo que hace es deshacer los cambios en la base de datos
+            DB::rollback();
 
-                    //este metodo lo que hace es mostrar el error en la consola
-                    dd($e->getMessage());
-                }
-            }
-
-
-            public function deletexid()
-            {
-                try {
-                    //este metodo lo que hace es inicailizar las transacciones en la base de datos
-                    DB::beginTransaction();
-
-                    //Aqui se escribe el codigo que se desea hacer en la transaccion
-
-                    //este metodo lo que hace es guardar los cambios en la base de datos
-                    DB::commit();
-
-                }catch (\Throwable $e) {
-                    //este metodo lo que hace es deshacer los cambios en la base de datos
-                    DB::rollback();
-
-                    //este metodo lo que hace es mostrar el error en la consola
-                    dd($e->getMessage());
-                }
-            }
-
-
-
-
-
-     public function resetUI()
-        {
-
-
+            //este metodo lo que hace es mostrar el error en la consola
+            dd($e->getMessage());
         }
+    }
+
+
+    public function deletexid()
+    {
+        try {
+            //este metodo lo que hace es inicailizar las transacciones en la base de datos
+            DB::beginTransaction();
+
+            //Aqui se escribe el codigo que se desea hacer en la transaccion
+
+            //este metodo lo que hace es guardar los cambios en la base de datos
+            DB::commit();
+
+        } catch (\Throwable $e) {
+            //este metodo lo que hace es deshacer los cambios en la base de datos
+            DB::rollback();
+
+            //este metodo lo que hace es mostrar el error en la consola
+            dd($e->getMessage());
+        }
+    }
+
+
+    public function resetUI()
+    {
+
+
+    }
 
 }

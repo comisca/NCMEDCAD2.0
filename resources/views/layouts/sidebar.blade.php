@@ -111,7 +111,7 @@
                             <li><a href="/pre/calificacion/tecnica">Precalificacion Tecnica</a></li>
                             <li><a href="/pre/calificacion/Administrativas">Precalificacion Administrativa</a></li>
 
-                            <li><a href="#">Configuracion Evento</a></li>
+                            <li><a href="/event/config">Configuracion Evento</a></li>
                             <li><a href="#">Eventos</a></li>
 
                             {{--                        <li><a href="{{url('/fichatecnica')}}">Creacion de Aplicacion</a></li>--}}
