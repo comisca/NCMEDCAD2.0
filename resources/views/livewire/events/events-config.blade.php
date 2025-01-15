@@ -17,7 +17,7 @@
 
                         <div class="mb-3">
 
-                            <a href="#" data-toggle="modal" data-target="#modalUniversal"
+                            <a href="#" data-toggle="modal" data-target="#modalCreateEvents"
                                class="btn btn-primary waves-effect waves-light"><i
                                     class="mdi mdi-plus mr-2"></i> {{__('actions.create')}}</a>
 
@@ -54,14 +54,15 @@
                             </th>
                             <th scope="col">ID</th>
                             <th scope="col">Año</th>
+                            <th scope="col">Familia de Productos</th>
                             <th scope="col">Nombre de evento</th>
                             <th scope="col" style="width: 200px;">{{__('actions.action')}}</th>
                         </tr>
                         </thead>
                         <tbody>
-                        @if(!empty($users))
+                        @if(!empty($eventsData))
 
-                            @foreach($users as $permisoitems)
+                            @foreach($eventsData as $eventItems)
                                 <tr>
                                     <th scope="row">
                                         <div class="custom-control custom-checkbox">
@@ -70,25 +71,33 @@
                                         </div>
                                     </th>
                                     <td>
-                                        <img src="{{ URL::asset('assets/images/users/avatar-2.jpg')}}" alt=""
-                                             class="avatar-xs rounded-circle mr-2">
-                                        <a href="#" class="text-body">{{ $permisoitems->id }}</a>
+
+                                        <a href="#" class="text-body">{{ $eventItems->id_events }}</a>
                                     </td>
-                                    <td>{{ $permisoitems->first_name }} {{ $permisoitems->last_name }}</td>
-                                    <td>{{ $permisoitems->email }}</td>
+                                    <td>{{ $eventItems->years }}</td>
+                                    <td>{{ $eventItems->familia_producto }}</td>
+                                    <td>{{ $eventItems->event_name }}</td>
 
                                     <td>
                                         <ul class="list-inline mb-0">
                                             <li class="list-inline-item">
-                                                <a href="#" wire:click="editRoles({{$permisoitems->id}})"
+                                                <a href="#"
+                                                   wire:click="selectedProduct({{$eventItems->id_events}})"
                                                    class="px-2 text-primary" data-toggle="tooltip" data-placement="top"
-                                                   title="{{__('actions.edit')}}"><i
+                                                   title="Agregar Productos"><i
+                                                        class="uil uil-plus font-size-18"></i></a>
+                                            </li>
+                                            <li class="list-inline-item">
+                                                <a href="#" wire:click="editRoles({{$eventItems->id_events}})"
+                                                   class="px-2 text-primary" data-toggle="tooltip" data-placement="top"
+                                                   title="Editar"><i
                                                         class="uil uil-pen font-size-18"></i></a>
                                             </li>
                                             <li class="list-inline-item">
-                                                <a href="javascript:void(0);" onclick="confirm({{ $permisoitems->id }})"
+                                                <a href="javascript:void(0);"
+                                                   onclick="confirm({{ $eventItems->id_events }})"
                                                    class="px-2 text-danger" data-toggle="tooltip" data-placement="top"
-                                                   title="{{__('actions.delete')}}"><i
+                                                   title="Eliminar"><i
                                                         class="uil uil-trash-alt font-size-18"></i></a>
                                             </li>
                                             {{--                                                                                    <li class="list-inline-item dropdown">--}}
@@ -121,6 +130,7 @@
     </div>
 
     @include('livewire.events.form-create-event')
+    @include('livewire.events.form-add-products')
     {{--    <livewire:search-universal></livewire:search-universal>--}}
 
 </div>
@@ -133,8 +143,10 @@
     <script src="{{ URL::asset('assets/js/pages/dashboard.init.js')}}"></script>
     <script>
         document.addEventListener('livewire:initialized', function () {
+
+            $('#modalCreateEvents').modal('hide');
             @this.
-            on('usuario-added', (event) => {
+            on('event-create', (event) => {
                 toastr.success(event.messages, 'Exito', {
                     "closeButton": true,
                     "debug": false,
@@ -184,6 +196,11 @@
 
             @this.on('roles-selected', (event) => {
                 document.getElementById("roles").focus();
+
+            })
+
+            @this.on('modal-add-products', (event) => {
+                $('#modalAddProducts').modal('show');
 
             })
 
