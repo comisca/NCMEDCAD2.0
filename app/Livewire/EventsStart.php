@@ -2,6 +2,7 @@
 
 namespace App\Livewire;
 
+use App\Models\Application;
 use App\Models\EventsAuction;
 use App\Models\ProductEvent;
 use Livewire\Attributes\On;
@@ -18,7 +19,7 @@ class EventsStart extends Component
     public $Pagination = 10;
     public $searchInput;
     public $selectedYears, $selectedEvents, $eventsData, $productsEvents;
-    public $selectedProductEvent;
+    public $selectedProductEvent, $productEventIndivisual, $dataAplication;
 
     public function paginationView()
     {
@@ -59,10 +60,29 @@ class EventsStart extends Component
     }
 
 
-    public function selectedProductEvent($id)
+    public function selectedProductEventID($id)
     {
         $this->selectedProductEvent = $id;
-        $this->dispatch('selectedProductEvent', $id);
+        $productEvernt = ProductEvent::find($id);
+
+        $this->dataAplication = Application::join('medicamentos', 'applications.product_id', '=', 'medicamentos.id')
+            ->join('companies as distribution_company', 'applications.distribution_id', '=', 'distribution_company.id')
+            ->join('companies as fabric_company', 'applications.fabric_id', '=', 'fabric_company.id')
+            ->where('medicamentos.id', $productEvernt->product_id)
+            ->where('applications.status', 10)
+            ->select(
+                'applications.*',
+                'medicamentos.*',
+                'distribution_company.legal_name as distribution_first_name',
+                'fabric_company.legal_name as fabric_first_name',
+                'applications.id as id_application',
+                'distribution_company.id as id_postor',
+                'applications.status as status_application'
+            )
+            ->get();
+
+
+        $this->dispatch('selectedProductEventDispach', messages: 'El evento fue agregado con exito');
 
     }
 

@@ -115,7 +115,7 @@
 
                                             <li class="list-inline-item">
                                                 <a href="#"
-                                                   wire:click="selectedProductEvent({{$eventItems->id_product_event}})"
+                                                   wire:click="selectedProductEventID({{$eventItems->id_product_event}})"
                                                    class="px-2 text-primary" data-toggle="tooltip" data-placement="top"
                                                    title="Agregar Postor"><i
                                                         class="uil uil-plus font-size-18"></i></a>
@@ -162,9 +162,8 @@
         </div>
     </div>
 
-    @include('livewire.events.form-detail-event')
-    @include('livewire.events.form-create-event')
-    @include('livewire.events.form-add-products')
+
+    @include('livewire.events.form-add-postor')
     {{--    <livewire:search-universal></livewire:search-universal>--}}
 
 </div>
@@ -267,8 +266,8 @@
 
             })
 
-            @this.on('modal-add-products', (event) => {
-                $('#modalAddProducts').modal('show');
+            @this.on('selectedProductEventDispach', (event) => {
+                $('#modalAddPostor').modal('show');
 
             })
 

@@ -1,6 +1,6 @@
 <div class="modal fade bs-example-modal-lg" tabindex="-1" wire:ignore.self id="modalAddPostor" role="dialog"
      aria-labelledby="exampleModalScrollableTitle" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
+    <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <div class="modal-header">
                 {{--                <h5 class="modal-title mt-0" id="exampleModalScrollableTitle">{{__('actions.search')}}</h5>--}}
@@ -13,15 +13,8 @@
 
 
                 <div class="form-group col-md-6">
-                    <label for="inputNameCompany">Tipo de Productos</label>
-                    <select id="selectedType" wire:model.live="selectedType"
-                            class="form-control @error('selectedType') is-invalid @enderror">
-                        <option selected>Selecciona que tipo de productos</option>
-                        <option value="Productos">Productos</option>
-                        <option value="Paquetes">Paquetes</option>
-
-
-                    </select>
+                    <label for="inputNameCompany">Buscar Postor</label>
+                    <input type="search" wire:model="searchQuerty" class="form-control" placeholder="Buscar Postor">
                     @error('selectedType')
                     <span class="text-danger">{{$message}}</span>
                     @enderror
@@ -38,15 +31,18 @@
                                         <label class="custom-control-label" for="contacusercheck"></label>
                                     </div>
                                 </th>
-                                <th scope="col">COD Productos</th>
-                                <th scope="col">Producto</th>
+                                <th scope="col">ID</th>
+                                <th scope="col">Participante</th>
+                                <th scope="col">Fabricante</th>
+                                <th scope="col">Aplicacion</th>
+                                <th scope="col">Estado de Aplicacion</th>
                                 <th scope="col" style="width: 200px;">{{__('actions.action')}}</th>
                             </tr>
                             </thead>
                             <tbody>
-                            @if(!empty($productData))
+                            @if(!empty($dataAplication))
 
-                                @foreach($productData as $productItems)
+                                @foreach($dataAplication as $itemsPostor)
                                     <tr>
                                         <th scope="row">
                                             <div class="custom-control custom-checkbox">
@@ -57,14 +53,24 @@
                                         </th>
                                         <td>
 
-                                            <a href="#" class="text-body">{{ $productItems->cod_medicamento }}</a>
+                                            <a href="#" class="text-body">{{ $itemsPostor->id_application }}</a>
                                         </td>
-                                        <td>{{ $productItems->descripcion }}</td>
+                                        <td>{{ $itemsPostor->distribution_first_name }}</td>
+                                        <td>{{ $itemsPostor->fabric_first_name }}</td>
+                                        <td>{{ $itemsPostor->trade_name }}</td>
+                                        <td>
+                                            @if($itemsPostor->status_application == 10)
+                                                <span class="badge badge-success">Precalificado</span>
+                                            @else
+                                                <span class="badge badge-danger">Con Observacion</span>
+                                            @endif
+                                        </td>
 
                                         <td>
                                             <ul class="list-inline mb-0">
                                                 <li class="list-inline-item">
-                                                    <a href="#" wire:click="addProductsEvents({{$productItems->id}})"
+                                                    <a href="#"
+                                                       wire:click="addProductsEvents({{$itemsPostor->id_postor}})"
                                                        class="px-2 text-primary" data-toggle="tooltip"
                                                        data-placement="top"
                                                        title="Agregar Productos"><i
