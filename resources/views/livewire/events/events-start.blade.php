@@ -121,7 +121,8 @@
                                                         class="uil uil-plus font-size-18"></i></a>
                                             </li>
                                             <li class="list-inline-item">
-                                                <a href="#" wire:click="editRoles({{$eventItems->id_product_event}})"
+                                                <a href="#"
+                                                   wire:click="createConfigSubasta({{$eventItems->id_product_event}})"
                                                    class="px-2 text-primary" data-toggle="tooltip" data-placement="top"
                                                    title="Configurar Subasta"><i
                                                         class="uil uil-setting font-size-18"></i></a>
@@ -165,6 +166,7 @@
 
     @include('livewire.events.form-add-postor')
     @include('livewire.events.form-detail-postor')
+    @include('livewire.events.form-subasta-config')
     {{--    <livewire:search-universal></livewire:search-universal>--}}
 
 </div>
@@ -243,6 +245,12 @@
                 $('#modalAddPostor').modal('show');
 
             })
+
+            @this.on('modal-config-subasta', (event) => {
+                $('#modalConfigSubasta').modal('show');
+
+            })
+
 
             @this.on('modal-detail-products', (event) => {
                 $('#modalDetailProducts').modal('show');

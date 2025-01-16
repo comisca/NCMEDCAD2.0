@@ -24,6 +24,8 @@ class EventsStart extends Component
     public $selectedYears, $selectedEvents, $eventsData, $productsEvents;
     public $selectedProductEvent, $productEventIndivisual, $dataAplication;
     public $viewPostorDataVar;
+    public $productSubasta, $idSubasta, $codProducts, $qtyProducts, $priceRef, $dateStart;
+    public $timeStart, $timeDuration, $porcReduce, $timeRecovery, $typeSubasta, $observacionSubasta;
 
     public function paginationView()
     {
@@ -151,6 +153,24 @@ class EventsStart extends Component
         }
 
     }
+
+    public function createConfigSubasta($id)
+    {
+
+        $dataLocalProductEvent = ProductEvent::join('medicamentos', 'product_events.product_id', '=', 'medicamentos.id')
+            ->where('product_events.id', $id)
+            ->select('product_events.id as id_product_event',
+                'medicamentos.*',
+                'product_events.*')
+            ->first();
+        $this->productSubasta = $dataLocalProductEvent->descripcion;
+        $this->codProducts = $dataLocalProductEvent->cod_medicamento;
+        $this->idSubasta = $id;
+        $this->dispatch('modal-config-subasta', messages: 'El evento fue agregado con exito');
+
+
+    }
+
 
     public function viewPostorData($id)
     {

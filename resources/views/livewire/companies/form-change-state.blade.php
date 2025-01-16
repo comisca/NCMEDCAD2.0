@@ -26,7 +26,7 @@
                             class="form-control @error('selectStates') is-invalid @enderror">
                         <option selected>Selecciona un estado</option>
                         <option value="9">Observacion</option>
-                        <option value="5">Recibido/Conforme</option>
+                        <option value="5">Recibido</option>
 
                     </select>
                     @error('selectStates')

@@ -63,6 +63,19 @@
                             </div>
                         </div>
 
+                        <div class="col-xl-4 col-md-4 mb-4">
+                            <div class="col mr-2">
+                                <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                    Evaluar Todos los Items:
+                                </div>
+                                <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                    <button id="showNotificationModal" type="button" class="btn
+                                    btn-primary">Dar Por Recibido
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
                         <div class="col-xl-12 col-md-12 mb-12">
                             <div class="col mr-2">
                                 <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
@@ -220,7 +233,7 @@
                                                         <td>
                                                             @if($selectedRequeriment == 'A')
                                                                 @if($item->status  < 6)
-                                                                    Recibido/Conforme
+                                                                    Recibido
                                                                 @elseif($item->status  == 10)
                                                                     Pendiente de revision
                                                                 @elseif($item->status  == 9)
@@ -228,7 +241,7 @@
                                                                 @endif
                                                             @else
                                                                 @if($item->states_req_applications  < 6)
-                                                                    Recibido/Conforme
+                                                                    Recibido
                                                                 @elseif($item->states_req_applications  == 10)
                                                                     Pendiente de revision
                                                                 @elseif($item->states_req_applications  == 9)
@@ -243,14 +256,14 @@
                                                                     <a href="#"
                                                                        wire:click="showFormChangeState({{$item->id}},'req_relation_profile_tables')"
                                                                        type="button"
-                                                                       class="btn btn-success">Cambiar Estado
+                                                                       class="btn btn-success">Evaluacion
                                                                     </a>
                                                                 @else
 
                                                                     <a href="#"
                                                                        wire:click="showFormChangeState({{$item->id}},'req_applications')"
                                                                        type="button"
-                                                                       class="btn btn-success">Cambiar Estado
+                                                                       class="btn btn-success">Evaluacion
                                                                     </a>
                                                                 @endif
                                                             @endif

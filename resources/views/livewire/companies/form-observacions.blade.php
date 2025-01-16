@@ -1,6 +1,6 @@
 <div class="modal fade bs-example-modal-lg" tabindex="-1" wire:ignore.self id="modalShowObservacion" role="dialog"
      aria-labelledby="exampleModalScrollableTitle" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
+    <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <div class="modal-header">
                 {{--                <h5 class="modal-title mt-0" id="exampleModalScrollableTitle">{{__('actions.search')}}</h5>--}}

@@ -173,7 +173,7 @@
                                                                 <a href="#"
                                                                    wire:click="showFormChangeState({{$item->id}})"
                                                                    type="button"
-                                                                   class="btn btn-success">Cambiar Estado
+                                                                   class="btn btn-success">Evaluacion
                                                                 </a>
                                                             @endif
                                                         </td>
