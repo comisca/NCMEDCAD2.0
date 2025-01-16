@@ -2,6 +2,8 @@
 
 namespace App\Livewire;
 
+use App\Models\EventsAuction;
+use App\Models\ProductEvent;
 use Livewire\Attributes\On;
 use Livewire\WithPagination;
 use Livewire\Component;
@@ -15,6 +17,8 @@ class EventsStart extends Component
 
     public $Pagination = 10;
     public $searchInput;
+    public $selectedYears, $selectedEvents, $eventsData, $productsEvents;
+    public $selectedProductEvent;
 
     public function paginationView()
     {
@@ -26,12 +30,40 @@ class EventsStart extends Component
 
     }
 
+    public function updated()
+    {
+        $this->eventsData =
+            EventsAuction::join('familia_producto', 'events_auctions.family_id', '=', 'familia_producto.id')
+                ->where('events_auctions.status', 1)
+                ->where('events_auctions.years', $this->selectedYears)
+                ->select('events_auctions.id as id_events', 'familia_producto.*', 'events_auctions.*')
+                ->get();
+
+
+        $this->productsEvents = ProductEvent::join('medicamentos', 'product_events.product_id', '=', 'medicamentos.id')
+            ->where('product_events.event_id', $this->selectedEvents)
+            ->select('product_events.id as id_product_event',
+                'medicamentos.*',
+                'product_events.*')
+            ->get();
+
+
+    }
+
 
     public function render()
     {
         return view('livewire.events.events-start')
             ->extends('layouts.master')
             ->section('content');
+    }
+
+
+    public function selectedProductEvent($id)
+    {
+        $this->selectedProductEvent = $id;
+        $this->dispatch('selectedProductEvent', $id);
+
     }
 
     public function create()

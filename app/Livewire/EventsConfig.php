@@ -20,7 +20,7 @@ class EventsConfig extends Component
     public $Pagination = 20;
     public $searchInput;
     public $familySelecte, $yearsInput, $nameEvent, $observationEvent;
-    public $selectedType, $productData, $idEventSelect;
+    public $selectedType, $productData, $idEventSelect, $dataproductsEvents;
 
     public function paginationView()
     {
@@ -116,15 +116,20 @@ class EventsConfig extends Component
         try {
             DB::beginTransaction();
 
-            $addData = ProductEvent::create([
-                'event_id' => $this->idEventSelect,
-                'product_id' => $id,
-                'type_product' => $this->selectedType,
-                'status' => 1,
-                'created_at' => date('Y-m-d H:i:s'),
-                'updated_at' => date('Y-m-d H:i:s'),
-            ]);
+            $comparatioData = ProductEvent::where('event_id', $this->idEventSelect)->where('product_id', $id)->first();
 
+            if (empty($comparatioData)) {
+
+                $addData = ProductEvent::create([
+                    'event_id' => $this->idEventSelect,
+                    'product_id' => $id,
+                    'type_product' => $this->selectedType,
+                    'status' => 1,
+                    'created_at' => date('Y-m-d H:i:s'),
+                    'updated_at' => date('Y-m-d H:i:s'),
+                ]);
+
+            }
 
             DB::commit();
 
@@ -132,6 +137,9 @@ class EventsConfig extends Component
 
         } catch (\Throwable $e) {
             DB::rollback();
+
+            dd($e->getMessage());
+
         }
 
 
@@ -141,7 +149,20 @@ class EventsConfig extends Component
     public function selectedProduct($id)
     {
         $this->idEventSelect = $id;
+
         $this->dispatch('modal-add-products', messages: 'El evento fue agregado con exito');
+    }
+
+    public function selectedEventProducts($id)
+    {
+        $this->idEventSelect = $id;
+        $this->dataproductsEvents =
+            ProductEvent::join('medicamentos', 'product_events.product_id', '=', 'medicamentos.id')
+                ->where('product_events.event_id', $id)
+                ->where('product_events.status', 1)
+                ->select('product_events.*', 'medicamentos.*')
+                ->get();
+        $this->dispatch('modal-detail-products', messages: 'El evento fue agregado con exito');
     }
 
 

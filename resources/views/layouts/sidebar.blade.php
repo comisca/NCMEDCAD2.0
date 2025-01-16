@@ -112,6 +112,7 @@
                             <li><a href="/pre/calificacion/Administrativas">Precalificacion Administrativa</a></li>
 
                             <li><a href="/event/config">Configuracion Evento</a></li>
+                            <li><a href="/send/auctions">Configuracion Subasta</a></li>
                             <li><a href="#">Eventos</a></li>
 
                             {{--                        <li><a href="{{url('/fichatecnica')}}">Creacion de Aplicacion</a></li>--}}

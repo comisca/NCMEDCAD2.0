@@ -1,4 +1,4 @@
-<div class="modal fade bs-example-modal-lg" tabindex="-1" wire:ignore.self id="modalAddProducts" role="dialog"
+<div class="modal fade bs-example-modal-lg" tabindex="-1" wire:ignore.self id="modalAddPostor" role="dialog"
      aria-labelledby="exampleModalScrollableTitle" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">

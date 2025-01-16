@@ -82,6 +82,14 @@
                                         <ul class="list-inline mb-0">
                                             <li class="list-inline-item">
                                                 <a href="#"
+                                                   wire:click="selectedEventProducts({{$eventItems->id_events}})"
+                                                   class="px-2 text-primary" data-toggle="tooltip" data-placement="top"
+                                                   title="Ver Detalles"><i
+                                                        class="uil uil-eye font-size-18"></i></a>
+                                            </li>
+
+                                            <li class="list-inline-item">
+                                                <a href="#"
                                                    wire:click="selectedProduct({{$eventItems->id_events}})"
                                                    class="px-2 text-primary" data-toggle="tooltip" data-placement="top"
                                                    title="Agregar Productos"><i
@@ -129,6 +137,7 @@
         </div>
     </div>
 
+    @include('livewire.events.form-detail-event')
     @include('livewire.events.form-create-event')
     @include('livewire.events.form-add-products')
     {{--    <livewire:search-universal></livewire:search-universal>--}}
@@ -144,9 +153,10 @@
     <script>
         document.addEventListener('livewire:initialized', function () {
 
-            $('#modalCreateEvents').modal('hide');
+
             @this.
             on('event-create', (event) => {
+                $('#modalCreateEvents').modal('hide');
                 toastr.success(event.messages, 'Exito', {
                     "closeButton": true,
                     "debug": false,
@@ -174,6 +184,39 @@
                 // })
 
             })
+
+            @this.on('product-add_create', (event) => {
+                toastr.success(event.messages, 'Exito', {
+                    "closeButton": true,
+                    "debug": false,
+                    "newestOnTop": false,
+                    "progressBar": false,
+                    "positionClass": "toast-bottom-full-width",
+                    "preventDuplicates": false,
+                    "onclick": null,
+                    "showDuration": 300,
+                    "hideDuration": 1000,
+                    "timeOut": 5000,
+                    "extendedTimeOut": 1000,
+                    "showEasing": "swing",
+                    "hideEasing": "linear",
+                    "showMethod": "fadeIn",
+                    "hideMethod": "fadeOut"
+                })
+                // Swal.fire({
+                //     position: 'top-end',
+                //     icon: 'success',
+                //     title: event.messages,
+                //     text: "Exito!!",
+                //     showConfirmButton: false,
+                //     timer: 2500
+                // })
+
+            })
+
+
+
+
             @this.on('roles-error', (event) => {
                 toastr.error(event.messages, 'Exito', {
                     "closeButton": true,
@@ -201,6 +244,11 @@
 
             @this.on('modal-add-products', (event) => {
                 $('#modalAddProducts').modal('show');
+
+            })
+
+            @this.on('modal-detail-products', (event) => {
+                $('#modalDetailProducts').modal('show');
 
             })
 

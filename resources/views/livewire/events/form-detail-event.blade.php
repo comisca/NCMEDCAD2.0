@@ -1,28 +1,19 @@
-<div class="modal fade bs-example-modal-lg" tabindex="-1" wire:ignore.self id="modalAddProducts" role="dialog"
+<div class="modal fade bs-example-modal-lg" tabindex="-1" wire:ignore.self id="modalDetailProducts" role="dialog"
      aria-labelledby="exampleModalScrollableTitle" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
+    <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <div class="modal-header">
-                {{--                <h5 class="modal-title mt-0" id="exampleModalScrollableTitle">{{__('actions.search')}}</h5>--}}
-                {{--                <button type="button" class="close" data-dismiss="modal" aria-label="Close">--}}
-                {{--                    <span aria-hidden="true">&times;</span>--}}
-                {{--                </button>--}}
+                <h5 class="modal-title" id="exampleModalScrollableTitle">Detalles del Producto</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
 
             <div class="modal-body">
 
 
                 <div class="form-group col-md-6">
-                    <label for="inputNameCompany">Tipo de Productos</label>
-                    <select id="selectedType" wire:model.live="selectedType"
-                            class="form-control @error('selectedType') is-invalid @enderror">
-                        <option selected>Selecciona que tipo de productos</option>
-                        <option value="Productos">Productos</option>
-                        <option value="Paquetes">Paquetes</option>
-
-
-                    </select>
-                    @error('selectedType')
+                    <label for="inputNameCompany">Buscar Productos</label>
+                    <input type="search" wire:model="searchQuery" placeholder="Buscar" class="form-control">
+                    @error('searchQuery')
                     <span class="text-danger">{{$message}}</span>
                     @enderror
                 </div>
@@ -44,9 +35,9 @@
                             </tr>
                             </thead>
                             <tbody>
-                            @if(!empty($productData))
+                            @if(!empty($dataproductsEvents))
 
-                                @foreach($productData as $productItems)
+                                @foreach($dataproductsEvents as $itemProductDetail)
                                     <tr>
                                         <th scope="row">
                                             <div class="custom-control custom-checkbox">
@@ -57,18 +48,19 @@
                                         </th>
                                         <td>
 
-                                            <a href="#" class="text-body">{{ $productItems->cod_medicamento }}</a>
+                                            <a href="#" class="text-body">{{ $itemProductDetail->cod_medicamento }}</a>
                                         </td>
-                                        <td>{{ $productItems->descripcion }}</td>
+                                        <td>{{ $itemProductDetail->descripcion }}</td>
 
                                         <td>
                                             <ul class="list-inline mb-0">
                                                 <li class="list-inline-item">
-                                                    <a href="#" wire:click="addProductsEvents({{$productItems->id}})"
+                                                    <a href="#"
+                                                       wire:click="addProductsEvents({{$itemProductDetail->id}})"
                                                        class="px-2 text-primary" data-toggle="tooltip"
                                                        data-placement="top"
-                                                       title="Agregar Productos"><i
-                                                            class="uil uil-plus font-size-18"></i></a>
+                                                       title="Eliminar Producto"><i
+                                                            class="uil uil-trash font-size-18"></i></a>
                                                 </li>
 
 
@@ -101,8 +93,7 @@
 
             </div>
             <div class="modal-footer">
-                <button wire:click="addProducts()" type="button" class="btn btn-primary">Guardar Cambio
-                </button>
+              
                 <button type="button" class="btn btn-light" data-dismiss="modal">Close</button>
 
 
