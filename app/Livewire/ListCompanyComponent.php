@@ -126,7 +126,6 @@ class ListCompanyComponent extends Component
             DB::beginTransaction();
 
             if ($this->stateChangeGlobal == 1) {
-
                 $password = $this->generatePassword();
                 $company = Companies::find($this->idCompanyChanges);
                 $company->password = Hash::make($password);

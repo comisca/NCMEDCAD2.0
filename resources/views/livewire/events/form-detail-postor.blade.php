@@ -1,12 +1,10 @@
-<div class="modal fade bs-example-modal-lg" tabindex="-1" wire:ignore.self id="modalAddPostor" role="dialog"
+<div class="modal fade bs-example-modal-lg" tabindex="-1" wire:ignore.self id="modalViewPostor" role="dialog"
      aria-labelledby="exampleModalScrollableTitle" aria-hidden="true">
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <div class="modal-header">
-                {{--                <h5 class="modal-title mt-0" id="exampleModalScrollableTitle">{{__('actions.search')}}</h5>--}}
-                {{--                <button type="button" class="close" data-dismiss="modal" aria-label="Close">--}}
-                {{--                    <span aria-hidden="true">&times;</span>--}}
-                {{--                </button>--}}
+                <h5 class="modal-title" id="exampleModalScrollableTitle">Detalles del Producto</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
 
             <div class="modal-body">
@@ -14,8 +12,8 @@
 
                 <div class="form-group col-md-6">
                     <label for="inputNameCompany">Buscar Postor</label>
-                    <input type="search" wire:model="searchQuerty" class="form-control" placeholder="Buscar Postor">
-                    @error('selectedType')
+                    <input type="search" wire:model="searchQuery" placeholder="Buscar" class="form-control">
+                    @error('searchQuery')
                     <span class="text-danger">{{$message}}</span>
                     @enderror
                 </div>
@@ -32,17 +30,15 @@
                                     </div>
                                 </th>
                                 <th scope="col">ID</th>
-                                <th scope="col">Participante</th>
-                                <th scope="col">Fabricante</th>
-                                <th scope="col">Aplicacion</th>
-                                <th scope="col">Estado de Aplicacion</th>
+                                <th scope="col">Proveedor</th>
+                                <th scope="col">Cod. Ingreso</th>
                                 <th scope="col" style="width: 200px;">{{__('actions.action')}}</th>
                             </tr>
                             </thead>
                             <tbody>
-                            @if(!empty($dataAplication))
+                            @if(!empty($viewPostorDataVar))
 
-                                @foreach($dataAplication as $itemsPostor)
+                                @foreach($viewPostorDataVar as $itemViewPostorDataVar)
                                     <tr>
                                         <th scope="row">
                                             <div class="custom-control custom-checkbox">
@@ -53,28 +49,21 @@
                                         </th>
                                         <td>
 
-                                            <a href="#" class="text-body">{{ $itemsPostor->id_application }}</a>
+                                            <a href="#"
+                                               class="text-body">{{ $itemViewPostorDataVar->id_postor_event }}</a>
                                         </td>
-                                        <td>{{ $itemsPostor->distribution_first_name }}</td>
-                                        <td>{{ $itemsPostor->fabric_first_name }}</td>
-                                        <td>{{ $itemsPostor->trade_name }}</td>
-                                        <td>
-                                            @if($itemsPostor->status_application == 10)
-                                                <span class="badge badge-success">Precalificado</span>
-                                            @else
-                                                <span class="badge badge-danger">Con Observacion</span>
-                                            @endif
-                                        </td>
+                                        <td>{{ $itemViewPostorDataVar->legal_name }}</td>
+                                        <td>{{ $itemViewPostorDataVar->name_anonimous }}</td>
 
                                         <td>
                                             <ul class="list-inline mb-0">
                                                 <li class="list-inline-item">
                                                     <a href="#"
-                                                       wire:click="addPostorMethod({{$itemsPostor->id_postor}})"
-                                                       class="px-2 text-primary" data-toggle="tooltip"
+                                                       wire:click="addProductsEvents({{$itemViewPostorDataVar->id}})"
+                                                       class="px-2 text-danger" data-toggle="tooltip"
                                                        data-placement="top"
-                                                       title="Agregar Productos"><i
-                                                            class="uil uil-plus font-size-18"></i></a>
+                                                       title="Eliminar Postor"><i
+                                                            class="uil uil-trash font-size-18"></i></a>
                                                 </li>
 
 
@@ -107,8 +96,7 @@
 
             </div>
             <div class="modal-footer">
-                <button wire:click="addProducts()" type="button" class="btn btn-primary">Guardar Cambio
-                </button>
+
                 <button type="button" class="btn btn-light" data-dismiss="modal">Close</button>
 
 

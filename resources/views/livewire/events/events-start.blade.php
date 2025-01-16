@@ -107,7 +107,7 @@
                                         <ul class="list-inline mb-0">
                                             <li class="list-inline-item">
                                                 <a href="#"
-                                                   wire:click="selectedEventProducts({{$eventItems->id_product_event}})"
+                                                   wire:click="viewPostorData({{$eventItems->id_product_event}})"
                                                    class="px-2 text-primary" data-toggle="tooltip" data-placement="top"
                                                    title="Ver Detalles"><i
                                                         class="uil uil-eye font-size-18"></i></a>
@@ -164,6 +164,7 @@
 
 
     @include('livewire.events.form-add-postor')
+    @include('livewire.events.form-detail-postor')
     {{--    <livewire:search-universal></livewire:search-universal>--}}
 
 </div>
@@ -179,8 +180,10 @@
 
 
             @this.
-            on('event-create', (event) => {
-                $('#modalCreateEvents').modal('hide');
+            on('postor-add_create-susses', (event) => {
+
+                $('#modalAddPostor').modal('hide');
+
                 toastr.success(event.messages, 'Exito', {
                     "closeButton": true,
                     "debug": false,
@@ -198,43 +201,13 @@
                     "showMethod": "fadeIn",
                     "hideMethod": "fadeOut"
                 })
-                // Swal.fire({
-                //     position: 'top-end',
-                //     icon: 'success',
-                //     title: event.messages,
-                //     text: "Exito!!",
-                //     showConfirmButton: false,
-                //     timer: 2500
-                // })
+
 
             })
 
-            @this.on('product-add_create', (event) => {
-                toastr.success(event.messages, 'Exito', {
-                    "closeButton": true,
-                    "debug": false,
-                    "newestOnTop": false,
-                    "progressBar": false,
-                    "positionClass": "toast-bottom-full-width",
-                    "preventDuplicates": false,
-                    "onclick": null,
-                    "showDuration": 300,
-                    "hideDuration": 1000,
-                    "timeOut": 5000,
-                    "extendedTimeOut": 1000,
-                    "showEasing": "swing",
-                    "hideEasing": "linear",
-                    "showMethod": "fadeIn",
-                    "hideMethod": "fadeOut"
-                })
-                // Swal.fire({
-                //     position: 'top-end',
-                //     icon: 'success',
-                //     title: event.messages,
-                //     text: "Exito!!",
-                //     showConfirmButton: false,
-                //     timer: 2500
-                // })
+            @this.on('view-postor-data', (event) => {
+                $('#modalViewPostor').modal('show');
+
 
             })
 
