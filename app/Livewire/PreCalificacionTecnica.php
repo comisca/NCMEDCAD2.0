@@ -38,7 +38,7 @@ class PreCalificacionTecnica extends Component
 //                'medicamentos.cod_medicamento',
 //                'companies.legal_name')
 //            ->where('distribution_id', Session::get('id_company'))
-//            ->where('applications.status', 1)
+//            ->where('applications.status', '>=',1)
 //            ->get();
 
         $applicationsapp = Application::join('familia_producto', 'applications.family_id', '=', 'familia_producto.id')

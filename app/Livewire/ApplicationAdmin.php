@@ -23,7 +23,9 @@ class ApplicationAdmin extends Component
         return 'vendor.livewire.bootstrap';
     }
 
-    public function mount() {}
+    public function mount()
+    {
+    }
 
     public function updated()
     {
@@ -40,7 +42,7 @@ class ApplicationAdmin extends Component
                 DB::raw('(SELECT COUNT(*) FROM req_applications WHERE req_applications.states_req_applications = 3 AND req_applications.application_id = applications.id) as req_applications_count')
             )
             ->where('applications.distribution_id', $this->particioanteId)
-            ->where('applications.status', 1)
+            ->where('applications.status', '>=', 1)
             ->get();
     }
 
@@ -114,5 +116,7 @@ class ApplicationAdmin extends Component
     }
 
 
-    public function resetUI() {}
+    public function resetUI()
+    {
+    }
 }

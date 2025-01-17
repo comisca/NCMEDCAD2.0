@@ -59,9 +59,9 @@ class PreCalificacionTecnicaDetail extends Component
                 'companies.legal_name',
                 'companies.email',
                 'applications.id',
-                DB::raw('(SELECT COUNT(*) FROM req_applications WHERE req_applications.states_req_applications = 3 AND req_applications.application_id = applications.id) as req_applications_count'))
+                DB::raw('(SELECT COUNT(*) FROM req_applications WHERE req_applications.states_req_applications > 3 AND req_applications.application_id = applications.id) as req_applications_count'))
             ->where('applications.id', $this->apllicationID)
-            ->where('applications.status', 1)
+            ->where('applications.status', '>=', 1)
             ->first();
 
         $dataApplication =
@@ -383,6 +383,38 @@ class PreCalificacionTecnicaDetail extends Component
             //este metodo lo que hace es mostrar el error en la consola
             dd($e->getMessage());
         }
+    }
+
+
+    public function precalificarReq()
+    {
+
+
+        $dataReqApplication = ReqApplications::where('application_id', $this->apllicationID)
+            ->where('states_req_applications', '>', 1)
+            ->count();
+
+
+        if ($dataReqApplication <= 0) {
+
+            Application::where('id', $this->apllicationID)
+                ->update([
+                    'status' => 10
+                ]);
+
+            $this->dispatch('precalificarReqExito',
+                message: 'La precalificacion fue todo un exito');
+
+        } else {
+            Application::where('id', $this->apllicationID)
+                ->update([
+                    'status' => 1
+                ]);
+            $this->dispatch('precalificarReq',
+                message: 'No se puede precalificar la solicitud, aun hay requerimientos pendientes');
+        }
+
+
     }
 
 

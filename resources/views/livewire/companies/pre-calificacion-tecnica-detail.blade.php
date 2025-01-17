@@ -68,7 +68,8 @@
                                     Certificacion:
                                 </div>
                                 <div class="h5 mb-0 font-weight-bold text-gray-800">
-                                    <button id="showNotificationModal" type="button" class="btn
+                                    <button wire:click="precalificarReq()" id="showNotificationModal" type="button"
+                                            class="btn
                                     btn-primary">Precalificar
                                     </button>
                                 </div>
@@ -317,6 +318,53 @@
             @this.on('chageStateRequerimentSuccess', (event) => {
                 $('#modalChangeState').modal('hide');
                 toastr.success(event.messages, 'Exito', {
+                    "closeButton": true,
+                    "debug": false,
+                    "newestOnTop": false,
+                    "progressBar": false,
+                    "positionClass": "toast-bottom-full-width",
+                    "preventDuplicates": false,
+                    "onclick": null,
+                    "showDuration": 300,
+                    "hideDuration": 1000,
+                    "timeOut": 5000,
+                    "extendedTimeOut": 1000,
+                    "showEasing": "swing",
+                    "hideEasing": "linear",
+                    "showMethod": "fadeIn",
+                    "hideMethod": "fadeOut"
+                })
+
+
+            })
+
+            @this.on('precalificarReq', (event) => {
+
+                toastr.success(event.message, 'Error', {
+                    "closeButton": true,
+                    "debug": false,
+                    "newestOnTop": false,
+                    "progressBar": false,
+                    "positionClass": "toast-bottom-full-width",
+                    "preventDuplicates": false,
+                    "onclick": null,
+                    "showDuration": 300,
+                    "hideDuration": 1000,
+                    "timeOut": 5000,
+                    "extendedTimeOut": 1000,
+                    "showEasing": "swing",
+                    "hideEasing": "linear",
+                    "showMethod": "fadeIn",
+                    "hideMethod": "fadeOut"
+                })
+
+
+            })
+
+
+            @this.on('precalificarReqExito', (event) => {
+
+                toastr.success(event.message, 'Exito', {
                     "closeButton": true,
                     "debug": false,
                     "newestOnTop": false,
