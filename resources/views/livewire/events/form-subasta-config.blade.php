@@ -13,12 +13,12 @@
                 <div class="row">
                     <div class="form-group col-md-12">
                         <label for="inputNameCompany">Modalidad de Negociacion</label>
-                        <select id="inputState" wire:model="typeSubasta"
+                        <select id="inputState" wire:model.live="typeSubasta"
                                 class="form-control @error('typeSubasta') is-invalid @enderror">
                             <option selected>Selecciona una modalidad</option>
-                            <option value="Subasta a la Inversa">Subasta a la Inversa</option>
-                            <option value="Subasta Directa">Subasta Directa</option>
-                            <option value="Subasta Por Paquetes">Subasta Por Paquetes</option>
+                            <option value="Inversa">Negociacion Inversa</option>
+                            <option value="Directa">Negociacion Directa</option>
+                            <option value="Paquetes">Negociacion Por Paquetes</option>
 
                         </select>
                         @error('typeSubasta')
@@ -84,20 +84,30 @@
                         <span class="text-danger">{{$message}}</span>
                         @enderror
                     </div>
+
                     <div class="form-group col-md-6">
-                        <label for="inputNameCompany">Porcentaje Rebaja(%)</label>
+                        @if($typeSubasta == 'Inversa')
+                            <label for="inputNameCompany">Porcentaje Rebaja(%)</label>
+                        @elseif($typeSubasta == 'Directa')
+                            <label for="inputNameCompany">Porcentaje De Tolerancia(%)</label>
+                        @else
+                            <label for="inputNameCompany">Porcentaje Rebaja(%)</label>
+                        @endif
                         <input type="text" class="form-control" wire:model="porcReduce">
                         @error('porcReduce')
                         <span class="text-danger">{{$message}}</span>
                         @enderror
                     </div>
-                    <div class="form-group col-md-6">
-                        <label for="inputNameCompany">Tiempo de recuperacion(Minutos)</label>
-                        <input type="text" class="form-control" wire:model="timeRecovery">
-                        @error('timeRecovery')
-                        <span class="text-danger">{{$message}}</span>
-                        @enderror
-                    </div>
+                    @if($typeSubasta == 'Inversa')
+                        <div class="form-group col-md-6">
+                            <label for="inputNameCompany">Tiempo de recuperacion(Minutos)</label>
+                            <input type="text" class="form-control" wire:model="timeRecovery">
+                            @error('timeRecovery')
+                            <span class="text-danger">{{$message}}</span>
+                            @enderror
+                        </div>
+
+                    @endif
 
                     <div class="col-md-12">
                         <label for="exampleInputEmail1" class="form-label">Observacion de Subasta:</label>
