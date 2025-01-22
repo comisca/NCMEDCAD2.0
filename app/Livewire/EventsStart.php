@@ -190,6 +190,12 @@ class EventsStart extends Component
     }
 
 
+    public function createAuctions()
+    {
+
+    }
+
+
     public function update()
     {
         try {
