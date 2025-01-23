@@ -86,6 +86,7 @@ Route::get('/companie/info/{id}', \App\Livewire\CompaniesDetailsComponents::clas
 Route::get('/home', HomeComponent::class);
 Route::get('/register', RegisterComponent::class);
 Route::get('/registerDistribuidor', RegisterDistribuidorComponent::class);
+Route::get('/subastas', \App\Livewire\EventsHistory::class);
 
 //Route::get('/DocumentsCompany', DocumentsCompanyComponent::class);
 
