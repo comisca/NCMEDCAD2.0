@@ -111,7 +111,7 @@
 
                     <div class="col-md-12">
                         <label for="exampleInputEmail1" class="form-label">Observacion de Subasta:</label>
-                        <textarea disabled wire:model="observacionSubasta"
+                        <textarea wire:model="observacionSubasta"
                                   class="form-control @error('observacionSubasta') is-invalid @enderror"
                                   rows="3"></textarea>
                         @error('observacionSubasta')
@@ -122,7 +122,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button wire:click="chageStateRequeriment()" type="button" class="btn btn-primary">Guardar Cambio
+                <button wire:click="createAuctions()" type="button" class="btn btn-primary">Guardar Cambio
                 </button>
                 <button type="button" class="btn btn-light" data-dismiss="modal">Close</button>
 

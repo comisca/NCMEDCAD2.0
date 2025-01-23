@@ -3,6 +3,7 @@
 namespace App\Livewire;
 
 use App\Models\Application;
+use App\Models\Auctions;
 use App\Models\Companies;
 use App\Models\EventsAuction;
 use App\Models\PostorEvent;
@@ -35,6 +36,7 @@ class EventsStart extends Component
     public function mount()
     {
 
+        $this->qtyProducts = 30000;
     }
 
     public function updated()
@@ -193,6 +195,85 @@ class EventsStart extends Component
     public function createAuctions()
     {
 
+        $rules = [
+            'typeSubasta' => 'required',
+            'idSubasta' => 'required',
+            'qtyProducts' => 'required',
+            'priceRef' => 'required',
+            'timeStart' => 'required',
+            'timeDuration' => 'required',
+            'dateStart' => 'required',
+            'porcReduce' => 'required',
+        ];
+        $messages = [
+            'typeSubasta.required' => 'Tienes que seleccionar el tipo de subasta',
+            'idSubasta.required' => 'El id de la negociacion es requerido',
+            'qtyProducts.required' => 'La cantidad de productos es requerida',
+            'priceRef.required' => 'El precio de referencia es requerido',
+            'timeStart.required' => 'La hora de inicio es requerida',
+            'timeDuration.required' => 'La duracion de la subasta es requerida',
+            'dateStart.required' => 'La fecha de inicio es requerida',
+            'porcReduce.required' => 'El porcentaje de reduccion es requerido',
+        ];
+
+        $this->validate($rules, $messages);
+
+        try {
+
+            DB::beginTransaction();
+
+            $dataLastEvents = ProductEvent::join('medicamentos', 'product_events.product_id', '=', 'medicamentos.id')
+                ->where('product_events.id', $this->idSubasta)
+                ->select('product_events.id as id_product_event',
+                    'medicamentos.*',
+                    'product_events.*')
+                ->first();
+
+            if ($this->typeSubasta == 'Directa') {
+                $this->timeRecovery = 0;
+                $toleranciapor = $this->porcReduce;
+                $rebajaporc = 0;
+            } else {
+                $toleranciapor = 0;
+                $rebajaporc = $this->porcReduc;
+            }
+
+            Auctions::create([
+                'product_id' => $dataLastEvents->product_id,
+                'event_id' => $this->idSubasta,
+                'type_product' => $dataLastEvents->type_product,
+                'auction_state' => 'Pendiente',
+                'auction_result' => 'Pendiente',
+                'total' => $this->qtyProducts,
+                'price_reference' => $this->priceRef,
+                'date_start' => $this->dateStart,
+                'hour_start' => $this->timeStart,
+                'duration_time' => $this->timeDuration,
+                'porcentage_reductions' => $rebajaporc,
+                'porcentage_tolerance' => $toleranciapor,
+                'recovery_time' => $this->timeRecovery,
+                'observation' => $this->observacionSubasta,
+                'type_auction' => $this->typeSubasta,
+                'status' => 1,
+                'created_at' => date('Y-m-d H:i:s'),
+                'updated_at' => date('Y-m-d H:i:s')
+            ]);
+
+
+            DB::commit();
+
+            $this->dispatch('auctions-create-susses', messages: 'La subasta fue creada con exito');
+            $this->resetUI();
+        } catch (\Throwable $e) {
+            //este metodo lo que hace es deshacer los cambios en la base de datos
+            DB::rollback();
+
+
+            dd($e->getMessage());
+            //este metodo lo que hace es mostrar el error en la consola
+            dd($e->getMessage());
+        }
+
     }
 
 
@@ -240,6 +321,18 @@ class EventsStart extends Component
 
     public function resetUI()
     {
+        $this->productSubasta = '';
+        $this->idSubasta = '';
+        $this->codProducts = '';
+        $this->qtyProducts = '';
+        $this->priceRef = '';
+        $this->dateStart = '';
+        $this->timeStart = '';
+        $this->timeDuration = '';
+        $this->porcReduce = '';
+        $this->timeRecovery = '';
+        $this->typeSubasta = '';
+        $this->observacionSubasta = '';
 
 
     }
