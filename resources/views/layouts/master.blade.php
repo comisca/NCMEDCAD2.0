@@ -57,6 +57,31 @@
         }
 
     </style>
+    <style>
+        .progress-circle {
+            position: relative;
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            background: conic-gradient(#4caf50 0%, #4caf50 25%, #ddd 25%, #ddd 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+
+        .progress-circle .circle {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .time-display {
+            font-size: 2rem;
+            color: #fff; /* Letras blancas */
+        }
+    </style>
 </head>
 
 <body>

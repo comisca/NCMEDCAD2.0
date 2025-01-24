@@ -39,6 +39,11 @@
                 </div>
                 <!-- end row -->
                 <div class="table-responsive mb-4">
+                    @if (session('error'))
+                        <div class="alert alert-danger">
+                            {{ session('error') }}
+                        </div>
+                    @endif
                     <table class="table table-centered table-nowrap mb-0">
                         <thead>
                         <tr>
@@ -78,7 +83,7 @@
                                     <td>{{ $eventItems->date_start}} - {{$eventItems->hour_start}}</td>
                                     <td>{{ $eventItems->auction_result}} </td>
                                     <td><a href="#"
-                                           wire:click="viewPostorData({{$eventItems->id_product_event}})"
+                                           wire:click="viewPostorData({{$eventItems->auction_id}})"
                                            class="px-2 text-primary" data-toggle="tooltip" data-placement="top"
                                            title="Descargar Actas"><i
                                                 class="uil uil-cloud-download font-size-24"></i></a></td>
@@ -155,8 +160,7 @@
                                     <td>
                                         <ul class="list-inline mb-0">
                                             <li class="list-inline-item">
-                                                <a href="#"
-                                                   wire:click="viewPostorData({{$eventItems->id_product_event}})"
+                                                <a href="/monitor/subasta/{{ $eventItems->auction_id }}"
                                                    class="px-2 text-primary" data-toggle="tooltip" data-placement="top"
                                                    title="Entrar a Negociacion"><i
                                                         class="uil uil-play font-size-24"></i></a>

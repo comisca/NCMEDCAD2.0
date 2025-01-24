@@ -16,6 +16,7 @@ return new class extends Migration {
             $table->bigInteger('postor_id')->unsigned();
             $table->decimal('amount', 20, 6);
             $table->datetime('puja_time');
+            $table->string('code_postor', 100);
             $table->integer('winner_puja')->default(0);
             $table->integer('status')->default(1);
             $table->timestamps();
