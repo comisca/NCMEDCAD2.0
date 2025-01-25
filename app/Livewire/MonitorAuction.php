@@ -18,6 +18,12 @@ class MonitorAuction extends Component
     public $Pagination = 10;
     public $searchInput;
     public $IdSubasta, $IdPostor, $IdAnonimo;
+    public $auction;
+    public $timeLeft;
+    public $bids;
+    public $minPrice;
+
+    protected $listeners = ['bidPlaced' => 'updateAuction'];
 
     public function paginationView()
     {
@@ -26,34 +32,103 @@ class MonitorAuction extends Component
 
     public function mount($id)
     {
-        $this->IdSubasta = $id;
-        $dataSubasta = Auctions::where('id', $this->IdSubasta)->first();
+        if (Session::has('id_company') || Session::has('id_user')) {
 
-        $dateTimeStart = new \DateTime("{$dataSubasta->date_start} {$dataSubasta->hour_start}");
-        $currentDateTime = new \DateTime();
 
-        if ($dateTimeStart > $currentDateTime) {
-            return redirect('/subastas')->with('error', 'La Subasta no ha iniciado aún');
-        }
+            $this->IdSubasta = $id;
+            $this->auction = Auctions::where('id', $this->IdSubasta)->first();
+            $this->bids = Purchase::where('auction_id', $this->IdSubasta)
+                ->where('status', 1)
+                ->get();
 
-        if (Session::has('id_company')) {
-            $postores = PostorEvent::join('companies', 'postor_events.postor_id', '=', 'companies.id')
-                ->join('events_auctions', 'postor_events.event_id', '=', 'events_auctions.id')
-                ->select('postor_events.*', 'companies.*', 'events_auctions.*')
-                ->where('postor_events.event_id', $dataSubasta->event_id)
-                ->where('postor_events.id_product_event', $dataSubasta->product_id)
-                ->where('postor_events.postor_id', Session::get('id_company'))
-                ->first();
-
-            if ($postores) {
-                $this->IdPostor = $postores->id;
-                $this->IdAnonimo = $postores->name_anonimous;
-            } else {
-                return redirect('/subastas')->with('error', 'No tienes autorización para esta subasta');
+            if ($this->auction->auction_state == 'Finalizada') {
+                return redirect('/subastas')->with('error', 'La Subasta ya finalizo!');
             }
+
+            $dateTimeStart = new \DateTime("{$this->auction->date_start} {$this->auction->hour_start}");
+            $currentDateTime = new \DateTime();
+
+            if ($dateTimeStart > $currentDateTime) {
+                return redirect('/subastas')->with('error', 'La Subasta no ha iniciado aún');
+            }
+
+            if (Session::has('id_company')) {
+                $postores = PostorEvent::join('companies', 'postor_events.postor_id', '=', 'companies.id')
+                    ->join('events_auctions', 'postor_events.event_id', '=', 'events_auctions.id')
+                    ->select('postor_events.*', 'companies.*', 'events_auctions.*')
+                    ->where('postor_events.event_id', $this->auction->event_id)
+                    ->where('postor_events.id_product_event', $this->auction->product_id)
+                    ->where('postor_events.postor_id', Session::get('id_company'))
+                    ->first();
+
+                if ($postores) {
+                    $this->IdPostor = $postores->id;
+                    $this->IdAnonimo = $postores->name_anonimous;
+                } else {
+                    return redirect('/subastas')->with('error', 'No tienes autorización para esta subasta');
+                }
+            }
+        } else {
+            return redirect('/subastas')->with('error', 'No tienes autorización para esta subasta');
         }
 
+        $this->minPrice = $this->calculateMinPrice();
     }
+
+    public function calculateTimeLeft()
+    {
+        $endTime = Carbon::parse($this->auction->end_time);
+        $now = Carbon::now();
+
+        if ($now->gt($endTime)) {
+            return 0;
+        }
+
+        return $endTime->diffInSeconds($now);
+    }
+
+    public function calculateMinPrice()
+    {
+        // Lógica para calcular el precio mínimo basado en las pujas y el porcentaje de rebaja
+        // Esto es un ejemplo, ajusta según tus necesidades
+        $lastBid = $this->auction->bids()->latest()->first();
+        $minPrice = $lastBid ? $lastBid->amount * 0.9 : $this->auction->starting_price * 0.9;
+
+        return $minPrice;
+    }
+
+
+    public function placeBid($amount)
+    {
+        // Validar que el monto sea mayor que el precio mínimo
+        if ($amount < $this->minPrice) {
+            return;
+        }
+
+        // Crear la puja
+        Bid::create([
+            'auction_id' => $this->auction->id,
+            'user_id' => auth()->id(),
+            'amount' => $amount,
+        ]);
+
+        // Actualizar el tiempo de finalización de la subasta
+        $this->auction->update([
+            'end_time' => Carbon::now()->addMinutes(3),
+        ]);
+
+        // Emitir evento para actualizar la pantalla
+        $this->emit('bidPlaced');
+    }
+
+
+    public function updateAuction()
+    {
+        $this->timeLeft = $this->calculateTimeLeft();
+        $this->bids = $this->auction->bids()->orderBy('created_at', 'desc')->get();
+        $this->minPrice = $this->calculateMinPrice();
+    }
+
 
     public function updated()
     {
@@ -65,7 +140,12 @@ class MonitorAuction extends Component
 
     public function render()
     {
-        return view('livewire.events.monitor-auction')
+        return view('livewire.events.monitor-auction', [
+            'auction' => $this->auction,
+            'timeLeft' => $this->timeLeft,
+            'bids' => $this->bids,
+            'minPrice' => $this->minPrice,
+        ])
             ->extends('layouts.master')
             ->section('content');
     }

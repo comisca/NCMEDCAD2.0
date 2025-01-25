@@ -11,97 +11,26 @@ use DB;
 class AutionTimerComponent extends Component
 {
 
-use WithPagination;
-    public $Pagination = 10;
-    public $searchInput;
-    public function paginationView()
+
+    public $timeLeft;
+
+    protected $listeners = ['updateTimer' => 'updateTimeLeft'];
+
+    public function mount($timeLeft)
     {
-        return 'vendor.livewire.bootstrap';
+        $this->timeLeft = $timeLeft;
     }
 
-    public function mount()
+    public function updateTimeLeft($timeLeft)
     {
-
+        $this->timeLeft = $timeLeft;
     }
 
 
     public function render()
     {
-        return view('livewire.aution-timer-component')
-        ->extends('layouts.master')
-        ->section('content');
+        return view('livewire.events.aution-timer-component');
     }
 
-       public function create()
-        {
-            try {
-                //este metodo lo que hace es inicailizar las transacciones en la base de datos
-                DB::beginTransaction();
-
-                //Aqui se escribe el codigo que se desea hacer en la transaccion
-
-                //este metodo lo que hace es guardar los cambios en la base de datos
-                DB::commit();
-
-            }catch (\Throwable $e) {
-                //este metodo lo que hace es deshacer los cambios en la base de datos
-                DB::rollback();
-
-                //este metodo lo que hace es mostrar el error en la consola
-               dd($e->getMessage());
-            }
-        }
-
-
-          public function update()
-            {
-                try {
-                    //este metodo lo que hace es inicailizar las transacciones en la base de datos
-                    DB::beginTransaction();
-
-                    //Aqui se escribe el codigo que se desea hacer en la transaccion
-
-                    //este metodo lo que hace es guardar los cambios en la base de datos
-                    DB::commit();
-
-                }catch (\Throwable $e) {
-                    //este metodo lo que hace es deshacer los cambios en la base de datos
-                    DB::rollback();
-
-                    //este metodo lo que hace es mostrar el error en la consola
-                    dd($e->getMessage());
-                }
-            }
-
-
-            public function deletexid()
-            {
-                try {
-                    //este metodo lo que hace es inicailizar las transacciones en la base de datos
-                    DB::beginTransaction();
-
-                    //Aqui se escribe el codigo que se desea hacer en la transaccion
-
-                    //este metodo lo que hace es guardar los cambios en la base de datos
-                    DB::commit();
-
-                }catch (\Throwable $e) {
-                    //este metodo lo que hace es deshacer los cambios en la base de datos
-                    DB::rollback();
-
-                    //este metodo lo que hace es mostrar el error en la consola
-                    dd($e->getMessage());
-                }
-            }
-
-
-
-
-
-     public function resetUI()
-        {
-
-
-        }
 
 }

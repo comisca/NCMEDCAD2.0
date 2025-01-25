@@ -60,57 +60,15 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-4">
-            <div class="card">
-                <div class="d-flex justify-content-center">
-                    <div class="progress-circle" id="progress-circle">
-                        <div class="circle">
-                            <span id="time-display" class="time-display">3:00</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
+        <livewire:aution-timer-component></livewire:aution-timer-component>
 
     </div>
 
     <div class="row mt-4">
-        <div class="col-md-4">
-            <div class="card">
-                <div class="card-header">Panel de Puja</div>
-                <div class="card-body">
-                    <table class="table">
-                        <thead>
-                        <tr>
-                            <th>ID ANONIMO</th>
-                            <th>ENVIADA</th>
-                            <th>VALOR</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <!-- Filas de la tabla -->
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-4">
-            <div class="card">
-                <div class="card-header">Panel de Oferta</div>
-                <div class="card-body">
-                    <p>Última Oferta recibida (U$$): <span id="ultima-oferta">...</span></p>
-                    <p>Rebaja minima para la siguiente oferta (U$$): <span id="rebaja">...</span></p>
-                    <p>Próxima oferta minima valida (U$$): <span id="proxima">...</span></p>
-                    <div class="input-group">
-                        <input type="text" class="form-control" placeholder="Cantidad">
-                        <div class="input-group-append">
-                            <button class="btn btn-success">ENVIAR</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+        <livewire:bid-history-component></livewire:bid-history-component>
+
+        <livewire:minimum-bid-component></livewire:minimum-bid-component>
+
         <div class="col-md-4">
             <div class="card">
                 <div class="card-header">Mis Ofertas</div>

@@ -127,7 +127,7 @@
 
                                                     if (distance <= 0) {
                                                         clearInterval(countdownInterval);
-                                                        countdownElement.innerHTML = 'Started';
+                                                        countdownElement.innerHTML = 'Corriendo...';
                                                     }
                                                 }, 1000);
                                             });

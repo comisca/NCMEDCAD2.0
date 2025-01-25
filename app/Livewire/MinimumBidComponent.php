@@ -11,97 +11,43 @@ use DB;
 class MinimumBidComponent extends Component
 {
 
-use WithPagination;
-    public $Pagination = 10;
-    public $searchInput;
-    public function paginationView()
+    public $auction;
+    public $bidAmount;
+
+    protected $rules = [
+        'bidAmount' => 'required|numeric|min:0',
+    ];
+
+    public function mount(Auction $auction)
     {
-        return 'vendor.livewire.bootstrap';
+        $this->auction = $auction;
     }
 
-    public function mount()
+    public function placeBid()
     {
+        $this->validate();
 
+        // Crear la puja
+        Bid::create([
+            'auction_id' => $this->auction->id,
+            'user_id' => auth()->id(),
+            'amount' => $this->bidAmount,
+        ]);
+
+        // Actualizar el tiempo de finalización de la subasta
+        $this->auction->update([
+            'end_time' => Carbon::now()->addMinutes(3),
+        ]);
+
+        // Emitir evento para actualizar la pantalla
+        $this->emit('bidPlaced');
     }
 
 
     public function render()
     {
-        return view('livewire.minimum-bid-component')
-        ->extends('layouts.master')
-        ->section('content');
+        return view('livewire.events.minimum-bid-component');
     }
 
-       public function create()
-        {
-            try {
-                //este metodo lo que hace es inicailizar las transacciones en la base de datos
-                DB::beginTransaction();
-
-                //Aqui se escribe el codigo que se desea hacer en la transaccion
-
-                //este metodo lo que hace es guardar los cambios en la base de datos
-                DB::commit();
-
-            }catch (\Throwable $e) {
-                //este metodo lo que hace es deshacer los cambios en la base de datos
-                DB::rollback();
-
-                //este metodo lo que hace es mostrar el error en la consola
-               dd($e->getMessage());
-            }
-        }
-
-
-          public function update()
-            {
-                try {
-                    //este metodo lo que hace es inicailizar las transacciones en la base de datos
-                    DB::beginTransaction();
-
-                    //Aqui se escribe el codigo que se desea hacer en la transaccion
-
-                    //este metodo lo que hace es guardar los cambios en la base de datos
-                    DB::commit();
-
-                }catch (\Throwable $e) {
-                    //este metodo lo que hace es deshacer los cambios en la base de datos
-                    DB::rollback();
-
-                    //este metodo lo que hace es mostrar el error en la consola
-                    dd($e->getMessage());
-                }
-            }
-
-
-            public function deletexid()
-            {
-                try {
-                    //este metodo lo que hace es inicailizar las transacciones en la base de datos
-                    DB::beginTransaction();
-
-                    //Aqui se escribe el codigo que se desea hacer en la transaccion
-
-                    //este metodo lo que hace es guardar los cambios en la base de datos
-                    DB::commit();
-
-                }catch (\Throwable $e) {
-                    //este metodo lo que hace es deshacer los cambios en la base de datos
-                    DB::rollback();
-
-                    //este metodo lo que hace es mostrar el error en la consola
-                    dd($e->getMessage());
-                }
-            }
-
-
-
-
-
-     public function resetUI()
-        {
-
-
-        }
 
 }
