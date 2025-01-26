@@ -35,43 +35,54 @@ class MonitorAuction extends Component
     {
         if (Session::has('id_company') || Session::has('id_user')) {
 
-            if (Session::has('id_user')) {
-                $this->IdSubasta = $id;
-                $this->auction = Auctions::where('id', $this->IdSubasta)->first();
-                $this->bids = Pujas::where('auction_id', $this->IdSubasta)
-                    ->where('status', 1)
-                    ->get();
+            $this->IdSubasta = $id;
+//            dd($this->IdSubasta);
+            $this->auction = Auctions::join('events_auctions', 'auctions.event_id', '=', 'events_auctions.id')
+                ->join('product_events', 'events_auctions.id', '=', 'product_events.event_id')
+                ->select('auctions.*', 'product_events.id as product_id_pe', 'events_auctions.id as event_id')
+                ->where('auctions.id', $this->IdSubasta)->first();
+            // dd($this->auction);
 
-                if ($this->auction->auction_state == 'Finalizada') {
-                    return redirect('/subastas')->with('error', 'La Subasta ya finalizo!');
-                }
+            $this->bids = Pujas::where('auction_id', $this->IdSubasta)
+                ->where('status', 1)
+                ->get();
 
-                $dateTimeStart = new \DateTime("{$this->auction->date_start} {$this->auction->hour_start}");
-                $currentDateTime = new \DateTime();
+            if ($this->auction->auction_state == 'Finalizada') {
+                return redirect('/subastas')->with('error', 'La Subasta ya finalizo!');
+            }
 
-                if ($dateTimeStart > $currentDateTime) {
-                    return redirect('/subastas')->with('error', 'La Subasta no ha iniciado aún');
-                }
+            $dateTimeStart = new \DateTime("{$this->auction->date_start} {$this->auction->hour_start}");
+            $currentDateTime = new \DateTime();
 
-                if (Session::has('id_company')) {
-                    $postores = PostorEvent::join('companies', 'postor_events.postor_id', '=', 'companies.id')
-                        ->join('events_auctions', 'postor_events.event_id', '=', 'events_auctions.id')
-                        ->select('postor_events.*', 'companies.*', 'events_auctions.*')
-                        ->where('postor_events.event_id', $this->auction->event_id)
-                        ->where('postor_events.id_product_event', $this->auction->product_id)
-                        ->where('postor_events.postor_id', Session::get('id_company'))
-                        ->first();
+            if ($dateTimeStart > $currentDateTime) {
+                return redirect('/subastas')->with('error', 'La Subasta no ha iniciado aún');
+            }
 
-                    if ($postores) {
-                        $this->IdPostor = 1;
-                        $this->IdAnonimo = 'wdwdwdwd';
-                    } else {
-                        return redirect('/subastas')->with('error', 'No tienes autorización para esta subasta');
-                    }
+            if (Session::has('id_company')) {
+//                dd($this->auction->event_id . '-' . $this->auction->product_id);
+
+
+                $postores = PostorEvent::join('companies', 'postor_events.postor_id', '=', 'companies.id')
+                    ->join('events_auctions', 'postor_events.event_id', '=', 'events_auctions.id')
+//                    ->join('product_events', 'postor_events.id_product_event', '=', 'product_events.id')
+                    ->select('postor_events.*', 'companies.*', 'events_auctions.*')
+                    ->where('postor_events.event_id', $this->auction->event_id)
+                    ->where('postor_events.id_product_event', $this->auction->product_id_pe)
+                    ->where('postor_events.postor_id', Session::get('id_company'))
+                    ->first();
+
+                if ($postores) {
+//                        $this->IdPostor = 1;
+//                        $this->IdAnonimo = 'wdwdwdwd';
+                    $this->IdPostor = $postores->postor_id;
+                    $this->IdAnonimo = $postores->name_anonimous;
+                } else {
+                    return redirect('/subastas')->with('error', 'No tienes autorización para esta subasta');
                 }
             }
+
         } else {
-            return redirect('/subastas')->with('error', 'No tienes autorización para esta subasta');
+            return redirect('/subastas')->with('error', 'Subasta Privada');
         }
 
 //        $this->minPrice = $this->calculateMinPrice();

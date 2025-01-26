@@ -41,10 +41,10 @@ class MinimumBidComponent extends Component
 
             $pujaCreated = Pujas::create([
                 'auction_id' => $this->auction->id,
-                'postor_id' => 1,
+                'postor_id' => $this->idPosdor,
                 'amount' => $this->bidAmount,
                 'puja_time' => now(),
-                'code_postor' => 'wqdqwd',
+                'code_postor' => $this->idAnonimo,
                 'status' => 1,
             ]);
 

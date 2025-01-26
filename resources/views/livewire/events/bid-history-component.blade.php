@@ -33,7 +33,7 @@
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             if (window.Echo) {
-                window.Echo.channel('auction.2')
+                window.Echo.channel('auction.{{ $bidsAuction->id }}')
                     .listen('NewPuja', (e) => {
                         Livewire.dispatch('newBid');
                     });
