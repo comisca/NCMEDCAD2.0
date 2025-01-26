@@ -4,6 +4,7 @@ namespace App\Livewire;
 
 use App\Models\Auctions;
 use App\Models\PostorEvent;
+use App\Models\ProductEvent;
 use App\Models\Pujas;
 use Livewire\Attributes\On;
 use Livewire\WithPagination;
@@ -18,11 +19,11 @@ class MonitorAuction extends Component
 
     public $Pagination = 10;
     public $searchInput;
-    public $IdSubasta, $IdPostor, $IdAnonimo;
+    public $IdSubasta, $IdPostor, $IdAnonimo, $namePostor;
     public $auction;
     public $timeLeft;
     public $bids;
-    public $minPrice;
+    public $minPrice, $productEventData;
 
 //    protected $listeners = ['bidPlaced' => 'updateAuction'];
 
@@ -39,9 +40,20 @@ class MonitorAuction extends Component
 //            dd($this->IdSubasta);
             $this->auction = Auctions::join('events_auctions', 'auctions.event_id', '=', 'events_auctions.id')
                 ->join('product_events', 'events_auctions.id', '=', 'product_events.event_id')
-                ->select('auctions.*', 'product_events.id as product_id_pe', 'events_auctions.id as event_id')
+                ->select('auctions.*',
+                    'product_events.id as product_id_pe',
+                    'events_auctions.id as event_id',
+                    'events_auctions.event_name',
+                    'auctions.total',
+                    'auctions.price_reference')
                 ->where('auctions.id', $this->IdSubasta)->first();
             // dd($this->auction);
+
+            $this->productEventData =
+                ProductEvent::join('medicamentos', 'product_events.product_id', '=', 'medicamentos.id')
+                    ->select('product_events.*', 'medicamentos.*')
+                    ->where('product_events.event_id', $this->auction->event_id)
+                    ->first();
 
             $this->bids = Pujas::where('auction_id', $this->IdSubasta)
                 ->where('status', 1)
@@ -76,6 +88,7 @@ class MonitorAuction extends Component
 //                        $this->IdAnonimo = 'wdwdwdwd';
                     $this->IdPostor = $postores->postor_id;
                     $this->IdAnonimo = $postores->name_anonimous;
+                    $this->namePostor = $postores->legal_name;
                 } else {
                     return redirect('/subastas')->with('error', 'No tienes autorización para esta subasta');
                 }
@@ -147,6 +160,7 @@ class MonitorAuction extends Component
     {
         $this->IdPostor = $this->IdPostor;
         $this->IdAnonimo = $this->IdAnonimo;
+        $this->namePostor = $this->namePostor;
 
     }
 

@@ -10,31 +10,33 @@
                 <div class="card-body">
                     <div>
                         <span>Evento:</span>
-                        <span>EVENTO DE NEGOCIACION DE PRECIOS N 02-2000 - SESIONES DE PRUEBA</span>
+                        <span>{{$auction->event_name}}</span>
                     </div>
                     <div>
                         <span>Estado:</span>
                         <span>Programada</span>
                     </div>
-                    <div>
-                        <span>Participantes:</span>
-                        <span>Participante TEST</span>
-                    </div>
+                    @if(Session::has('id_company'))
+                        <div>
+                            <span>Participantes:</span>
+                            <span>{{$namePostor}}</span>
+                        </div>
+                    @endif
                     <div>
                         <span>Duracion de subasta:</span>
-                        <span>25 Minutos</span>
+                        <span>{{$auction->duration_time}}</span>
                     </div>
                     <div>
                         <span>Tiempo de recuperacion:</span>
-                        <span>4 minutos</span>
+                        <span>{{$auction->recovery_time}}</span>
                     </div>
                     <div>
                         <span>Inicio:</span>
-                        <span class="badge">20/08/2024 07:00 PM</span>
+                        <span class="badge">{{$auction->date_start}} {{$auction->hour_start}}</span>
                     </div>
                     <div>
                         <span>Porcentaje de descuento:</span>
-                        <span class="badge">20/08/2024 07:00 PM</span>
+                        <span class="badge">{{$auction->porcentage_reductions}} %</span>
                     </div>
                 </div>
             </div>
@@ -44,19 +46,19 @@
                 <div class="card-body">
                     <div>
                         <span>Codigo:</span>
-                        <span class="badge">CTSM-FT-05-66</span>
+                        <span class="badge">{{$productEventData->cod_medicamento}}</span>
                     </div>
                     <div>
                         <span>Descripcion:</span>
-                        <span>Desatinb 1000mg Tableta recubierta, blister o foil o frasco 30 tabletas</span>
+                        <span>{{$productEventData->descripcion}}</span>
                     </div>
                     <div>
                         <span>Cantidad de subasta:</span>
-                        <span class="badge">100,000</span>
+                        <span class="badge">{{$auction->total}}</span>
                     </div>
                     <div>
                         <span>Precio de referencia:</span>
-                        <span class="badge">$0.9000</span>
+                        <span class="badge">${{$auction->price_reference}}</span>
                     </div>
                 </div>
             </div>
