@@ -93,6 +93,11 @@ Route::get('/monitor/subasta/{id}', \App\Livewire\MonitorAuction::class);
 
 Route::get('/messeger/success', \App\Livewire\MessagessSucces::class);
 
+Route::get('/test-event', function () {
+    event(new \App\Events\TestEvent('Hello, Reverb!'));
+    return 'Event emitted!';
+});
+
 
 //Route::get('/fichatecnica', FichaTecnicaComponent::class);
 

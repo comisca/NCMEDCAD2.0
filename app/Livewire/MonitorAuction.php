@@ -4,6 +4,7 @@ namespace App\Livewire;
 
 use App\Models\Auctions;
 use App\Models\PostorEvent;
+use App\Models\Pujas;
 use Livewire\Attributes\On;
 use Livewire\WithPagination;
 use Livewire\Component;
@@ -23,7 +24,7 @@ class MonitorAuction extends Component
     public $bids;
     public $minPrice;
 
-    protected $listeners = ['bidPlaced' => 'updateAuction'];
+//    protected $listeners = ['bidPlaced' => 'updateAuction'];
 
     public function paginationView()
     {
@@ -34,45 +35,46 @@ class MonitorAuction extends Component
     {
         if (Session::has('id_company') || Session::has('id_user')) {
 
+            if (Session::has('id_user')) {
+                $this->IdSubasta = $id;
+                $this->auction = Auctions::where('id', $this->IdSubasta)->first();
+                $this->bids = Pujas::where('auction_id', $this->IdSubasta)
+                    ->where('status', 1)
+                    ->get();
 
-            $this->IdSubasta = $id;
-            $this->auction = Auctions::where('id', $this->IdSubasta)->first();
-            $this->bids = Purchase::where('auction_id', $this->IdSubasta)
-                ->where('status', 1)
-                ->get();
+                if ($this->auction->auction_state == 'Finalizada') {
+                    return redirect('/subastas')->with('error', 'La Subasta ya finalizo!');
+                }
 
-            if ($this->auction->auction_state == 'Finalizada') {
-                return redirect('/subastas')->with('error', 'La Subasta ya finalizo!');
-            }
+                $dateTimeStart = new \DateTime("{$this->auction->date_start} {$this->auction->hour_start}");
+                $currentDateTime = new \DateTime();
 
-            $dateTimeStart = new \DateTime("{$this->auction->date_start} {$this->auction->hour_start}");
-            $currentDateTime = new \DateTime();
+                if ($dateTimeStart > $currentDateTime) {
+                    return redirect('/subastas')->with('error', 'La Subasta no ha iniciado aún');
+                }
 
-            if ($dateTimeStart > $currentDateTime) {
-                return redirect('/subastas')->with('error', 'La Subasta no ha iniciado aún');
-            }
+                if (Session::has('id_company')) {
+                    $postores = PostorEvent::join('companies', 'postor_events.postor_id', '=', 'companies.id')
+                        ->join('events_auctions', 'postor_events.event_id', '=', 'events_auctions.id')
+                        ->select('postor_events.*', 'companies.*', 'events_auctions.*')
+                        ->where('postor_events.event_id', $this->auction->event_id)
+                        ->where('postor_events.id_product_event', $this->auction->product_id)
+                        ->where('postor_events.postor_id', Session::get('id_company'))
+                        ->first();
 
-            if (Session::has('id_company')) {
-                $postores = PostorEvent::join('companies', 'postor_events.postor_id', '=', 'companies.id')
-                    ->join('events_auctions', 'postor_events.event_id', '=', 'events_auctions.id')
-                    ->select('postor_events.*', 'companies.*', 'events_auctions.*')
-                    ->where('postor_events.event_id', $this->auction->event_id)
-                    ->where('postor_events.id_product_event', $this->auction->product_id)
-                    ->where('postor_events.postor_id', Session::get('id_company'))
-                    ->first();
-
-                if ($postores) {
-                    $this->IdPostor = $postores->id;
-                    $this->IdAnonimo = $postores->name_anonimous;
-                } else {
-                    return redirect('/subastas')->with('error', 'No tienes autorización para esta subasta');
+                    if ($postores) {
+                        $this->IdPostor = 1;
+                        $this->IdAnonimo = 'wdwdwdwd';
+                    } else {
+                        return redirect('/subastas')->with('error', 'No tienes autorización para esta subasta');
+                    }
                 }
             }
         } else {
             return redirect('/subastas')->with('error', 'No tienes autorización para esta subasta');
         }
 
-        $this->minPrice = $this->calculateMinPrice();
+//        $this->minPrice = $this->calculateMinPrice();
     }
 
     public function calculateTimeLeft()
@@ -91,35 +93,35 @@ class MonitorAuction extends Component
     {
         // Lógica para calcular el precio mínimo basado en las pujas y el porcentaje de rebaja
         // Esto es un ejemplo, ajusta según tus necesidades
-        $lastBid = $this->auction->bids()->latest()->first();
-        $minPrice = $lastBid ? $lastBid->amount * 0.9 : $this->auction->starting_price * 0.9;
+        $lastBid = Pujas::where('auction_id', $this->auction->id)->orderBy('created_at', 'desc')->first();
+        $minPrice = $lastBid ? $lastBid->amount * 0.9 : $this->auction->price_reference * 0.9;
 
         return $minPrice;
     }
 
 
-    public function placeBid($amount)
-    {
-        // Validar que el monto sea mayor que el precio mínimo
-        if ($amount < $this->minPrice) {
-            return;
-        }
-
-        // Crear la puja
-        Bid::create([
-            'auction_id' => $this->auction->id,
-            'user_id' => auth()->id(),
-            'amount' => $amount,
-        ]);
-
-        // Actualizar el tiempo de finalización de la subasta
-        $this->auction->update([
-            'end_time' => Carbon::now()->addMinutes(3),
-        ]);
-
-        // Emitir evento para actualizar la pantalla
-        $this->emit('bidPlaced');
-    }
+//    public function placeBid($amount)
+//    {
+//        // Validar que el monto sea mayor que el precio mínimo
+//        if ($amount < $this->minPrice) {
+//            return;
+//        }
+//
+//        // Crear la puja
+//        Bid::create([
+//            'auction_id' => $this->auction->id,
+//            'user_id' => auth()->id(),
+//            'amount' => $amount,
+//        ]);
+//
+//        // Actualizar el tiempo de finalización de la subasta
+//        $this->auction->update([
+//            'end_time' => Carbon::now()->addMinutes(3),
+//        ]);
+//
+//        // Emitir evento para actualizar la pantalla
+//        $this->emit('bidPlaced');
+//    }
 
 
     public function updateAuction()

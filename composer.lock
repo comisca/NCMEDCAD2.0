@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "296a24dcfb4d2091a850197968fbc6a6",
+    "content-hash": "268a673848fa55161cc3f9374a71e656",
     "packages": [
         {
             "name": "beyondcode/laravel-websockets",
@@ -2536,16 +2536,16 @@
         },
         {
             "name": "livewire/livewire",
-            "version": "v3.5.8",
+            "version": "v3.5.18",
             "source": {
                 "type": "git",
                 "url": "https://github.com/livewire/livewire.git",
-                "reference": "ce1ce71b39a3492b98f7d2f2a4583f1b163fe6ae"
+                "reference": "62f0fa6b340a467c25baa590a567d9a134b357da"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/livewire/livewire/zipball/ce1ce71b39a3492b98f7d2f2a4583f1b163fe6ae",
-                "reference": "ce1ce71b39a3492b98f7d2f2a4583f1b163fe6ae",
+                "url": "https://api.github.com/repos/livewire/livewire/zipball/62f0fa6b340a467c25baa590a567d9a134b357da",
+                "reference": "62f0fa6b340a467c25baa590a567d9a134b357da",
                 "shasum": ""
             },
             "require": {
@@ -2553,7 +2553,7 @@
                 "illuminate/routing": "^10.0|^11.0",
                 "illuminate/support": "^10.0|^11.0",
                 "illuminate/validation": "^10.0|^11.0",
-                "laravel/prompts": "^0.1.24",
+                "laravel/prompts": "^0.1.24|^0.2|^0.3",
                 "league/mime-type-detection": "^1.9",
                 "php": "^8.1",
                 "symfony/console": "^6.0|^7.0",
@@ -2571,12 +2571,12 @@
             "type": "library",
             "extra": {
                 "laravel": {
-                    "providers": [
-                        "Livewire\\LivewireServiceProvider"
-                    ],
                     "aliases": {
                         "Livewire": "Livewire\\Livewire"
-                    }
+                    },
+                    "providers": [
+                        "Livewire\\LivewireServiceProvider"
+                    ]
                 }
             },
             "autoload": {
@@ -2600,7 +2600,7 @@
             "description": "A front-end framework for Laravel.",
             "support": {
                 "issues": "https://github.com/livewire/livewire/issues",
-                "source": "https://github.com/livewire/livewire/tree/v3.5.8"
+                "source": "https://github.com/livewire/livewire/tree/v3.5.18"
             },
             "funding": [
                 {
@@ -2608,7 +2608,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2024-09-20T19:41:19+00:00"
+            "time": "2024-12-23T15:05:02+00:00"
         },
         {
             "name": "maennchen/zipstream-php",

@@ -11,24 +11,19 @@ use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class NewPuja implements ShouldBroadcastNow
+class TestEvent implements ShouldBroadcastNow
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    public $auctioID;
-    public $userdID;
-    public $monto, $postor_id, $code_postor;
+
+    public $message;
 
     /**
      * Create a new event instance.
      */
-    public function __construct($auctioID, $userdID, $monto, $postor_id, $code_postor)
+    public function __construct($message)
     {
-        $this->auctioID = $auctioID;
-        $this->userdID = $userdID;
-        $this->monto = $monto;
-        $this->postor_id = $postor_id;
-        $this->code_postor = $code_postor;
+        $this->message = $message;
     }
 
     /**
@@ -39,18 +34,14 @@ class NewPuja implements ShouldBroadcastNow
     public function broadcastOn(): array
     {
         return [
-            new Channel('auction.' . $this->auctioID),
+            new Channel('test-channel'),
         ];
     }
 
-    public function broadcastWith(): array
+    public function broadcastWith()
     {
         return [
-            'auction_id' => $this->auctioID,
-            'user_id' => $this->userdID,
-            'amount' => $this->monto,
-            'postor_id' => $this->postor_id,
-            'code_postor' => $this->code_postor,
+            'message' => $this->message,
         ];
     }
 }

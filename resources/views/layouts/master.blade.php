@@ -82,6 +82,8 @@
             color: #fff; /* Letras blancas */
         }
     </style>
+    @livewireStyles
+    {{--    @vite(['resources/js/app.js'])  <!-- Incluye el archivo JavaScript compilado -->--}}
 </head>
 
 <body>
@@ -116,9 +118,10 @@
 <!-- /Right-bar -->
 
 <!-- JAVASCRIPT -->
+
 @include('layouts.vendor-scripts')
 
-
+@livewireScripts
 @include('components.shortcuts')
 
 </body>

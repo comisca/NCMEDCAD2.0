@@ -2,6 +2,7 @@
 
 namespace App\Livewire;
 
+use App\Models\Pujas;
 use Livewire\Attributes\On;
 use Livewire\WithPagination;
 use Livewire\Component;
@@ -11,23 +12,32 @@ use DB;
 class BidHistoryComponent extends Component
 {
 
-    public $bids;
+    public $bids, $bidsAuction;
 
     protected $listeners = ['updateBidHistory' => 'updateBids'];
 
-    public function mount($bids)
+    public function mount($bidsAuction)
     {
-        $this->bids = $bids;
+        $this->bidsAuction = $bidsAuction;
+        $this->bids = Pujas::where('auction_id', $this->bidsAuction->id)
+            ->where('status', 1)
+            ->orderBy('amount', 'desc')
+            ->get();
     }
 
-    public function updateBids($bids)
+    #[On('newBid')]
+    public function updateBids()
     {
-        $this->bids = $bids;
+        $this->bids = Pujas::where('auction_id', $this->bidsAuction->id)
+            ->where('status', 1)
+            ->orderBy('amount', 'desc')
+            ->get();
     }
+
 
     public function render()
     {
-        return view('livewire.bid-history-component');
+        return view('livewire.events.bid-history-component');
     }
 
 

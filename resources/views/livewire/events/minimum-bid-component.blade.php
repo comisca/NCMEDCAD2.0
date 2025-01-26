@@ -6,9 +6,9 @@
             <p>Rebaja minima para la siguiente oferta (U$$): <span id="rebaja">...</span></p>
             <p>Próxima oferta minima valida (U$$): <span id="proxima">...</span></p>
             <div class="input-group">
-                <input type="text" class="form-control" placeholder="Cantidad">
+                <input type="text" wire:model="bidAmount" class="form-control" placeholder="Cantidad">
                 <div class="input-group-append">
-                    <button class="btn btn-success">ENVIAR</button>
+                    <button wire:click="placeBid()" class="btn btn-success">ENVIAR</button>
                 </div>
             </div>
         </div>
