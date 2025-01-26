@@ -1,5 +1,5 @@
 <div class="col-md-4">
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
+
     <div class="card">
         <div class="card-header">Panel de Puja</div>
         <div class="card-body">
@@ -28,18 +28,3 @@
         </div>
     </div>
 </div>
-
-@section('script')
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            if (window.Echo) {
-                window.Echo.channel('auction.{{ $bidsAuction->id }}')
-                    .listen('NewPuja', (e) => {
-                        Livewire.dispatch('newBid');
-                    });
-            } else {
-                console.error('Echo no está inicializado');
-            }
-        });
-    </script>
-@endsection

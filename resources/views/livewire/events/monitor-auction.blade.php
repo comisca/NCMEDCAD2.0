@@ -2,6 +2,7 @@
     @lang('NCMEDCAD | Tiitle')
 @endsection
 <div class="container-fluid">
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
     <div class="row">
 
         <div class="col-md-4">
@@ -94,116 +95,127 @@
     </div>
 </div>
 
-
 @section('script')
-
-    <!-- apexcharts -->
-    {{--    <script src="{{ URL::asset('assets/libs/apexcharts/apexcharts.min.js')}}"></script>--}}
-    {{--    <script src="{{ URL::asset('assets/js/pages/dashboard.init.js')}}"></script>--}}
-    {{--    <script>--}}
-    {{--        document.addEventListener('livewire:initialized', function () {--}}
-    {{--            @this.--}}
-    {{--            on('messages-succes', (event) => {--}}
-    {{--                toastr.success(event.messages, 'Exito', {--}}
-    {{--                    "closeButton": true,--}}
-    {{--                    "debug": false,--}}
-    {{--                    "newestOnTop": false,--}}
-    {{--                    "progressBar": false,--}}
-    {{--                    "positionClass": "toast-bottom-full-width",--}}
-    {{--                    "preventDuplicates": false,--}}
-    {{--                    "onclick": null,--}}
-    {{--                    "showDuration": 300,--}}
-    {{--                    "hideDuration": 1000,--}}
-    {{--                    "timeOut": 5000,--}}
-    {{--                    "extendedTimeOut": 1000,--}}
-    {{--                    "showEasing": "swing",--}}
-    {{--                    "hideEasing": "linear",--}}
-    {{--                    "showMethod": "fadeIn",--}}
-    {{--                    "hideMethod": "fadeOut"--}}
-    {{--                })--}}
-    {{--                // Swal.fire({--}}
-    {{--                //     position: 'top-end',--}}
-    {{--                //     icon: 'success',--}}
-    {{--                //     title: event.messages,--}}
-    {{--                //     text: "Exito!!",--}}
-    {{--                //     showConfirmButton: false,--}}
-    {{--                //     timer: 2500--}}
-    {{--                // })--}}
-
-    {{--            })--}}
-    {{--            @this.on('messages-error', (event) => {--}}
-    {{--                toastr.error(event.messages, 'Exito', {--}}
-    {{--                    "closeButton": true,--}}
-    {{--                    "debug": false,--}}
-    {{--                    "newestOnTop": false,--}}
-    {{--                    "progressBar": false,--}}
-    {{--                    "positionClass": "toast-bottom-full-width",--}}
-    {{--                    "preventDuplicates": false,--}}
-    {{--                    "onclick": null,--}}
-    {{--                    "showDuration": 300,--}}
-    {{--                    "hideDuration": 1000,--}}
-    {{--                    "timeOut": 5000,--}}
-    {{--                    "extendedTimeOut": 1000,--}}
-    {{--                    "showEasing": "swing",--}}
-    {{--                    "hideEasing": "linear",--}}
-    {{--                    "showMethod": "fadeIn",--}}
-    {{--                    "hideMethod": "fadeOut"--}}
-    {{--                })--}}
-    {{--            })--}}
-
-    {{--            @this.on('roles-selected', (event) => {--}}
-    {{--                document.getElementById("roles").focus();--}}
-
-    {{--            })--}}
-
-    {{--        });--}}
-
-    {{--        function confirm(id) {--}}
-    {{--            Swal.fire({--}}
-    {{--                title: 'Eliminar Rol?',--}}
-    {{--                text: "Estas seguro de eliminar este rol?",--}}
-    {{--                type: 'question',--}}
-    {{--                showCancelButton: true,--}}
-    {{--                confirmButtonColor: '#3085d6',--}}
-    {{--                cancelButtonColor: '#d33',--}}
-    {{--                confirmButtonText: 'Si, Eliminar!',--}}
-    {{--                cancelButtonText: 'No, Cancelar'--}}
-    {{--            }).then((result) => {--}}
-    {{--                if (result.value) {--}}
-    {{--                    Livewire.dispatch('deleteroles', {postId: id})--}}
-    {{--                    swal.close();--}}
-    {{--                }--}}
-    {{--            });--}}
-
-    {{--        }--}}
-    {{--    </script>--}}
-
-    {{--    <script>--}}
-    {{--        let totalTime = 180; // Tiempo total en segundos (3 minutos)--}}
-    {{--        const timeDisplay = document.getElementById('time-display');--}}
-    {{--        const progressCircle = document.getElementById('progress-circle');--}}
-
-    {{--        const updateProgress = () => {--}}
-    {{--            totalTime--;--}}
-
-    {{--            const minutes = Math.floor(totalTime / 60);--}}
-    {{--            const seconds = totalTime % 60;--}}
-
-    {{--            timeDisplay.textContent = `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;--}}
-
-    {{--            if (totalTime > 120) {--}}
-    {{--                progressCircle.style.background = 'conic-gradient(#4caf50 0%, #4caf50 calc((180 - ' + totalTime + ') / 180 * 100%), #ddd calc((180 - ' + totalTime + ') / 180 * 100%), #ddd 100%)';--}}
-    {{--            } else if (totalTime > 30) {--}}
-    {{--                progressCircle.style.background = 'conic-gradient(#ff9800 0%, #ff9800 calc((180 - ' + totalTime + ') / 180 * 100%), #ddd calc((180 - ' + totalTime + ') / 180 * 100%), #ddd 100%)';--}}
-    {{--            } else {--}}
-    {{--                progressCircle.style.background = 'conic-gradient(#f44336 0%, #f44336 calc((180 - ' + totalTime + ') / 180 * 100%), #ddd calc((180 - ' + totalTime + ') / 180 * 100%), #ddd 100%)';--}}
-    {{--            }--}}
-
-    {{--            if (totalTime > 0) {--}}
-    {{--                setTimeout(updateProgress, 1000);--}}
-    {{--            }--}}
-    {{--        };--}}
-
-    {{--        setTimeout(updateProgress, 1000);--}}
-    {{--    </script>--}}
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            if (window.Echo) {
+                window.Echo.channel('auction.{{ $auction->id }}')
+                    .listen('NewPuja', (e) => {
+                        Livewire.dispatch('newBid');
+                        Livewire.dispatch('updateMinumusBid');
+                    });
+            } else {
+                console.error('Echo no está inicializado');
+            }
+        });
+    </script>
 @endsection
+<!-- apexcharts -->
+{{--    <script src="{{ URL::asset('assets/libs/apexcharts/apexcharts.min.js')}}"></script>--}}
+{{--    <script src="{{ URL::asset('assets/js/pages/dashboard.init.js')}}"></script>--}}
+{{--    <script>--}}
+{{--        document.addEventListener('livewire:initialized', function () {--}}
+{{--            @this.--}}
+{{--            on('messages-succes', (event) => {--}}
+{{--                toastr.success(event.messages, 'Exito', {--}}
+{{--                    "closeButton": true,--}}
+{{--                    "debug": false,--}}
+{{--                    "newestOnTop": false,--}}
+{{--                    "progressBar": false,--}}
+{{--                    "positionClass": "toast-bottom-full-width",--}}
+{{--                    "preventDuplicates": false,--}}
+{{--                    "onclick": null,--}}
+{{--                    "showDuration": 300,--}}
+{{--                    "hideDuration": 1000,--}}
+{{--                    "timeOut": 5000,--}}
+{{--                    "extendedTimeOut": 1000,--}}
+{{--                    "showEasing": "swing",--}}
+{{--                    "hideEasing": "linear",--}}
+{{--                    "showMethod": "fadeIn",--}}
+{{--                    "hideMethod": "fadeOut"--}}
+{{--                })--}}
+{{--                // Swal.fire({--}}
+{{--                //     position: 'top-end',--}}
+{{--                //     icon: 'success',--}}
+{{--                //     title: event.messages,--}}
+{{--                //     text: "Exito!!",--}}
+{{--                //     showConfirmButton: false,--}}
+{{--                //     timer: 2500--}}
+{{--                // })--}}
+
+{{--            })--}}
+{{--            @this.on('messages-error', (event) => {--}}
+{{--                toastr.error(event.messages, 'Exito', {--}}
+{{--                    "closeButton": true,--}}
+{{--                    "debug": false,--}}
+{{--                    "newestOnTop": false,--}}
+{{--                    "progressBar": false,--}}
+{{--                    "positionClass": "toast-bottom-full-width",--}}
+{{--                    "preventDuplicates": false,--}}
+{{--                    "onclick": null,--}}
+{{--                    "showDuration": 300,--}}
+{{--                    "hideDuration": 1000,--}}
+{{--                    "timeOut": 5000,--}}
+{{--                    "extendedTimeOut": 1000,--}}
+{{--                    "showEasing": "swing",--}}
+{{--                    "hideEasing": "linear",--}}
+{{--                    "showMethod": "fadeIn",--}}
+{{--                    "hideMethod": "fadeOut"--}}
+{{--                })--}}
+{{--            })--}}
+
+{{--            @this.on('roles-selected', (event) => {--}}
+{{--                document.getElementById("roles").focus();--}}
+
+{{--            })--}}
+
+{{--        });--}}
+
+{{--        function confirm(id) {--}}
+{{--            Swal.fire({--}}
+{{--                title: 'Eliminar Rol?',--}}
+{{--                text: "Estas seguro de eliminar este rol?",--}}
+{{--                type: 'question',--}}
+{{--                showCancelButton: true,--}}
+{{--                confirmButtonColor: '#3085d6',--}}
+{{--                cancelButtonColor: '#d33',--}}
+{{--                confirmButtonText: 'Si, Eliminar!',--}}
+{{--                cancelButtonText: 'No, Cancelar'--}}
+{{--            }).then((result) => {--}}
+{{--                if (result.value) {--}}
+{{--                    Livewire.dispatch('deleteroles', {postId: id})--}}
+{{--                    swal.close();--}}
+{{--                }--}}
+{{--            });--}}
+
+{{--        }--}}
+{{--    </script>--}}
+
+{{--    <script>--}}
+{{--        let totalTime = 180; // Tiempo total en segundos (3 minutos)--}}
+{{--        const timeDisplay = document.getElementById('time-display');--}}
+{{--        const progressCircle = document.getElementById('progress-circle');--}}
+
+{{--        const updateProgress = () => {--}}
+{{--            totalTime--;--}}
+
+{{--            const minutes = Math.floor(totalTime / 60);--}}
+{{--            const seconds = totalTime % 60;--}}
+
+{{--            timeDisplay.textContent = `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;--}}
+
+{{--            if (totalTime > 120) {--}}
+{{--                progressCircle.style.background = 'conic-gradient(#4caf50 0%, #4caf50 calc((180 - ' + totalTime + ') / 180 * 100%), #ddd calc((180 - ' + totalTime + ') / 180 * 100%), #ddd 100%)';--}}
+{{--            } else if (totalTime > 30) {--}}
+{{--                progressCircle.style.background = 'conic-gradient(#ff9800 0%, #ff9800 calc((180 - ' + totalTime + ') / 180 * 100%), #ddd calc((180 - ' + totalTime + ') / 180 * 100%), #ddd 100%)';--}}
+{{--            } else {--}}
+{{--                progressCircle.style.background = 'conic-gradient(#f44336 0%, #f44336 calc((180 - ' + totalTime + ') / 180 * 100%), #ddd calc((180 - ' + totalTime + ') / 180 * 100%), #ddd 100%)';--}}
+{{--            }--}}
+
+{{--            if (totalTime > 0) {--}}
+{{--                setTimeout(updateProgress, 1000);--}}
+{{--            }--}}
+{{--        };--}}
+
+{{--        setTimeout(updateProgress, 1000);--}}
+{{--    </script>--}}
