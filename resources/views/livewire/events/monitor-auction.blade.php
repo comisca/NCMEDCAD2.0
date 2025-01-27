@@ -63,8 +63,33 @@
                 </div>
             </div>
         </div>
-        <livewire:aution-timer-component :timeLeft="$timeLeft"
-                                         :key="'auction-timer-' . $auction->id"></livewire:aution-timer-component>
+        {{--        <livewire:aution-timer-component :timeLeft="$timeLeft"--}}
+        {{--                                         :key="'auction-timer-' . $auction->id"></livewire:aution-timer-component>--}}
+
+        <div>
+            <div
+                x-data="timer({{ $remainingTime }}, {{ $isRecoveryPeriod ? 'true' : 'false' }}, {{ $auction->recovery_time }})"
+                x-init="startTimer()"
+                wire:ignore
+            >
+                <div
+                    class="countdown"
+                    :class="{ 'text-danger': isRecoveryPeriod }"
+                >
+                    <span x-text="formatTime(remainingTime)"></span>
+                </div>
+
+                <div
+                    x-show="isRecoveryPeriod"
+                    x-transition
+                    class="alert alert-warning mt-2"
+                >
+                    ¡Período de recuperación activo! Cualquier puja reiniciará el contador a <span
+                        x-text="recoveryTimeMinutes"></span> minutos.
+                </div>
+            </div>
+        </div>
+
 
     </div>
 
@@ -110,6 +135,55 @@
                 console.error('Echo no está inicializado');
             }
         });
+
+        // Definir la función timer fuera del DOMContentLoaded
+        function timer(initialTime, initialRecoveryStatus, recoveryTimeMinutes) {
+            return {
+                remainingTime: initialTime,
+                isRecoveryPeriod: initialRecoveryStatus,
+                recoveryTimeMinutes: recoveryTimeMinutes,
+                timerInterval: null,
+
+                startTimer() {
+                    window.Echo.channel('auction.{{ $auction->id }}')
+                        .listen('.TimerUpdate', (e) => {
+                            this.remainingTime = e.remainingTime;
+                            this.isRecoveryPeriod = e.isRecoveryPeriod;
+                        })
+                        .listen('NewPuja', (e) => {
+                            if (this.remainingTime <= (this.recoveryTimeMinutes * 60)) {
+                                this.remainingTime = this.recoveryTimeMinutes * 60;
+                                this.isRecoveryPeriod = true;
+                                // En lugar de dispatch, emitir un evento personalizado
+                                const event = new CustomEvent('timer-reset', {
+                                    detail: {remainingTime: this.remainingTime}
+                                });
+                                window.dispatchEvent(event);
+                            }
+                        });
+
+                    // Escuchar el evento de reset del timer
+                    window.addEventListener('timer-reset', (e) => {
+                        this.remainingTime = e.detail.remainingTime;
+                        this.isRecoveryPeriod = true;
+                    });
+
+                    this.timerInterval = setInterval(() => {
+                        if (this.remainingTime > 0) {
+                            this.remainingTime--;
+                            this.isRecoveryPeriod = this.remainingTime <= (this.recoveryTimeMinutes * 60);
+                        }
+                    }, 1000);
+                },
+
+                formatTime(seconds) {
+                    if (seconds <= 0) return '00:00';
+                    const minutes = Math.floor(seconds / 60);
+                    const remainingSeconds = seconds % 60;
+                    return `${String(minutes).padStart(2, '0')}:${String(remainingSeconds).padStart(2, '0')}`;
+                }
+            }
+        }
     </script>
 @endsection
 <!-- apexcharts -->

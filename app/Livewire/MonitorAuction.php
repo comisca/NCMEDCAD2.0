@@ -2,10 +2,12 @@
 
 namespace App\Livewire;
 
+use App\Events\TimerUpdate;
 use App\Models\Auctions;
 use App\Models\PostorEvent;
 use App\Models\ProductEvent;
 use App\Models\Pujas;
+use Carbon\Carbon;
 use Livewire\Attributes\On;
 use Livewire\WithPagination;
 use Livewire\Component;
@@ -24,6 +26,8 @@ class MonitorAuction extends Component
     public $timeLeft;
     public $bids;
     public $minPrice, $productEventData;
+    public $remainingTime;
+    public $isRecoveryPeriod = false;
 
 //    protected $listeners = ['bidPlaced' => 'updateAuction'];
 
@@ -92,36 +96,67 @@ class MonitorAuction extends Component
                 } else {
                     return redirect('/subastas')->with('error', 'No tienes autorización para esta subasta');
                 }
+
+
             }
 
         } else {
             return redirect('/subastas')->with('error', 'Subasta Privada');
         }
-
+        $this->calculateRemainingTime();
 //        $this->minPrice = $this->calculateMinPrice();
     }
 
-    public function calculateTimeLeft()
+    #[On('updateTimerCount')]
+    public function calculateRemainingTime()
     {
-        $endTime = Carbon::parse($this->auction->end_time);
         $now = Carbon::now();
+        $startTime = Carbon::parse($this->auction->date_start . ' ' . $this->auction->hour_start);
+        $endTime = $startTime->copy()->addMinutes($this->auction->duration_time);
 
-        if ($now->gt($endTime)) {
-            return 0;
+        if ($now->lt($startTime)) {
+            $this->remainingTime = null;
+            return;
         }
 
-        return $endTime->diffInSeconds($now);
+        $this->remainingTime = $endTime->diffInSeconds($now);
+        $this->isRecoveryPeriod = $this->remainingTime <= ($this->auction->recovery_time * 60);
+
+        // Emitir evento de actualización del timer
+        broadcast(new TimerUpdate($this->auction->id, $this->remainingTime, $this->isRecoveryPeriod))->toOthers();
     }
 
-    public function calculateMinPrice()
+    #[On('updateWacth')]
+    public function handleNewBid()
     {
-        // Lógica para calcular el precio mínimo basado en las pujas y el porcentaje de rebaja
-        // Esto es un ejemplo, ajusta según tus necesidades
-        $lastBid = Pujas::where('auction_id', $this->auction->id)->orderBy('created_at', 'desc')->first();
-        $minPrice = $lastBid ? $lastBid->amount * 0.9 : $this->auction->price_reference * 0.9;
-
-        return $minPrice;
+        if ($this->isRecoveryPeriod) {
+            $this->remainingTime = $this->auction->recovery_time * 60;
+            broadcast(new TimerUpdate(
+                $this->auction->id,
+                $this->remainingTime,
+                true
+            ))->toOthers();
+        }
     }
+//    public function handleNewBid()
+//    {
+//        $now = Carbon::now();
+//        $startTime = Carbon::parse($this->auction->date_start . ' ' . $this->auction->hour_start);
+//        $endTime = $startTime->copy()->addMinutes($this->auction->duration_time);
+//
+//        $this->remainingTime = $endTime->diffInSeconds($now);
+//        $this->isRecoveryPeriod = $this->remainingTime <= ($this->auction->recovery_time * 60);
+//
+//        if ($this->isRecoveryPeriod) {
+//            $this->remainingTime = $this->auction->recovery_time * 60;
+//
+//            broadcast(new TimerUpdate(
+//                $this->auction->id,
+//                $this->remainingTime,
+//                true
+//            ))->toOthers();
+//        }
+//    }
 
 
 //    public function placeBid($amount)

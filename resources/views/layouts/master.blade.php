@@ -77,9 +77,19 @@
             transform: translate(-50%, -50%);
         }
 
-        .time-display {
-            font-size: 2rem;
-            color: #fff; /* Letras blancas */
+        .countdown {
+            font-size: 2em;
+            font-weight: bold;
+            text-align: center;
+            transition: color 0.3s ease;
+        }
+
+        .countdown.text-danger {
+            color: #dc3545;
+        }
+
+        .alert {
+            transition: all 0.3s ease;
         }
     </style>
     @livewireStyles
