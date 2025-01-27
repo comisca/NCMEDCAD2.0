@@ -11,22 +11,18 @@ use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class TimerUpdate implements ShouldBroadcastNow
+class AuctionEnded implements ShouldBroadcastNow
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
     public $auctionId;
-    public $remainingTime;
-    public $isRecoveryPeriod;
 
     /**
      * Create a new event instance.
      */
-    public function __construct($auctionId, $remainingTime, $isRecoveryPeriod)
+    public function __construct($auctionId)
     {
         $this->auctionId = $auctionId;
-        $this->remainingTime = $remainingTime;
-        $this->isRecoveryPeriod = $isRecoveryPeriod;
     }
 
     /**
@@ -37,7 +33,12 @@ class TimerUpdate implements ShouldBroadcastNow
     public function broadcastOn(): array
     {
         return [
-            new Channel('auction.' . $this->auctionId),
+            new Channel('auctionEndTimer.' . $this->auctionId),
         ];
+    }
+
+    public function broadcastAs()
+    {
+        return 'AuctionEnded';
     }
 }

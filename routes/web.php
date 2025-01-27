@@ -1,6 +1,8 @@
 <?php
 
+use App\Events\AuctionEnded;
 use App\Livewire\DocumentsValidationComponent;
+use App\Models\Auctions;
 use Illuminate\Support\Facades\Route;
 use App\Livewire\RolesComponet;
 use App\Livewire\PermissionComponent;
@@ -97,6 +99,56 @@ Route::get('/test-event', function () {
     event(new \App\Events\TestEvent('Hello, Reverb!'));
     return 'Event emitted!';
 });
+
+Route::post('/update-auction-end', function (Request $request) {
+    try {
+        DB::beginTransaction();
+
+        $auction = Auctions::find($request->auction_id);
+        if ($auction) {
+            $auction->update([
+                'date_end' => now(),
+                'auction_state' => 'Finalizada'
+            ]);
+
+            broadcast(new AuctionEnded($auction->id))->toOthers();
+
+            DB::commit();
+
+            return response()->json(['success' => true]);
+        }
+
+        return response()->json(['success' => false]);
+    } catch (\Exception $e) {
+        DB::rollback();
+        return response()->json(['success' => false, 'error' => $e->getMessage()]);
+    }
+});
+
+//Route::post('/update-auction-end', function (Request $request) {
+//    try {
+//        DB::beginTransaction();
+//
+//        $auction = Auctions::find($request->auction_id);
+//        if ($auction) {
+//            $auction->update([
+//                'date_end' => now(),
+//                'auction_state' => 'Finalizada'
+//            ]);
+//
+//            broadcast(new AuctionEnded($auction->id))->toOthers();
+//
+//            DB::commit();
+//
+//            return response()->json(['success' => true]);
+//        }
+//
+//        return response()->json(['success' => false]);
+//    } catch (\Exception $e) {
+//        DB::rollback();
+//        return response()->json(['success' => false, 'error' => $e->getMessage()]);
+//    }
+//});
 
 
 //Route::get('/fichatecnica', FichaTecnicaComponent::class);

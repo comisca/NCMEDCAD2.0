@@ -131,10 +131,28 @@
                         Livewire.dispatch('newBid');
                         Livewire.dispatch('updateMinumusBid');
                     });
+
+                window.Echo.channel('auctionEndTimer.{{ $auction->id }}')
+                    .listen('AuctionEnded', (e) => {
+                        // Redireccionar o mostrar mensaje
+                        window.location.href = '/subastas';
+                        // O mostrar un modal/mensaje
+                        // Swal.fire({
+                        //     title: 'Subasta Finalizada',
+                        //     text: 'La subasta ha terminado',
+                        //     icon: 'info',
+                        //     confirmButtonText: 'Aceptar'
+                        // }).then((result) => {
+                        //     window.location.href = '/subastas';
+                        // });
+                    });
+
+
             } else {
                 console.error('Echo no está inicializado');
             }
         });
+
 
         // Definir la función timer fuera del DOMContentLoaded
         function timer(initialTime, initialRecoveryStatus, recoveryTimeMinutes) {
@@ -145,6 +163,12 @@
                 timerInterval: null,
 
                 startTimer() {
+                    // Si el tiempo inicial es 0, no iniciamos el contador
+                    if (this.remainingTime <= 0) {
+                        this.remainingTime = 0;
+                        return;
+                    }
+
                     window.Echo.channel('auction.{{ $auction->id }}')
                         .listen('.TimerUpdate', (e) => {
                             this.remainingTime = e.remainingTime;
@@ -154,7 +178,6 @@
                             if (this.remainingTime <= (this.recoveryTimeMinutes * 60)) {
                                 this.remainingTime = this.recoveryTimeMinutes * 60;
                                 this.isRecoveryPeriod = true;
-                                // En lugar de dispatch, emitir un evento personalizado
                                 const event = new CustomEvent('timer-reset', {
                                     detail: {remainingTime: this.remainingTime}
                                 });
@@ -162,7 +185,6 @@
                             }
                         });
 
-                    // Escuchar el evento de reset del timer
                     window.addEventListener('timer-reset', (e) => {
                         this.remainingTime = e.detail.remainingTime;
                         this.isRecoveryPeriod = true;
@@ -172,6 +194,9 @@
                         if (this.remainingTime > 0) {
                             this.remainingTime--;
                             this.isRecoveryPeriod = this.remainingTime <= (this.recoveryTimeMinutes * 60);
+                        } else {
+                            clearInterval(this.timerInterval);
+                            // Livewire.dispatch('endAuction');
                         }
                     }, 1000);
                 },
@@ -184,6 +209,17 @@
                 }
             }
         }
+    </script>
+    <script>
+        document.addEventListener('livewire:initialized', () => {
+            Livewire.on('swal', data => {
+                Swal.fire({
+                    icon: data[0].icon,
+                    title: data[0].title,
+                    text: data[0].text
+                });
+            });
+        });
     </script>
 @endsection
 <!-- apexcharts -->

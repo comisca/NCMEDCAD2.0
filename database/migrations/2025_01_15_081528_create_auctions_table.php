@@ -27,6 +27,7 @@ return new class extends Migration {
             $table->decimal('porcentage_tolerance', 20, 6)->nullable();
             $table->integer('recovery_time')->nullable();
             $table->text('observation')->nullable();
+            $table->dateTime('date_end')->nullable();
             $table->integer('status')->default(1);
             $table->timestamps();
         });
