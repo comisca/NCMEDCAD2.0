@@ -68,7 +68,9 @@
 
         <div>
             <div
-                x-data="timer({{ $remainingTime }}, {{ $isRecoveryPeriod ? 'true' : 'false' }}, {{ $auction->recovery_time }})"
+                x-data=" timer({{ $remainingTime }}, {{ $isRecoveryPeriod ? 'true' : 'false' }},
+             {{ $auction->recovery_time }})
+        "
                 x-init="startTimer()"
                 wire:ignore
             >
@@ -197,6 +199,7 @@
                         } else {
                             clearInterval(this.timerInterval);
                             // Livewire.dispatch('endAuction');
+                            location.reload()
                         }
                     }, 1000);
                 },

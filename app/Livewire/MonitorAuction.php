@@ -110,6 +110,7 @@ class MonitorAuction extends Component
         $endTime = $startTime->copy()->addMinutes($this->auction->duration_time);
 
         if ($now->gt($endTime)) {
+            $this->calculateRemainingTime();
             return redirect('/subastas')->with('error', 'La Subasta ya finalizo!');
         }
 
@@ -117,57 +118,109 @@ class MonitorAuction extends Component
 //        $this->minPrice = $this->calculateMinPrice();
     }
 
-    #[On('updateTimerCount')]
     public function calculateRemainingTime()
     {
         $now = Carbon::now();
         $startTime = Carbon::parse($this->auction->date_start . ' ' . $this->auction->hour_start);
         $endTime = $startTime->copy()->addMinutes($this->auction->duration_time);
 
-        if ($now->lt($startTime)) {
-            $this->remainingTime = null;
-            return;
-        }
-
-        $this->remainingTime = $endTime->diffInSeconds($now);
-        $this->isRecoveryPeriod = $this->remainingTime <= ($this->auction->recovery_time * 60);
-
-        // Si el tiempo restante es 0 o negativo
-        if ($this->remainingTime <= 0) {
-            try {
-                DB::beginTransaction();
-
-                $auction = Auctions::find($this->auction->id);
-                if ($auction && $auction->auction_state !== 'Finalizada') {
-                    $auction->update([
-                        'date_end' => Carbon::now(),
-                        'auction_state' => 'Finalizada'
-                    ]);
-
-                    DB::commit();
-
-                    // Emitir evento para notificar a otros usuarios
-                    broadcast(new AuctionEnded($auction->id))->toOthers();
-
-                    // Mostrar mensaje de finalización
-                    $this->dispatch('swal', [
-                        'icon' => 'success',
-                        'title' => '¡Subasta Finalizada!',
-                        'text' => 'La subasta ha terminado exitosamente'
-                    ]);
-                }
-            } catch (\Exception $e) {
-                DB::rollback();
-                \Log::error('Error al finalizar la subasta: ' . $e->getMessage());
+        // Si ya pasó el tiempo de finalización
+        if ($now->gt($endTime)) {
+            if ($this->auction->auction_state !== 'Finalizada') {
+                $this->finalizarSubasta();
             }
-
             $this->remainingTime = 0;
             return;
         }
 
-        // Emitir evento de actualización del timer
-        broadcast(new TimerUpdate($this->auction->id, $this->remainingTime, $this->isRecoveryPeriod))->toOthers();
+        $this->remainingTime = max(0, $endTime->diffInSeconds($now));
+        $this->isRecoveryPeriod = $this->remainingTime <= ($this->auction->recovery_time * 60);
+
+        broadcast(new TimerUpdate(
+            $this->auction->id,
+            $this->remainingTime,
+            $this->isRecoveryPeriod
+        ))->toOthers();
     }
+
+    private function finalizarSubasta()
+    {
+        try {
+            DB::beginTransaction();
+
+            $auction = Auctions::find($this->auction->id);
+            if ($auction && $auction->auction_state !== 'Finalizada') {
+                $auction->update([
+                    'date_end' => Carbon::now(),
+                    'auction_state' => 'Finalizada'
+                ]);
+
+                DB::commit();
+
+                broadcast(new AuctionEnded($auction->id))->toOthers();
+
+                $this->dispatch('swal', [
+                    'icon' => 'success',
+                    'title' => '¡Subasta Finalizada!',
+                    'text' => 'La subasta ha terminado exitosamente'
+                ]);
+            }
+        } catch (\Exception $e) {
+            DB::rollback();
+            logger()->error('Error finalizando subasta: ' . $e->getMessage());
+        }
+    }
+//    #[On('updateTimerCount')]
+//    public function calculateRemainingTime()
+//    {
+//        $now = Carbon::now();
+//        $startTime = Carbon::parse($this->auction->date_start . ' ' . $this->auction->hour_start);
+//        $endTime = $startTime->copy()->addMinutes($this->auction->duration_time);
+//
+//        if ($now->lt($startTime)) {
+//            $this->remainingTime = null;
+//            return;
+//        }
+//
+//        $this->remainingTime = $endTime->diffInSeconds($now);
+//        $this->isRecoveryPeriod = $this->remainingTime <= ($this->auction->recovery_time * 60);
+//
+//        // Si el tiempo restante es 0 o negativo
+//        if ($this->remainingTime <= 0) {
+//            try {
+//                DB::beginTransaction();
+//
+//                $auction = Auctions::find($this->auction->id);
+//                if ($auction && $auction->auction_state !== 'Finalizada') {
+//                    $auction->update([
+//                        //     'date_end' => Carbon::now(),
+//                        'auction_state' => 'Finalizada'
+//                    ]);
+//
+//                    DB::commit();
+//
+//                    // Emitir evento para notificar a otros usuarios
+//                    broadcast(new AuctionEnded($auction->id))->toOthers();
+//
+//                    // Mostrar mensaje de finalización
+//                    $this->dispatch('swal', [
+//                        'icon' => 'success',
+//                        'title' => '¡Subasta Finalizada!',
+//                        'text' => 'La subasta ha terminado exitosamente'
+//                    ]);
+//                }
+//            } catch (\Exception $e) {
+//                DB::rollback();
+//                \Log::error('Error al finalizar la subasta: ' . $e->getMessage());
+//            }
+//
+//            $this->remainingTime = 0;
+//            return;
+//        }
+//
+//        // Emitir evento de actualización del timer
+//        broadcast(new TimerUpdate($this->auction->id, $this->remainingTime, $this->isRecoveryPeriod))->toOthers();
+//    }
 //    public function calculateRemainingTime()
 //    {
 //        $now = Carbon::now();
