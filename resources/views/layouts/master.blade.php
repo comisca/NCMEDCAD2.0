@@ -93,102 +93,42 @@
         }
 
         /* Estilos para la tabla */
+        .container-fluid {
+            padding: 0 30px; /* Ajusta según necesites */
+        }
+
         .table-container {
             background: white;
-            padding: 20px;
+            padding: 30px;
             border-radius: 8px;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
             margin: 20px 0;
+            width: 100%;
+            overflow-x: auto;
+        }
+
+        /* Asegurar que la tabla ocupe todo el ancho disponible */
+        .table-responsive {
+            width: 100% !important;
+            margin: 0 !important;
         }
 
         .power-grid-table {
+            width: 100% !important;
             font-size: 0.9rem;
         }
 
-        .power-grid-table thead th {
-            background-color: #f8f9fa;
-            color: #495057;
-            font-weight: 600;
-            text-transform: uppercase;
-            font-size: 0.8rem;
-            padding: 12px;
-            border-bottom: 2px solid #dee2e6;
+        /* Resto de tus estilos... */
+
+        /* Asegurarse que los contenedores padres no limiten el ancho */
+        .row {
+            margin-right: 0;
+            margin-left: 0;
         }
 
-        .power-grid-table tbody tr:hover {
-            background-color: #f5f5f5;
-            transition: background-color 0.2s ease;
-        }
-
-        /* Estilos para los filtros */
-        .filters-container {
-            background: #f8f9fa;
-            padding: 15px;
-            border-radius: 6px;
-            margin-bottom: 20px;
-        }
-
-        .filter-pill {
-            background: #e9ecef;
-            border-radius: 20px;
-            padding: 5px 15px;
-            margin: 3px;
-            display: inline-block;
-            font-size: 0.85rem;
-        }
-
-        /* Estilos para la paginación */
-        .pagination {
-            margin-top: 20px;
-        }
-
-        .page-item.active .page-link {
-            background-color: #007bff;
-            border-color: #007bff;
-        }
-
-        /* Estilos para los botones de acciones */
-        .btn-group {
-            margin: 5px;
-        }
-
-        .btn-sm {
-            padding: 0.25rem 0.5rem;
-            font-size: 0.875rem;
-        }
-
-        /* Estilos para el buscador */
-        .search-box {
-            margin-bottom: 1rem;
-        }
-
-        .search-input {
-            border-radius: 20px;
-            padding: 8px 15px;
-            border: 1px solid #ced4da;
-        }
-
-        /* Estilos para estados */
-        .status-badge {
-            padding: 5px 10px;
-            border-radius: 15px;
-            font-size: 0.85rem;
-            font-weight: 500;
-        }
-
-        .status-active {
-            background-color: #28a745;
-            color: white;
-        }
-
-        .status-inactive {
-            background-color: #dc3545;
-            color: white;
-        }
-
-        .status-pending {
-            background-color: #ffc107;
-            color: black;
+        .col-12 {
+            padding-right: 0;
+            padding-left: 0;
         }
     </style>
     @livewireStyles

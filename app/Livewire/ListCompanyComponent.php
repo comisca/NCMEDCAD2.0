@@ -103,6 +103,7 @@ class ListCompanyComponent extends Component
         }
     }
 
+    #[On('changeStateCompany')]
     public function changesStates($id, $stateChanges)
     {
         $this->idCompanyChanges = $id;
@@ -118,6 +119,7 @@ class ListCompanyComponent extends Component
         $length = rand($minLength, $maxLength);
         return Str::random($length);
     }
+
 
     public function changeStateCompany()
     {
@@ -205,6 +207,7 @@ class ListCompanyComponent extends Component
         }
 
     }
+
 
     public function rejectedCompany($id)
     {

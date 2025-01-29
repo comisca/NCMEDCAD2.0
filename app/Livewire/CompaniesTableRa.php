@@ -2,6 +2,7 @@
 
 namespace App\Livewire;
 
+use Livewire\Attributes\On;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 use App\Models\Companies;
@@ -125,6 +126,12 @@ class CompaniesTableRa extends DataTableComponent
             );
     }
 
+    #[On('success_messages_changes')]
+    public function refresh()
+    {
+        // La tabla se refrescará cuando cambie el estado
+    }
+
     public function columns(): array
     {
         return [
@@ -141,14 +148,14 @@ class CompaniesTableRa extends DataTableComponent
                     'class' => 'text-wrap',
                 ]),
 
-            Column::make('Country', 'country')
+            Column::make('Email', 'email')
                 ->sortable()
                 ->searchable()
                 ->attributes(fn($row) => [
                     'class' => 'text-center',
                 ]),
 
-            Column::make('City', 'city')
+            Column::make('Phone', 'phone')
                 ->sortable()
                 ->searchable()
                 ->attributes(fn($row) => [
@@ -181,19 +188,6 @@ class CompaniesTableRa extends DataTableComponent
                 ->attributes(fn($row) => [
                     'class' => 'text-center',
                 ]),
-            Column::make('Documents', 'id')
-                ->format(function ($value) {
-                    return '<button type="button"
-                        wire:click="$dispatch(\'detailCompany\', { id: ' . $value . ' })"
-                        class="btn btn-secondary btn-sm"
-                        title="Ver Documentos">
-                    <i class="fas fa-file"></i> Ver Documentos
-                </button>';
-                })
-                ->html()
-                ->attributes(fn($row) => [
-                    'class' => 'text-center',
-                ]),
             Column::make('Type', 'type_company')
                 ->sortable()
                 ->format(fn($value) => ucfirst($value))
@@ -209,15 +203,69 @@ class CompaniesTableRa extends DataTableComponent
                 ->attributes(fn($row) => [
                     'class' => 'text-center',
                 ]),
-
-            Column::make('Actions', 'id')
+            Column::make('Documents', 'id')
                 ->format(function ($value) {
-                    return view('components.table-actions', ['id' => $value])->render();
+                    return '<button type="button"
+                        wire:click="$dispatch(\'detailCompany\', { id: ' . $value . ' })"
+                        class="btn btn-secondary btn-sm"
+                        title="Ver Documentos">
+                    <i class="fas fa-file"></i> Ver Documentos
+                </button>';
                 })
                 ->html()
                 ->attributes(fn($row) => [
                     'class' => 'text-center',
                 ]),
+            Column::make('Ver Más', 'id')
+                ->format(function ($value) {
+                    return '<a href="/companie/info/' . $value . '"
+                  class="btn btn-primary btn-sm"
+                  title="Ver Más">
+                <i class="fas fa-external-link-alt"></i> Ver Más
+              </a>';
+                })
+                ->html()
+                ->attributes(fn($row) => [
+                    'class' => 'text-center',
+                ]),
+            Column::make('Aceptar', 'id')
+                ->format(function ($value) {
+                    return '<button type="button"
+                        wire:click="$dispatch(\'changeStateCompany\', { id: ' . $value . ', stateChanges: 1 })"
+                        class="btn btn-success btn-sm"
+                        title="Aceptar">
+                    <i class="fas fa-check"></i> Aceptar
+                </button>';
+                })
+                ->html()
+                ->attributes(fn($row) => [
+                    'class' => 'text-center',
+                ]),
+
+// Columna para Rechazar
+            Column::make('Rechazar', 'id')
+                ->format(function ($value) {
+                    return '<button type="button"
+                        wire:click="$dispatch(\'changeStateCompany\', { id: ' . $value . ', stateChanges: 0 })"
+                        class="btn btn-danger btn-sm"
+                        title="Rechazar">
+                    <i class="fas fa-times"></i> Rechazar
+                </button>';
+                })
+                ->html()
+                ->attributes(fn($row) => [
+                    'class' => 'text-center',
+                ])
+            ,
+
+//            Column::make('Actions', 'id')
+//                ->format(function ($value) {
+//                    return view('components.table-actions', ['id' => $value])->render();
+//                })
+//                ->html()
+//                ->attributes(fn($row) => [
+//                    'class' => 'text-center',
+//                ]),
         ];
     }
 
