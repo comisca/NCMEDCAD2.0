@@ -111,7 +111,8 @@ class MonitorAuction extends Component
 
         if ($now->gt($endTime)) {
             $this->calculateRemainingTime();
-            return redirect('/subastas')->with('error', 'La Subasta ya finalizo!');
+            $this->finalizarSubasta();
+//            return redirect('/subastas')->with('error', 'La Subasta ya finalizo!');
         }
 
         $this->calculateRemainingTime();
@@ -149,22 +150,49 @@ class MonitorAuction extends Component
             DB::beginTransaction();
 
             $auction = Auctions::find($this->auction->id);
-            if ($auction && $auction->auction_state !== 'Finalizada') {
+
+            $lastPujaData = Pujas::where('auction_id', $this->auction->id)
+                ->where('status', 1)
+                ->orderBy('id', 'desc')
+                ->first();
+
+            if (!empty($lastPujaData)) {
+
+
+                if ($auction && $auction->auction_state !== 'Finalizada') {
+                    $auction->update([
+                        'date_end' => Carbon::now(),
+                        'auction_state' => 'Finalizada',
+                        'winner_id' => $lastPujaData->postor_id,
+                        'auction_result' => 'Adjudicado'
+                    ]);
+
+                    Pujas::where('auction_id', $this->auction->id)
+                        ->where('status', 1)
+                        ->where('id', '=', $lastPujaData->id)
+                        ->update([
+                            'winner_puja' => 1
+                        ]);
+
+
+//                    broadcast(new AuctionEnded($auction->id))->toOthers();
+
+                    $this->dispatch('swal', [
+                        'icon' => 'success',
+                        'title' => '¡Subasta Finalizada!',
+                        'text' => 'La subasta ha terminado exitosamente'
+                    ]);
+                }
+            } else {
                 $auction->update([
                     'date_end' => Carbon::now(),
-                    'auction_state' => 'Finalizada'
+                    'auction_state' => 'Finalizada',
+                    'auction_result' => 'No Adjudicado'
                 ]);
 
-                DB::commit();
-
-                broadcast(new AuctionEnded($auction->id))->toOthers();
-
-                $this->dispatch('swal', [
-                    'icon' => 'success',
-                    'title' => '¡Subasta Finalizada!',
-                    'text' => 'La subasta ha terminado exitosamente'
-                ]);
             }
+
+            DB::commit();
         } catch (\Exception $e) {
             DB::rollback();
             logger()->error('Error finalizando subasta: ' . $e->getMessage());

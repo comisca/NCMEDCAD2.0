@@ -59,6 +59,7 @@ class ListCompanyComponent extends Component
             ->section('content');
     }
 
+    #[On('detailCompany')]
     public function detailCompany($id)
     {
         $this->companyDataDetail = Companies::find($id);

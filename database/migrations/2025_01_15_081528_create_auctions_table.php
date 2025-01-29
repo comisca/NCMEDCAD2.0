@@ -28,6 +28,7 @@ return new class extends Migration {
             $table->integer('recovery_time')->nullable();
             $table->text('observation')->nullable();
             $table->dateTime('date_end')->nullable();
+            $table->bigInteger('winner_id')->unsigned()->nullable();
             $table->integer('status')->default(1);
             $table->timestamps();
         });

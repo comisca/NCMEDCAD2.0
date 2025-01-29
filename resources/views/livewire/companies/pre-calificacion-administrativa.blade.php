@@ -388,4 +388,44 @@
 
         }
     </script>
+
+
+    <script>
+        let pdfWindowCounter = 0;  // Contador para generar IDs únicos
+
+        window.viewPdf = function (url) {
+            pdfWindowCounter++;  // Incrementar el contador
+            const windowName = 'PDF_Viewer_' + pdfWindowCounter;  // Crear nombre único para la ventana
+
+            const pdfWindow = window.open('', windowName,
+                'width=800,height=600,left=200,top=100,resizable=yes,menubar=no,location=no,status=yes');
+
+            pdfWindow.document.write(`
+            <!DOCTYPE html>
+            <html>
+            <head>
+                <title>Visor de PDF ${pdfWindowCounter}</title>
+                <style>
+                    body {
+                        margin: 0;
+                        padding: 0;
+                        overflow: hidden;
+                        background-color: #525659;
+                    }
+                    iframe {
+                        width: 100%;
+                        height: 100vh;
+                        border: none;
+                    }
+                </style>
+            </head>
+            <body>
+                <iframe src="${url}" width="100%" height="100%"></iframe>
+            </body>
+            </html>
+        `);
+
+            pdfWindow.document.close();
+        }
+    </script>
 @endsection

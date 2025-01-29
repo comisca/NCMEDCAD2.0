@@ -28,6 +28,7 @@ class Auctions extends Model
         'recovery_time',
         'observation',
         'status',
+        'winner_id',
         'date_end'
 
     ];

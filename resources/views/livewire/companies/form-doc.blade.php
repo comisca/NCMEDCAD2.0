@@ -56,8 +56,10 @@
                                     </td>
 
                                     <td>
-                                        <button wire:click="viewDocAdm({{$itemsDocuments->id}})" type="button"
-                                                class="btn btn-link btn-sm
+                                        <button
+                                            onclick="viewPdf('{{Storage::url('document/companies/'.$itemsDocuments->attachment)}}')"
+                                            type="button"
+                                            class="btn btn-link btn-sm
                         btn-rounded">
                                             Ver detalle
                                         </button>
