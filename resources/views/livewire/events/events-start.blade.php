@@ -120,6 +120,14 @@
                                                    title="Agregar Postor"><i
                                                         class="uil uil-plus font-size-18"></i></a>
                                             </li>
+
+                                            <li class="list-inline-item">
+                                                <a href="#"
+                                                   wire:click="createNeedes({{$eventItems->id_product_event}})"
+                                                   class="px-2 text-primary" data-toggle="tooltip" data-placement="top"
+                                                   title="Agregar Necesidades"><i
+                                                        class="uil uil-plus font-size-18"></i></a>
+                                            </li>
                                             <li class="list-inline-item">
                                                 <a href="#"
                                                    wire:click="createConfigSubasta({{$eventItems->id_product_event}})"
@@ -162,7 +170,8 @@
             </div>
         </div>
     </div>
-
+    @include('livewire.events.form-needs')
+    @include('livewire.events.form-add-intitutions')
 
     @include('livewire.events.form-add-postor')
     @include('livewire.events.form-detail-postor')
@@ -233,11 +242,49 @@
 
             })
 
+
+            @this.on('intitutions-create-susses', (event) => {
+
+                $('#modalAddIntitutions').modal('hide');
+
+                toastr.success(event.messages, 'Exito', {
+                    "closeButton": true,
+                    "debug": false,
+                    "newestOnTop": false,
+                    "progressBar": false,
+                    "positionClass": "toast-bottom-full-width",
+                    "preventDuplicates": false,
+                    "onclick": null,
+                    "showDuration": 300,
+                    "hideDuration": 1000,
+                    "timeOut": 5000,
+                    "extendedTimeOut": 1000,
+                    "showEasing": "swing",
+                    "hideEasing": "linear",
+                    "showMethod": "fadeIn",
+                    "hideMethod": "fadeOut"
+                })
+
+
+            })
+
             @this.on('view-postor-data', (event) => {
                 $('#modalViewPostor').modal('show');
 
 
             })
+
+            @this.on('create-needs-create', (event) => {
+                $('#modalNeedesInstitutions').modal('show');
+
+
+            })
+            @this.on('view-institutions-create', (event) => {
+                $('#modalAddIntitutions').modal('show');
+
+
+            })
+
 
 
 

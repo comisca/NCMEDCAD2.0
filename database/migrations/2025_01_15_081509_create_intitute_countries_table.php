@@ -13,6 +13,7 @@ return new class extends Migration {
         Schema::create('intitute_countries', function (Blueprint $table) {
             $table->id();
             $table->bigInteger('country_event_id')->unsigned();
+            $table->bigInteger('events_id')->unsigned()->nullable();
             $table->bigInteger('intitute_id')->unsigned();
             $table->bigInteger('product_id')->unsigned();
             $table->decimal('qty', 20, 6);

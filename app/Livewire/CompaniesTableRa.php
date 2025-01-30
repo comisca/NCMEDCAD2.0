@@ -102,15 +102,15 @@ class CompaniesTableRa extends DataTableComponent
                     }
                 }),
 
-            TextFilter::make('City')
-                ->setFilterPillTitle('Ciudad')
+            TextFilter::make('Phone')
+                ->setFilterPillTitle('Telefono')
                 ->config([
-                    'placeholder' => 'Search by city...',
+                    'placeholder' => 'Search by phone...',
                     'maxlength' => '25',
                     'class' => 'form-control form-control-sm'
                 ])
                 ->filter(function (Builder $builder, string $value) {
-                    $builder->where('city', 'like', '%' . $value . '%');
+                    $builder->where('phone', 'like', '%' . $value . '%');
                 }),
         ];
     }

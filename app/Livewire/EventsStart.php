@@ -5,7 +5,10 @@ namespace App\Livewire;
 use App\Models\Application;
 use App\Models\Auctions;
 use App\Models\Companies;
+use App\Models\Countries;
 use App\Models\EventsAuction;
+use App\Models\IntituteCountries;
+use App\Models\Intitutions;
 use App\Models\PostorEvent;
 use App\Models\ProductEvent;
 use Illuminate\Support\Str;
@@ -27,6 +30,9 @@ class EventsStart extends Component
     public $viewPostorDataVar;
     public $productSubasta, $idSubasta, $codProducts, $qtyProducts, $priceRef, $dateStart;
     public $timeStart, $timeDuration, $porcReduce, $timeRecovery, $typeSubasta, $observacionSubasta;
+    public $countriesData, $instotutionsData, $countryEventData, $instotutionCountryData;
+    public $qtyProductsReferent, $priceProductReferent, $selectedType;
+    public $idCountrySelecteds;
 
     public function paginationView()
     {
@@ -36,7 +42,7 @@ class EventsStart extends Component
     public function mount()
     {
 
-        $this->qtyProducts = 30000;
+//        $this->qtyProducts = 30000;
     }
 
     public function updated()
@@ -65,6 +71,79 @@ class EventsStart extends Component
         return view('livewire.events.events-start')
             ->extends('layouts.master')
             ->section('content');
+    }
+
+    public function createNeedes($idevent)
+    {
+        $this->selectedProductEvent = $idevent;
+        $this->countriesData = Countries::where('status', 1)->get();
+
+        $this->dispatch('create-needs-create', messages: 'El evento fue agregado con exito');
+
+    }
+
+    public function viewIntitutions($id)
+    {
+        $this->idCountrySelecteds = $id;
+        $this->instotutionsData = Intitutions::where('country_id', $id)->get();
+        $this->dispatch('view-institutions-create', messages: 'El evento fue agregado con exito');
+
+    }
+
+    public function viewsInstituteCountry($id)
+    {
+        $this->instotutionCountryData =
+            IntituteCountries::join('intitutions', 'intitute_countries.intitute_id', '=', 'intitutions.id')
+                ->where('intitute_countries.country_event_id', $id)
+                ->select('intitute_countries.*', 'intitutions.*', 'intitute_countries.id as id_intitute_country')
+                ->get();
+
+        $this->dispatch('view-institutions-country-create', messages: 'El evento fue agregado con exito');
+
+    }
+
+
+    public function createIntitutions()
+    {
+
+        $rules = [
+            'selectedType' => 'required',
+            'qtyProductsReferent' => 'required',
+            'priceProductReferent' => 'required',
+        ];
+        $messages = [
+            'selectedType.required' => 'La intitucion es requerida.',
+            'qtyProductsReferent.required' => 'La cantida de productos es requerida',
+            'priceProductReferent.required' => 'El precio de referencia es requerido',
+        ];
+
+        $this->validate($rules, $messages);
+
+        try {
+            DB::beginTransaction();
+
+            $intitutionCreate = IntituteCountries::create([
+                'country_event_id' => $this->idCountrySelecteds,
+                'intitute_id' => $this->selectedType,
+                'product_id' => $this->selectedProductEvent,
+                'qty' => $this->qtyProductsReferent,
+                'price' => $this->priceProductReferent,
+                'type_product' => 'Referente',
+                'status' => 1,
+            ]);
+
+            DB::commit();
+            $this->selectedType = '';
+            $this->qtyProductsReferent = '';
+            $this->priceProductReferent = '';
+
+            $this->dispatch('intitutions-create-susses', messages: 'La intitucion fue agregada con exito');
+
+        } catch (\Throwable $e) {
+            DB::rollback();
+            dd($e->getMessage());
+        }
+
     }
 
 
@@ -165,6 +244,9 @@ class EventsStart extends Component
                 'medicamentos.*',
                 'product_events.*')
             ->first();
+
+        $this->qtyProducts = IntituteCountries::where('product_id', $id)->sum('qty');
+
         $this->productSubasta = $dataLocalProductEvent->descripcion;
         $this->codProducts = $dataLocalProductEvent->cod_medicamento;
         $this->idSubasta = $id;
