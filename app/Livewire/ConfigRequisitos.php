@@ -57,6 +57,7 @@ class ConfigRequisitos extends Component
 
         $this->requisitodDataSelected = Requisitos::where('grupo_requisito_id', $this->groupSelectedId)
             ->where('status', 1)
+            ->where('tipo_requisitos', 'TECNICOS')
             ->orderBy('id', 'asc')
             ->get();
         $this->productDataTable =

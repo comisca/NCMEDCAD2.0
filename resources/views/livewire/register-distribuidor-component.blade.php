@@ -148,7 +148,7 @@
                     <div class="form-row">
                         <div class="form-group col-12">
                             <label for="inputNameCompany">Adjuntar documentanción de registro legal</label>
-                            <input wire:model="docRegister" type="file"
+                            <input wire:model="docRegister" type="file" accept=".pdf,application/pdf"
                                    class="form-control @error('docRegister') is-invalid @enderror" id="docRegister"
                                    placeholder="Documentos.pdf">
                             @error('docRegister')
@@ -188,7 +188,7 @@
                     <div class="form-row">
                         <div class="form-group col-4">
                             <label for="inputNameCompany">Documento de Identidad</label>
-                            <input wire:model="docId" type="file"
+                            <input wire:model="docId" type="file" accept=".pdf,application/pdf"
                                    class="form-control @error('docId') is-invalid @enderror" id="docId"
                                    placeholder="Documentos.pdf">
                             @error('docId')
@@ -197,7 +197,7 @@
                         </div>
                         <div class="form-group col-4">
                             <label for="inputNameCompany">Poder de Representación</label>
-                            <input wire:model="docPoder" type="file"
+                            <input wire:model="docPoder" type="file" accept=".pdf,application/pdf"
                                    class="form-control @error('docPoder') is-invalid @enderror" id="docPoder"
                                    placeholder="Documentos.pdf">
                             @error('docPoder')
@@ -206,7 +206,7 @@
                         </div>
                         <div class="form-group col-4">
                             <label for="inputNameCompany">Licencia de Funcionamiento</label>
-                            <input wire:model="docLicense" type="file"
+                            <input wire:model="docLicense" type="file" accept=".pdf,application/pdf"
                                    class="form-control @error('docLicense') is-invalid @enderror" id="docLicense"
                                    placeholder="Documentos.pdf">
                             @error('docLicense')
