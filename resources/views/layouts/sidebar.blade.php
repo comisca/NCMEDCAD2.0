@@ -113,7 +113,7 @@
 
                             <li><a href="/event/config">Configuracion Evento</a></li>
                             <li><a href="/send/auctions">Configuracion Subasta</a></li>
-                            <li><a href="#">Eventos</a></li>
+                            <li><a href="/subastas">Eventos</a></li>
 
                             {{--                        <li><a href="{{url('/fichatecnica')}}">Creacion de Aplicacion</a></li>--}}
                         </ul>

@@ -12,7 +12,7 @@
                         <span>Evento:</span>
                         <span>{{$auction->event_name}}</span>
                     </div>
-                    <div>
+                    <div>z
                         <span>Estado:</span>
                         <span>Programada</span>
                     </div>
@@ -26,18 +26,22 @@
                         <span>Duracion de subasta:</span>
                         <span>{{$auction->duration_time}}</span>
                     </div>
-                    <div>
-                        <span>Tiempo de recuperacion:</span>
-                        <span>{{$auction->recovery_time}}</span>
-                    </div>
+                    @if($auction->type_auction == 'Inversa')
+                        <div>
+                            <span>Tiempo de recuperacion:</span>
+                            <span>{{$auction->recovery_time}}</span>
+                        </div>
+                    @endif
                     <div>
                         <span>Inicio:</span>
                         <span class="badge">{{$auction->date_start}} {{$auction->hour_start}}</span>
                     </div>
-                    <div>
-                        <span>Porcentaje de descuento:</span>
-                        <span class="badge">{{$auction->porcentage_reductions}} %</span>
-                    </div>
+                    @if($auction->type_auction == 'Inversa')
+                        <div>
+                            <span>Porcentaje de descuento:</span>
+                            <span class="badge">{{$auction->porcentage_reductions}} %</span>
+                        </div>
+                    @endif
                 </div>
             </div>
         </div>
