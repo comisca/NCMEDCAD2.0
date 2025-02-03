@@ -2,7 +2,7 @@
     @lang('NCMEDCAD | Tiitle')
 @endsection
 <div class="container-fluid">
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
+
     <div class="row">
 
         <div class="col-md-4">
@@ -103,9 +103,11 @@
         <livewire:bid-history-component :bidsAuction="$auction"
                                         :key="'bid-history-' . $auction->id"></livewire:bid-history-component>
 
-        <livewire:minimum-bid-component :auction="$auction" :idPosdor="$IdPostor" :idAnonimo="$IdAnonimo"
-                                        :key="'bid-form-' . $auction->id"></livewire:minimum-bid-component>
+        @if(Session::has('id_company'))
 
+            <livewire:minimum-bid-component :auction="$auction" :idPosdor="$IdPostor" :idAnonimo="$IdAnonimo"
+                                            :key="'bid-form-' . $auction->id"></livewire:minimum-bid-component>
+        @endif
         <div class="col-md-4">
             <div class="card">
                 <div class="card-header">Mis Ofertas</div>
@@ -119,7 +121,16 @@
                         </tr>
                         </thead>
                         <tbody>
-                        <!-- Filas de la tabla -->
+                        {{--                        @if(!empty($bids))--}}
+                        {{--                            @foreach($bids as $bid)--}}
+                        {{--                                <tr>--}}
+                        {{--                                    <td>{{ $bid->code_postor }}</td>--}}
+                        {{--                                    <td>{{ $bid->puja_time }}</td>--}}
+                        {{--                                    <td>{{ $bid->amount }}</td>--}}
+                        {{--                                </tr>--}}
+                        {{--                            @endforeach--}}
+
+                        {{--                        @endif--}}
                         </tbody>
                     </table>
                 </div>
@@ -138,19 +149,24 @@
                         Livewire.dispatch('updateMinumusBid');
                     });
 
+                {{--window.Echo.channel('auctionEndTimer.{{ $auction->id }}')--}}
+                {{--    .listen('AuctionEnded', (e) => {--}}
+
+                {{--    });--}}
+                // Corregir el listener del AuctionEnded
                 window.Echo.channel('auctionEndTimer.{{ $auction->id }}')
                     .listen('AuctionEnded', (e) => {
-                        // Redireccionar o mostrar mensaje
-                        window.location.href = '/subastas';
-                        // O mostrar un modal/mensaje
-                        // Swal.fire({
-                        //     title: 'Subasta Finalizada',
-                        //     text: 'La subasta ha terminado',
-                        //     icon: 'info',
-                        //     confirmButtonText: 'Aceptar'
-                        // }).then((result) => {
-                        //     window.location.href = '/subastas';
-                        // });
+                        // Mostrar el Sweet Alert directamente con los datos del evento
+                        Swal.fire({
+                            icon: e.icon,
+                            title: e.title,
+                            text: e.text
+                        }).then((result) => {
+                            // Opcional: recargar la página después de cerrar el alert
+                            if (result.isConfirmed) {
+                                window.location.reload();
+                            }
+                        });
                     });
 
 
@@ -219,13 +235,23 @@
     </script>
     <script>
         document.addEventListener('livewire:initialized', () => {
-            Livewire.on('swal', data => {
-                Swal.fire({
-                    icon: data[0].icon,
-                    title: data[0].title,
-                    text: data[0].text
-                });
-            });
+            {{--if (window.Echo) {--}}
+            {{--    window.Echo.channel('auctionEndTimer.{{ $auction->id }}')--}}
+            {{--        .listen('AuctionEnded', (e) => {--}}
+            {{--            Livewire.on('swal', data => {--}}
+            {{--                Swal.fire({--}}
+            {{--                    icon: e.icon,--}}
+            {{--                    title: e.title,--}}
+            {{--                    text: e.text--}}
+            {{--                });--}}
+            {{--            });--}}
+            {{--        });--}}
+
+
+            {{--} else {--}}
+            {{--    console.error('Echo no está inicializado');--}}
+            {{--}--}}
+
         });
     </script>
 @endsection

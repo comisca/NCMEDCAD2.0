@@ -74,11 +74,23 @@
 
                                         </td>
                                         <td>
+                                            <a
+                                                href="/recepcion/doc/eval/{{$itemsdataApplicationSelected->id}}/{{Session::get('id_company')}}"
+
+                                                type="button"
+                                                class="btn btn-success">Recepcion de productos
+                                            </a>
                                             <a href="/documents/validation/{{$itemsdataApplicationSelected->id}}"
 
                                                type="button"
-                                               class="btn btn-success">Ves detalle
+                                               class="btn btn-success">Precalificacion Tecnica
                                             </a>
+                                            <a href="/documents/validation/pre/admin/{{Session::get('id_company')}}"
+
+                                               type="button"
+                                               class="btn btn-success">Precalificacion Adminitrador
+                                            </a>
+
                                         </td>
 
                                     </tr>

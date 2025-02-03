@@ -317,7 +317,7 @@ class EventsStart extends Component
                 $rebajaporc = 0;
             } else {
                 $toleranciapor = 0;
-                $rebajaporc = $this->porcReduc;
+                $rebajaporc = $this->porcReduce;
             }
 
             Auctions::create([

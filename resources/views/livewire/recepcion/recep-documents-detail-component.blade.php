@@ -50,29 +50,33 @@
 
                         </div>
 
-                        <div class="col-xl-4 col-md-4 mb-4">
-                            <div class="col mr-2">
-                                <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
-                                    Envio de Notificacion:
-                                </div>
-                                <div class="h5 mb-0 font-weight-bold text-gray-800">
-                                    <button id="showNotificationModal" type="button" class="btn
+                        @if(Session::has('id_user'))
+                            <div class="col-xl-4 col-md-4 mb-4">
+                                <div class="col mr-2">
+                                    <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                        Envio de Notificacion:
+                                    </div>
+                                    <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                        <button id="showNotificationModal" type="button" class="btn
                                     btn-primary">Crear Notificacion
-                                    </button>
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
+                        @endif
 
                         <div class="col-xl-4 col-md-4 mb-4">
                             <div class="col mr-2">
                                 <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
                                     Evaluar Todos los Items:
                                 </div>
-                                <div class="h5 mb-0 font-weight-bold text-gray-800">
-                                    <button id="showNotificationModal" type="button" class="btn
+                                @if(Session::has('id_user'))
+                                    <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                        <button id="showNotificationModal" type="button" class="btn
                                     btn-primary">Dar Por Recibido
-                                    </button>
-                                </div>
+                                        </button>
+                                    </div>
+                                @endif
                             </div>
                         </div>
 
@@ -462,6 +466,10 @@
             })
 
 
+            {{--            @this.on('showDoc', (event) => {--}}
+            {{--                $('#modalDocApplications').modal('show');--}}
+
+            {{--            })--}}
             @this.on('showDoc', (event) => {
                 $('#modalDocApplications').modal('show');
 

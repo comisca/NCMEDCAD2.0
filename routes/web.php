@@ -125,6 +125,8 @@ Route::post('/update-auction-end', function (Request $request) {
     }
 });
 
+Broadcast::routes();
+
 //Route::post('/update-auction-end', function (Request $request) {
 //    try {
 //        DB::beginTransaction();

@@ -16,13 +16,19 @@ class AuctionEnded implements ShouldBroadcastNow
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
     public $auctionId;
+    public $title;
+    public $text;
+    public $icon;
 
     /**
      * Create a new event instance.
      */
-    public function __construct($auctionId)
+    public function __construct($auctionId, $text, $icon, $title)
     {
         $this->auctionId = $auctionId;
+        $this->text = $text;
+        $this->icon = $icon;
+        $this->title = $title;
     }
 
     /**
@@ -37,8 +43,14 @@ class AuctionEnded implements ShouldBroadcastNow
         ];
     }
 
-    public function broadcastAs()
+    public function broadcastWith(): array
     {
-        return 'AuctionEnded';
+        return [
+            'auction_id' => $this->auctionId,
+            'text' => $this->text,
+            'icon' => $this->icon,
+            'title' => $this->title,
+        ];
+
     }
 }

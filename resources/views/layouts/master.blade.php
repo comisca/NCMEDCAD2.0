@@ -138,6 +138,7 @@
     <!-- Adds any relevant Third-Party Styles (Used for DateRangeFilter (Flatpickr) and NumberRangeFilter) -->
     @rappasoftTableThirdPartyStyles
     {{--    @vite(['resources/js/app.js'])  <!-- Incluye el archivo JavaScript compilado -->--}}
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 
 <body>

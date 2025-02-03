@@ -418,7 +418,7 @@
 
             })
 
-
+            
             @this.on('showDoc', (event) => {
                 $('#modalDocApplications').modal('show');
 

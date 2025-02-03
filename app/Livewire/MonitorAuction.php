@@ -141,7 +141,7 @@ class MonitorAuction extends Component
             $this->auction->id,
             $this->remainingTime,
             $this->isRecoveryPeriod
-        ))->toOthers();
+        ));
     }
 
     private function finalizarSubasta()
@@ -177,11 +177,11 @@ class MonitorAuction extends Component
 
 //                    broadcast(new AuctionEnded($auction->id))->toOthers();
 
-                    $this->dispatch('swal', [
-                        'icon' => 'success',
-                        'title' => '¡Subasta Finalizada!',
-                        'text' => 'La subasta ha terminado exitosamente'
-                    ]);
+
+                    $icon = 'success';
+                    $title = '¡Subasta Adjudicada!';
+                    $text = 'Subasta finalizada. Puja ganadora: $' . number_format($lastPujaData->amount, 2);
+
                 }
             } else {
                 $auction->update([
@@ -189,10 +189,17 @@ class MonitorAuction extends Component
                     'auction_state' => 'Finalizada',
                     'auction_result' => 'No Adjudicado'
                 ]);
+                $icon = 'success';
+                $title = '¡Subasta No Adjudicada!';
+                $text = 'La negociacion ha terminado sin adjudicar';
+
 
             }
 
             DB::commit();
+
+
+            broadcast(new AuctionEnded($auction->id, $text, $icon, $title));
         } catch (\Exception $e) {
             DB::rollback();
             logger()->error('Error finalizando subasta: ' . $e->getMessage());
@@ -276,7 +283,7 @@ class MonitorAuction extends Component
                 $this->auction->id,
                 $this->remainingTime,
                 true
-            ))->toOthers();
+            ));
         }
     }
 

@@ -18,6 +18,33 @@ import Pusher from 'pusher-js';
 
 window.Pusher = Pusher;
 
+
+// try {
+//     window.Echo = new Echo({
+//         broadcaster: 'reverb',
+//         key: import.meta.env.VITE_REVERB_APP_KEY,
+//         wsHost: window.location.hostname,
+//         wsPort: 443,
+//         wssPort: 443,
+//         forceTLS: true,
+//         encrypted: true,
+//         disableStats: true,
+//         enabledTransports: ['ws', 'wss'],
+//         auth: {
+//             headers: {
+//                 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+//             }
+//         }
+//     });
+//
+//     // Agregar manejador de errores
+//     window.Echo.connector.pusher.connection.bind('error', function (error) {
+//         console.error('Echo connection error:', error);
+//     });
+// } catch (error) {
+//     console.error('Error initializing Echo:', error);
+// }
+
 window.Echo = new Echo({
     broadcaster: 'reverb',
     key: import.meta.env.VITE_REVERB_APP_KEY,

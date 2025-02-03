@@ -117,7 +117,7 @@ class RecepDocumentsDetailComponent extends Component
                 DB::raw('(SELECT COUNT(*) FROM req_applications WHERE req_applications.states_req_applications = 3 AND req_applications.application_id = applications.id) as req_applications_count')
             )
             ->where('applications.id', $this->apllicationID)
-            ->where('applications.status', 1)
+            ->where('applications.status', '>=', 1)
             ->first();
 
         //        $dataApplication =
