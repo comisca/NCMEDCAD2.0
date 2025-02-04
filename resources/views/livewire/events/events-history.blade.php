@@ -83,7 +83,7 @@
                                     <td>{{ $eventItems->date_start}} - {{$eventItems->hour_start}}</td>
                                     <td>{{ $eventItems->auction_result}} </td>
                                     <td><a href="#"
-                                           wire:click="viewPostorData({{$eventItems->auction_id}})"
+                                           wire:click="danloadActas({{$eventItems->auction_id}})"
                                            class="px-2 text-primary" data-toggle="tooltip" data-placement="top"
                                            title="Descargar Actas"><i
                                                 class="uil uil-cloud-download font-size-24"></i></a></td>

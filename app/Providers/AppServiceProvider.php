@@ -20,5 +20,9 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         //
+        \Config::set('dompdf.options.isUnicode', true);
+        \Config::set('dompdf.options.enable_php', true);
+        \Config::set('dompdf.options.enable_remote', true);
+        \Config::set('dompdf.options.enable_html5_parser', true);
     }
 }

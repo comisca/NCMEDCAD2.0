@@ -13,12 +13,57 @@ window.axios = axios;
 
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 
+
 import Echo from 'laravel-echo';
 import Pusher from 'pusher-js';
 
 window.Pusher = Pusher;
 
+window.Echo = new Echo({
+    broadcaster: 'pusher',
+    key: import.meta.env.VITE_PUSHER_APP_KEY,
+    wsHost: window.location.hostname,
+    wsPort: 6001,
+    forceTLS: false,
+    encrypted: false,
+    cluster: 'mt1',
+    enabledTransports: ['ws']
+});
+// window.Echo = new Echo({
+//     broadcaster: 'pusher',
+//     key: import.meta.env.VITE_PUSHER_APP_KEY,
+//     wsHost: import.meta.env.VITE_PUSHER_HOST || `ws-${import.meta.env.VITE_PUSHER_APP_CLUSTER}.pusher.com`,
+//     wsPort: import.meta.env.VITE_PUSHER_PORT || 80,
+//     wssPort: import.meta.env.VITE_PUSHER_PORT || 443,
+//     forceTLS: (import.meta.env.VITE_PUSHER_SCHEME || 'https') === 'https',
+//     enabledTransports: ['ws', 'wss']
+// });
+// window.Echo = new Echo({
+//     broadcaster: 'pusher',
+//     key: import.meta.env.VITE_PUSHER_APP_KEY,
+//     wsHost: import.meta.env.VITE_PUSHER_HOST || 'localhost',
+//     wsPort: import.meta.env.VITE_PUSHER_PORT || 6001,
+//     wssPort: import.meta.env.VITE_PUSHER_PORT || 6001,
+//     forceTLS: false,
+//     encrypted: false,
+//     enabledTransports: ['ws'],
+//     cluster: 'mt1',
+//     disableStats: true,
+//     auth: {
+//         headers: {
+//             'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+//         }
+//     }
+// });
 
+// Agregar manejo de errores
+window.Echo.connector.pusher.connection.bind('error', (error) => {
+    console.error('Error de conexión:', error);
+});
+
+window.Echo.connector.pusher.connection.bind('state_change', (states) => {
+    console.log('Estado de conexión:', states);
+});
 // try {
 //     window.Echo = new Echo({
 //         broadcaster: 'reverb',
@@ -45,14 +90,14 @@ window.Pusher = Pusher;
 //     console.error('Error initializing Echo:', error);
 // }
 
-window.Echo = new Echo({
-    broadcaster: 'reverb',
-    key: import.meta.env.VITE_REVERB_APP_KEY,
-    wsHost: import.meta.env.VITE_REVERB_HOST,
-    wsPort: import.meta.env.VITE_REVERB_PORT,
-    forceTLS: false,
-    disableStats: true,
-});
+// window.Echo = new Echo({
+//     broadcaster: 'reverb',
+//     key: import.meta.env.VITE_REVERB_APP_KEY,
+//     wsHost: import.meta.env.VITE_REVERB_HOST,
+//     wsPort: import.meta.env.VITE_REVERB_PORT,
+//     forceTLS: false,
+//     disableStats: true,
+// });
 
 
 //

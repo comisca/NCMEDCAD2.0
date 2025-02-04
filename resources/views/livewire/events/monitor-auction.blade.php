@@ -145,6 +145,7 @@
             if (window.Echo) {
                 window.Echo.channel('auction.{{ $auction->id }}')
                     .listen('NewPuja', (e) => {
+                        console.log('Nueva puja recibida:', e);
                         Livewire.dispatch('newBid');
                         Livewire.dispatch('updateMinumusBid');
                     });

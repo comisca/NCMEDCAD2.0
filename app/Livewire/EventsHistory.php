@@ -6,6 +6,7 @@ use App\Models\Auctions;
 use Livewire\Attributes\On;
 use Livewire\WithPagination;
 use Livewire\Component;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Session;
 use DB;
 
@@ -65,6 +66,27 @@ class EventsHistory extends Component
         }
     }
 
+    public function danloadActas($id)
+    {
+        $data = [];
+
+        // Genera el PDF
+        $pdf = Pdf::loadView('pdfs.acta-auctions', $data)
+            ->setPaper('a4')
+            ->setOptions([
+                'isHtml5ParserEnabled' => true,
+                'isRemoteEnabled' => true,
+                'defaultFont' => 'helvetica',
+            ]);
+
+        // Retorna el PDF como descarga
+        return response()->streamDownload(
+            function () use ($pdf) {
+                echo $pdf->output();
+            },
+            'acta.pdf'
+        );
+    }
 
     public function update()
     {

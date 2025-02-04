@@ -100,32 +100,32 @@ Route::get('/test-event', function () {
     return 'Event emitted!';
 });
 
-Route::post('/update-auction-end', function (Request $request) {
-    try {
-        DB::beginTransaction();
+//Route::post('/update-auction-end', function (Request $request) {
+//    try {
+//        DB::beginTransaction();
+//
+//        $auction = Auctions::find($request->auction_id);
+//        if ($auction) {
+//            $auction->update([
+//                'date_end' => now(),
+//                'auction_state' => 'Finalizada'
+//            ]);
+//
+//            broadcast(new AuctionEnded($auction->id))->toOthers();
+//
+//            DB::commit();
+//
+//            return response()->json(['success' => true]);
+//        }
+//
+//        return response()->json(['success' => false]);
+//    } catch (\Exception $e) {
+//        DB::rollback();
+//        return response()->json(['success' => false, 'error' => $e->getMessage()]);
+//    }
+//});
 
-        $auction = Auctions::find($request->auction_id);
-        if ($auction) {
-            $auction->update([
-                'date_end' => now(),
-                'auction_state' => 'Finalizada'
-            ]);
-
-            broadcast(new AuctionEnded($auction->id))->toOthers();
-
-            DB::commit();
-
-            return response()->json(['success' => true]);
-        }
-
-        return response()->json(['success' => false]);
-    } catch (\Exception $e) {
-        DB::rollback();
-        return response()->json(['success' => false, 'error' => $e->getMessage()]);
-    }
-});
-
-Broadcast::routes();
+//Broadcast::routes();
 
 //Route::post('/update-auction-end', function (Request $request) {
 //    try {
