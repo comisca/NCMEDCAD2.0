@@ -3,6 +3,10 @@
 namespace App\Livewire;
 
 use App\Models\Auctions;
+use App\Models\IntituteCountries;
+use App\Models\PostorEvent;
+use App\Models\ProductEvent;
+use App\Models\Pujas;
 use Livewire\Attributes\On;
 use Livewire\WithPagination;
 use Livewire\Component;
@@ -17,7 +21,7 @@ class EventsHistory extends Component
 
     public $Pagination = 10;
     public $searchInput;
-    public $SelecthistoryAuction;
+    public $SelecthistoryAuction, $auctionsData;
 
     public function paginationView()
     {
@@ -29,19 +33,35 @@ class EventsHistory extends Component
 
     }
 
-
-    public function render()
+    public function updated()
     {
-        $auctionsData = Auctions::join('events_auctions', 'auctions.event_id', '=', 'events_auctions.id')
+
+        $this->auctionsData = Auctions::join('events_auctions', 'auctions.event_id', '=', 'events_auctions.id')
             ->join('medicamentos', 'auctions.product_id', '=', 'medicamentos.id')
             ->select('auctions.*',
                 'medicamentos.descripcion as product_name',
                 'medicamentos.cod_medicamento as cod_medic',
                 'auctions.id as auction_id')
-            ->where('auctions.auction_state', '=', 'Pendiente')
+            ->where('auctions.auction_state', '=', $this->SelecthistoryAuction)
             ->orderBy('auctions.id', 'desc')
-            ->paginate($this->Pagination);
-        return view('livewire.events.events-history', ['auctionsData' => $auctionsData])
+            ->get();
+
+
+    }
+
+
+    public function render()
+    {
+        $this->auctionsData = Auctions::join('events_auctions', 'auctions.event_id', '=', 'events_auctions.id')
+            ->join('medicamentos', 'auctions.product_id', '=', 'medicamentos.id')
+            ->select('auctions.*',
+                'medicamentos.descripcion as product_name',
+                'medicamentos.cod_medicamento as cod_medic',
+                'auctions.id as auction_id')
+            ->where('auctions.auction_state', '=', 'Finalizada')
+            ->orderBy('auctions.id', 'desc')
+            ->get();
+        return view('livewire.events.events-history')
             ->extends('layouts.master')
             ->section('content');
     }
@@ -68,10 +88,53 @@ class EventsHistory extends Component
 
     public function danloadActas($id)
     {
+
+        $actaData = Auctions::join('events_auctions', 'auctions.event_id', '=', 'events_auctions.id')
+            ->join('familia_producto', 'auctions.product_id', '=', 'familia_producto.id')
+            ->select('auctions.*',
+                'events_auctions.event_name',
+                'auctions.id as auction_id')
+            ->where('auctions.id', '=', $id)
+            ->orderBy('auctions.id', 'desc')
+            ->first();
+        $productData = ProductEvent::join('medicamentos', 'product_events.product_id', '=', 'medicamentos.id')
+            ->where('product_events.event_id', $actaData->event_id)
+            ->where('product_events.status', 1)
+            ->select('product_events.*', 'medicamentos.*')
+            ->first();
+
+        $pujasDatas = Pujas::join('companies', 'pujas.postor_id', '=', 'companies.id')
+            ->where('pujas.auction_id', $id)
+            ->select('pujas.*')
+            ->get();
+
+        $suplierData = Pujas::join('companies', 'pujas.postor_id', '=', 'companies.id')
+            ->where('pujas.auction_id', $id)
+            ->select('companies.*', 'pujas.code_postor', DB::raw('COUNT(pujas.id) as total_pujas'))
+            ->groupBy('companies.id', 'pujas.code_postor')
+            ->get();
+
+        $pujaWinner = Pujas::join('companies', 'pujas.postor_id', '=', 'companies.id')
+            ->where('pujas.auction_id', $id)
+            ->where('pujas.status', 1)
+            ->orderBy('pujas.amount', 'desc')
+            ->select('companies.*', 'pujas.*')
+            ->first();
+        $intitutionData =
+            IntituteCountries::join('countries', 'intitute_countries.country_event_id', '=', 'countries.id')
+                ->join('intitutions', 'intitute_countries.intitute_id', '=', 'intitutions.id')
+                ->where('intitute_countries.events_id', $actaData->event_id)
+                ->select('intitute_countries.*', 'countries.*', 'intitutions.*')
+                ->get();
+
+
+        $viewData = compact('actaData', 'productData', 'pujasDatas', 'suplierData', 'pujaWinner', 'intitutionData');
+
+
         $data = [];
 
         // Genera el PDF
-        $pdf = Pdf::loadView('pdfs.acta-auctions', $data)
+        $pdf = Pdf::loadView('pdfs.acta-auctions', $viewData)
             ->setPaper('a4')
             ->setOptions([
                 'isHtml5ParserEnabled' => true,
@@ -84,7 +147,7 @@ class EventsHistory extends Component
             function () use ($pdf) {
                 echo $pdf->output();
             },
-            'acta.pdf'
+            'acta-' . $id . '- event.pdf'
         );
     }
 

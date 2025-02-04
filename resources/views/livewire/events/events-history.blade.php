@@ -21,9 +21,9 @@
                             <select id="selectedType" wire:model.live="SelecthistoryAuction"
                                     class="form-control @error('SelecthistoryAuction') is-invalid @enderror">
                                 <option selected>Seleccion historial</option>
-                                <option value="Pendientes">Pendientes</option>
-                                <option value="Cerradas">Cerradas</option>
-                                <option value="Canceladas">Canceladas</option>
+                                <option value="Pendiente">Pendientes</option>
+                                <option value="Finalizada">Cerradas</option>
+                                <option value="Cancelada">Canceladas</option>
                                 <option value="Todo">Mostrar todo</option>
 
 

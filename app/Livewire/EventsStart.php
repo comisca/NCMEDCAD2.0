@@ -121,6 +121,8 @@ class EventsStart extends Component
 
         try {
             DB::beginTransaction();
+            $eventCoontrie = ProductEvent::find($this->selectedProductEvent);
+
 
             $intitutionCreate = IntituteCountries::create([
                 'country_event_id' => $this->idCountrySelecteds,
@@ -129,6 +131,7 @@ class EventsStart extends Component
                 'qty' => $this->qtyProductsReferent,
                 'price' => $this->priceProductReferent,
                 'type_product' => 'Referente',
+                'events_id' => $eventCoontrie->event_id,
                 'status' => 1,
             ]);
 
