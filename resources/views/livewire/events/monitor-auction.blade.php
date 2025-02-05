@@ -107,35 +107,11 @@
 
             <livewire:minimum-bid-component :auction="$auction" :idPosdor="$IdPostor" :idAnonimo="$IdAnonimo"
                                             :key="'bid-form-' . $auction->id"></livewire:minimum-bid-component>
-        @endif
-        <div class="col-md-4">
-            <div class="card">
-                <div class="card-header">Mis Ofertas</div>
-                <div class="card-body">
-                    <table class="table">
-                        <thead>
-                        <tr>
-                            <th>ID ANONIMO</th>
-                            <th>ENVIADA</th>
-                            <th>VALOR</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        {{--                        @if(!empty($bids))--}}
-                        {{--                            @foreach($bids as $bid)--}}
-                        {{--                                <tr>--}}
-                        {{--                                    <td>{{ $bid->code_postor }}</td>--}}
-                        {{--                                    <td>{{ $bid->puja_time }}</td>--}}
-                        {{--                                    <td>{{ $bid->amount }}</td>--}}
-                        {{--                                </tr>--}}
-                        {{--                            @endforeach--}}
 
-                        {{--                        @endif--}}
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
+            <livewire:my-new-bid-component :auctionmynewbid="$auction"></livewire:my-new-bid-component>
+        @endif
+
+
     </div>
 </div>
 
@@ -147,6 +123,7 @@
                     .listen('NewPuja', (e) => {
                         console.log('Nueva puja recibida:', e);
                         Livewire.dispatch('newBid');
+                        Livewire.dispatch('myNewBid');
                         Livewire.dispatch('updateMinumusBid');
                     });
 

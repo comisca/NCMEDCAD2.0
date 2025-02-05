@@ -58,7 +58,7 @@ class EventsHistory extends Component
                 'medicamentos.descripcion as product_name',
                 'medicamentos.cod_medicamento as cod_medic',
                 'auctions.id as auction_id')
-            ->where('auctions.auction_state', '=', 'Finalizada')
+            ->where('auctions.auction_state', '=', 'Pendiente')
             ->orderBy('auctions.id', 'desc')
             ->get();
         return view('livewire.events.events-history')

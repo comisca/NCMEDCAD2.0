@@ -102,7 +102,7 @@ header('Content-Type: text/html; charset=UTF-8');
         .signature {
             margin-top: 30px;
             text-align: center;
-            border-top: 1px solid #ccc;
+            /*border-top: 1px solid #ccc;*/
             padding-top: 20px;
         }
     </style>

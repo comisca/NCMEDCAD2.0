@@ -4,11 +4,16 @@ namespace App\Livewire;
 
 use App\Events\AuctionEnded;
 use App\Events\TimerUpdate;
+use App\Mail\NotificationActas;
 use App\Models\Auctions;
+use App\Models\IntituteCountries;
 use App\Models\PostorEvent;
 use App\Models\ProductEvent;
 use App\Models\Pujas;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Storage;
 use Livewire\Attributes\On;
 use Livewire\WithPagination;
 use Livewire\Component;
@@ -27,7 +32,7 @@ class MonitorAuction extends Component
     public $timeLeft;
     public $bids;
     public $minPrice, $productEventData;
-    public $remainingTime;
+    public $remainingTime, $varNewMyBid;
     public $isRecoveryPeriod = false;
 
 //    protected $listeners = ['bidPlaced' => 'updateAuction'];
@@ -198,11 +203,98 @@ class MonitorAuction extends Component
 
             DB::commit();
 
+            $this->danloadActasMonitor($this->auction->id);
 
             broadcast(new AuctionEnded($auction->id, $text, $icon, $title));
         } catch (\Exception $e) {
             DB::rollback();
             logger()->error('Error finalizando subasta: ' . $e->getMessage());
+        }
+    }
+
+    public function danloadActasMonitor($id)
+    {
+
+        try {
+
+            $actaData = Auctions::join('events_auctions', 'auctions.event_id', '=', 'events_auctions.id')
+                ->join('familia_producto', 'auctions.product_id', '=', 'familia_producto.id')
+                ->select('auctions.*',
+                    'events_auctions.event_name',
+                    'auctions.id as auction_id')
+                ->where('auctions.id', '=', $id)
+                ->orderBy('auctions.id', 'desc')
+                ->first();
+            $productData = ProductEvent::join('medicamentos', 'product_events.product_id', '=', 'medicamentos.id')
+                ->where('product_events.event_id', $actaData->event_id)
+                ->where('product_events.status', 1)
+                ->select('product_events.*', 'medicamentos.*')
+                ->first();
+
+            $pujasDatas = Pujas::join('companies', 'pujas.postor_id', '=', 'companies.id')
+                ->where('pujas.auction_id', $id)
+                ->select('pujas.*')
+                ->get();
+
+            $suplierData = Pujas::join('companies', 'pujas.postor_id', '=', 'companies.id')
+                ->where('pujas.auction_id', $id)
+                ->select('companies.*', 'pujas.code_postor', DB::raw('COUNT(pujas.id) as total_pujas'))
+                ->groupBy('companies.id', 'pujas.code_postor')
+                ->get();
+
+            $pujaWinner = Pujas::join('companies', 'pujas.postor_id', '=', 'companies.id')
+                ->where('pujas.auction_id', $id)
+                ->where('pujas.status', 1)
+                ->orderBy('pujas.amount', 'desc')
+                ->select('companies.*', 'pujas.*')
+                ->first();
+            $intitutionData =
+                IntituteCountries::join('countries', 'intitute_countries.country_event_id', '=', 'countries.id')
+                    ->join('intitutions', 'intitute_countries.intitute_id', '=', 'intitutions.id')
+                    ->where('intitute_countries.events_id', $actaData->event_id)
+                    ->select('intitute_countries.*', 'countries.*', 'intitutions.*')
+                    ->get();
+
+
+            $viewData = compact('actaData', 'productData', 'pujasDatas', 'suplierData', 'pujaWinner', 'intitutionData');
+
+            // Genera el PDF
+            $pdf = Pdf::loadView('pdfs.acta-auctions', $viewData)
+                ->setPaper('a4')
+                ->setOptions([
+                    'isHtml5ParserEnabled' => true,
+                    'isRemoteEnabled' => true,
+                    'defaultFont' => 'helvetica',
+                ]);
+
+            // Nombre del archivo PDF
+            $filename = 'acta-' . $id . '-event.pdf';
+
+            // Guarda el PDF temporalmente
+            $pdfContent = $pdf->output();
+            Storage::disk('local')->put('temp/' . $filename, $pdfContent);
+
+            // Envía el correo con el PDF adjunto
+            Mail::to('henry.orellana@oceansbits.com')->send(
+                new NotificationActas(
+                    $viewData,
+                    storage_path('app/temp/' . $filename),
+                    $filename
+                ));
+
+            // Elimina el archivo temporal después de enviar el correo
+            Storage::disk('local')->delete('temp/' . $filename);
+
+            // Retorna el PDF como descarga
+            return response()->streamDownload(
+                function () use ($pdf) {
+                    echo $pdf->output();
+                },
+                $filename
+            );
+        } catch (\Exception $e) {
+            DB::rollback();
+            dd($e->getMessage());
         }
     }
 //    #[On('updateTimerCount')]
@@ -323,6 +415,7 @@ class MonitorAuction extends Component
             ]);
         }
     }
+
 
 
 //    #[On('auctionFinished')]

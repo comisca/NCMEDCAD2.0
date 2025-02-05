@@ -21,7 +21,7 @@ class BidHistoryComponent extends Component
         $this->bidsAuction = $bidsAuction;
         $this->bids = Pujas::where('auction_id', $this->bidsAuction->id)
             ->where('status', 1)
-            ->orderBy('amount', 'desc')
+            ->orderBy('amount', 'asc')
             ->get();
     }
 
@@ -30,7 +30,7 @@ class BidHistoryComponent extends Component
     {
         $this->bids = Pujas::where('auction_id', $this->bidsAuction->id)
             ->where('status', 1)
-            ->orderBy('amount', 'desc')
+            ->orderBy('amount', 'asc')
             ->get();
     }
 
