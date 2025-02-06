@@ -159,7 +159,7 @@ class MonitorAuction extends Component
 
             $lastPujaData = Pujas::where('auction_id', $this->auction->id)
                 ->where('status', 1)
-                ->orderBy('id', 'desc')
+                ->orderBy('amount', 'asc')
                 ->first();
 
             if (!empty($lastPujaData)) {
@@ -252,7 +252,7 @@ class MonitorAuction extends Component
             $pujaWinner = Pujas::join('companies', 'pujas.postor_id', '=', 'companies.id')
                 ->where('pujas.auction_id', $id)
                 ->where('pujas.status', 1)
-                ->orderBy('pujas.amount', 'desc')
+                ->orderBy('pujas.amount', 'asc')
                 ->select('companies.*', 'pujas.*')
                 ->first();
             $intitutionData =

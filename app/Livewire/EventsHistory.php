@@ -117,7 +117,7 @@ class EventsHistory extends Component
         $pujaWinner = Pujas::join('companies', 'pujas.postor_id', '=', 'companies.id')
             ->where('pujas.auction_id', $id)
             ->where('pujas.status', 1)
-            ->orderBy('pujas.amount', 'desc')
+            ->orderBy('pujas.amount', 'asc')
             ->select('companies.*', 'pujas.*')
             ->first();
         $intitutionData =

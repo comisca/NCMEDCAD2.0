@@ -5,12 +5,21 @@
 <div class="row">
 
     <div class="container">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/companies/dashboard">Dashboard</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Ficha Técnica</li>
+            </ol>
+        </nav>
+        <div
+            class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+            <h1 class="h2">FICHA TÉCNICA</h1><br>
+            <div class="clearfix">...</div>
+        </div>
+
         <form>
             <fieldset class="form-group">
-                <legend>FICHA TÉCNICA</legend>
-                <p>Por favor, complete todos los campos requeridos en la ficha técnica. Asegúrese de seguir cada uno de
-                    los pasos indicados para garantizar el registro correcto y evitar cualquier error en el proceso.
-                    Esto permitirá que la información sea procesada de manera eficiente y precisa.</p>
+
                 <div class="form-row">
 
                     <!-- PROBANDO BUSCADORES -->
@@ -21,14 +30,14 @@
                     <div class="form-group col-6">
                         <label for="inputNameProductoOfertar">Seleccione Familia de productos a ofertar:</label>
                         <select id="inputState" wire:model.live="inputFamilyProduct"
-                                class="form-control @error('country') is-invalid @enderror">
+                                class="form-control @error('inputFamilyProduct') is-invalid @enderror">
                             <option selected>SELECCIONA UNA FAMILIA DE PRODUCTO</option>
                             @foreach($familyProducts as $itemsFamilyProducts)
                                 <option
                                     value="{{$itemsFamilyProducts->id}}">{{$itemsFamilyProducts->familia_producto}}</option>
                             @endforeach
                         </select>
-                        @error('country')
+                        @error('inputFamilyProduct')
                         <span class="text-danger">{{$message}}</span>
                         @enderror
                     </div>
@@ -117,6 +126,7 @@
     {{--         <livewire:search-universal></livewire:search-universal>--}}
 
     @include('livewire.form-fichatec')
+    @include('livewire.form-new-fabric')
 </div>
 
 
@@ -126,6 +136,40 @@
     <script src="{{ URL::asset('assets/js/pages/dashboard.init.js')}}"></script>
     <script>
         document.addEventListener('livewire:initialized', function () {
+
+            // Configuración de los modales
+            const $modalFichaTecnica = $('#modalFichaTecnica');
+            const $modalCreateFabric = $('#modalCreateFabric');
+
+            // Prevenir que el segundo modal cierre el primero
+            $modalCreateFabric.on('show.bs.modal', function (e) {
+                e.stopPropagation();
+            });
+
+            $modalCreateFabric.on('hidden.bs.modal', function (e) {
+                e.stopPropagation();
+                $('body').addClass('modal-open');
+            });
+
+            // Modificar el comportamiento del botón para crear fabricante
+            $(document).on('click', '[data-target="#modalCreateFabric"]', function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+                $modalCreateFabric.modal('show');
+            });
+            $modalFichaTecnica.modal({
+                backdrop: 'static',
+                keyboard: false,
+                show: false
+            });
+
+            $modalCreateFabric.modal({
+                backdrop: 'static',
+                keyboard: false,
+                show: false
+            });
+
+
             @this.
             on('messages-succes', (event) => {
                 toastr.success(event.messages, 'Exito', {
@@ -149,24 +193,31 @@
 
             @this.on('messages-succes-fichatec', (event) => {
                 $('#modalFichaTecnica').modal('hide');
-                toastr.success(event.messages, 'Exito', {
-                    "closeButton": true,
-                    "debug": false,
-                    "newestOnTop": false,
-                    "progressBar": false,
-                    "positionClass": "toast-bottom-full-width",
-                    "preventDuplicates": false,
-                    "onclick": null,
-                    "showDuration": 300,
-                    "hideDuration": 1000,
-                    "timeOut": 5000,
-                    "extendedTimeOut": 1000,
-                    "showEasing": "swing",
-                    "hideEasing": "linear",
-                    "showMethod": "fadeIn",
-                    "hideMethod": "fadeOut"
-                })
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Dato Guardado',
+                    text: event.messages
+                }).then((result) => {
+                    // Opcional: recargar la página después de cerrar el alert
+                    if (result.isConfirmed) {
+
+                    }
+                });
             })
+            @this.on('success_new_fabric', (event) => {
+                $('#modalCreateFabric').modal('hide');
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Dato Guardado',
+                    text: event.messages
+                }).then((result) => {
+                    // Opcional: recargar la página después de cerrar el alert
+                    if (result.isConfirmed) {
+
+                    }
+                });
+            })
+
 
             @this.on('messages-error', (event) => {
                 toastr.error(event.messages, 'Exito', {
@@ -194,7 +245,7 @@
             })
 
             @this.on('showDetailFichaEvent', (event) => {
-                $('#modalFichaTecnica').modal('show');
+                $modalFichaTecnica.modal('show');
 
             })
 

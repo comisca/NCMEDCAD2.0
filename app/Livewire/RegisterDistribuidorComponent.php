@@ -142,7 +142,7 @@ class RegisterDistribuidorComponent extends Component
                 'user_name' => $this->userNameCompany,
 //                'user_name' => $this->userName,
                 'password' => '123456',
-                'type_company' => $this->typeCompany == 'DISTRIBUIDOR' ? 'D' : 'F',
+                'type_company' => $this->typeCompany,
                 'status' => 2,
                 'country_id' => $this->country,
                 'state_id' => $this->city,
@@ -152,7 +152,7 @@ class RegisterDistribuidorComponent extends Component
             $company->syncRoles('Company');
             $company->save();
 
-            
+
             if ($this->docRegister) {
                 $doc_rec = 'doc_' . uniqid() . '.' . $this->docRegister->extension();
                 $docRecUrl = $this->docRegister->storeAs('public/document/companies', $doc_rec);

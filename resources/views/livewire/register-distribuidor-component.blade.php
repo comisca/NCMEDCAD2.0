@@ -35,12 +35,12 @@
 
                         <div class="form-group col-6">
                             <label for="inputNameCompany">Perfil a participar</label>
-                            <select id="inputState" wire:model="country"
-                                    class="form-control @error('country') is-invalid @enderror">
-                                <option selected>Fabricantes</option>
-                                <option value="ReactivosLaboratorio">Distribuidor</option>
+                            <select id="inputState" wire:model="typeCompany"
+                                    class="form-control @error('typeCompany') is-invalid @enderror">
+                                <option value="F" selected>Fabricantes</option>
+                                <option value="D">Distribuidor</option>
                             </select>
-                            @error('country')
+                            @error('typeCompany')
                             <span class="text-danger">{{$message}}</span>
                             @enderror
                         </div>
