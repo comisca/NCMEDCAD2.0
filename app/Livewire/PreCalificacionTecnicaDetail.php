@@ -410,6 +410,7 @@ class PreCalificacionTecnicaDetail extends Component
                 ->update([
                     'status' => 1
                 ]);
+
             $this->dispatch('precalificarReq',
                 message: 'No se puede precalificar la solicitud, aun hay requerimientos pendientes');
         }

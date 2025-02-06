@@ -4,6 +4,7 @@ namespace App\Livewire;
 
 use App\Events\AuctionEnded;
 use App\Events\TimerUpdate;
+use App\Jobs\SendBulkActaEmails;
 use App\Mail\NotificationActas;
 use App\Models\Auctions;
 use App\Models\IntituteCountries;
@@ -218,7 +219,7 @@ class MonitorAuction extends Component
         try {
 
             $actaData = Auctions::join('events_auctions', 'auctions.event_id', '=', 'events_auctions.id')
-                ->join('familia_producto', 'auctions.product_id', '=', 'familia_producto.id')
+                ->join('medicamentos', 'auctions.product_id', '=', 'medicamentos.id')
                 ->select('auctions.*',
                     'events_auctions.event_name',
                     'auctions.id as auction_id')
@@ -242,6 +243,12 @@ class MonitorAuction extends Component
                 ->groupBy('companies.id', 'pujas.code_postor')
                 ->get();
 
+            $soloemails = Pujas::join('companies', 'pujas.postor_id', '=', 'companies.id')
+                ->where('pujas.auction_id', $id)
+                ->groupBy('companies.id', 'companies.email') // Asegúrate de incluir email en el groupBy
+                ->pluck('companies.email')
+                ->toArray();
+
             $pujaWinner = Pujas::join('companies', 'pujas.postor_id', '=', 'companies.id')
                 ->where('pujas.auction_id', $id)
                 ->where('pujas.status', 1)
@@ -255,6 +262,7 @@ class MonitorAuction extends Component
                     ->select('intitute_countries.*', 'countries.*', 'intitutions.*')
                     ->get();
 
+//            dd($soloemails);
 
             $viewData = compact('actaData', 'productData', 'pujasDatas', 'suplierData', 'pujaWinner', 'intitutionData');
 
@@ -275,17 +283,10 @@ class MonitorAuction extends Component
             Storage::disk('local')->put('temp/' . $filename, $pdfContent);
 
             // Envía el correo con el PDF adjunto
-            Mail::to('henry.orellana@oceansbits.com')->send(
-                new NotificationActas(
-                    $viewData,
-                    storage_path('app/temp/' . $filename),
-                    $filename
-                ));
+            SendBulkActaEmails::dispatch($viewData, $filename, $soloemails);
 
-            // Elimina el archivo temporal después de enviar el correo
-            Storage::disk('local')->delete('temp/' . $filename);
 
-            // Retorna el PDF como descarga
+//            // Retorna el PDF como descarga
             return response()->streamDownload(
                 function () use ($pdf) {
                     echo $pdf->output();
@@ -294,7 +295,7 @@ class MonitorAuction extends Component
             );
         } catch (\Exception $e) {
             DB::rollback();
-            dd($e->getMessage());
+            dd($e);
         }
     }
 //    #[On('updateTimerCount')]
