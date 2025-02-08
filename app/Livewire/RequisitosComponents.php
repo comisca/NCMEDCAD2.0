@@ -36,7 +36,6 @@ class RequisitosComponents extends Component
         $this->idSelecte = 0;
         $this->addInstitucion = 0;
         $this->tittleModal = 'Adicionar Requisitos';
-
     }
 
     public function updated()
@@ -46,7 +45,6 @@ class RequisitosComponents extends Component
             ->where('id_familia_producto', $this->groupFamilyId)
             ->where('status', 1)
             ->get();
-
     }
 
 
@@ -61,17 +59,16 @@ class RequisitosComponents extends Component
         if (strlen($this->searchQuety) > 0) {
             $requisitos =
                 Requisitos::join('grupos_requisitos', 'requisitos.grupo_requisito_id', '=', 'grupos_requisitos.id')
-                    ->where('requisitos.descripcion', 'like', '%' . $this->searchQuety . '%')
-                    ->where('requisitos.status', 1)
-                    ->select('requisitos.*', 'grupos_requisitos.descripcion as grupo_requisito')
-                    ->paginate($this->pagination);
+                ->where('requisitos.descripcion', 'like', '%' . $this->searchQuety . '%')
+                ->where('requisitos.status', 1)
+                ->select('requisitos.*', 'grupos_requisitos.descripcion as grupo_requisito')
+                ->paginate($this->pagination);
         } else {
             $requisitos =
                 Requisitos::join('grupos_requisitos', 'requisitos.grupo_requisito_id', '=', 'grupos_requisitos.id')
-                    ->select('requisitos.*', 'grupos_requisitos.descripcion as grupo_requisito')
-                    ->where('requisitos.status', 1)
-                    ->orderBy('requisitos.id', 'desc')->paginate($this->pagination);
-
+                ->select('requisitos.*', 'grupos_requisitos.descripcion as grupo_requisito')
+                ->where('requisitos.status', 1)
+                ->orderBy('requisitos.id', 'desc')->paginate($this->pagination);
         }
 
         return view('livewire.requisitos.requisitos-components', ['data' => $requisitos])
@@ -114,7 +111,7 @@ class RequisitosComponents extends Component
             Requisitos::create([
                 'id_familia_producto' => $this->groupFamilyId,
                 'grupo_requisito_id' => $this->grupoRequisitoId,
-//                'cod_medicamento' => $this->cod_medicamento,
+                //                'cod_medicamento' => $this->cod_medicamento,
                 'codigo' => $this->codRequisitos,
                 'tipo_requisitos' => $this->tiporequisito,
                 'tipo_participante' => $this->tipopaeticipante,
@@ -135,7 +132,6 @@ class RequisitosComponents extends Component
 
             $this->resetUI();
             $this->dispatch('messages-succes', messages: 'El grupo de productos se ha creado correctamente');
-
         } catch (\Throwable $e) {
             //este metodo lo que hace es deshacer los cambios en la base de datos
             DB::rollback();
@@ -167,15 +163,61 @@ class RequisitosComponents extends Component
 
     public function update()
     {
+
+        $rules = [
+            'codRequisitos' => 'required|min:2|unique:requisitos,codigo,' . $this->idSelecte,
+            'groupFamilyId' => 'required',
+            'tiporequisito' => 'required',
+            'tipopaeticipante' => 'required',
+            'grupoRequisitoId' => 'required',
+            'tipovalidacion' => 'required',
+            'descripcion' => 'required',
+            'messagesno' => 'required',
+        ];
+        $messages = [
+            'codRequisitos.required' => 'El codigo del grupo de productos es requerido',
+            'codRequisitos.min' => 'El codigo del grupo de productos debe tener al menos 2 caracteres',
+            'codRequisitos.unique' => 'Este codigo ya se encuentra registrado',
+            'groupFamilyId.required' => 'La familia de productos es requerida',
+            'tiporequisito.required' => 'El tipo de requisito es requerido',
+            'tipopaeticipante.required' => 'El tipo de participante es requerido',
+            'tipovalidacion.required' => 'El tipo de validacion es requerido',
+            'descripcion.required' => 'La descripcion del grupo de productos es requerida',
+            'messagesno.required' => 'El mensaje es requerido',
+            'grupoRequisitoId.required' => 'El Grupo de Requisito es requerido',
+
+        ];
+
+        $this->validate($rules, $messages);
+
+
         try {
             //este metodo lo que hace es inicailizar las transacciones en la base de datos
             DB::beginTransaction();
 
             //Aqui se escribe el codigo que se desea hacer en la transaccion
+            Requisitos::find($this->idSelecte)->update([
+                'id_familia_producto' => $this->groupFamilyId,
+                'grupo_requisito_id' => $this->grupoRequisitoId,
+                //                'cod_medicamento' => $this->cod_medicamento,
+                'codigo' => $this->codRequisitos,
+                'tipo_requisitos' => $this->tiporequisito,
+                'tipo_participante' => $this->tipopaeticipante,
+                'tipo_validacion' => $this->tipovalidacion,
+                'descripcion' => $this->descripcion,
+                'mensaje_nocumple' => $this->messagesno,
+                'obligatorio' => $this->obligatorio,
+                'ficha' => $this->fichaAplicacion,
+                'vence' => $this->vencimiento,
+                'entregable' => $this->entregable,
+            ]);
+
 
             //este metodo lo que hace es guardar los cambios en la base de datos
             DB::commit();
 
+            $this->resetUI();
+            $this->dispatch('messages-succes', messages: 'El requisito se ha actualizado correctamente');
         } catch (\Throwable $e) {
             //este metodo lo que hace es deshacer los cambios en la base de datos
             DB::rollback();
@@ -186,7 +228,8 @@ class RequisitosComponents extends Component
     }
 
 
-    public function deletexid()
+    #[On('deleteReqId')]
+    public function deletexid($reqId)
     {
         try {
             //este metodo lo que hace es inicailizar las transacciones en la base de datos
@@ -194,9 +237,11 @@ class RequisitosComponents extends Component
 
             //Aqui se escribe el codigo que se desea hacer en la transaccion
 
+            Requisitos::where('id', $reqId)->update(['status' => 0]);
+
             //este metodo lo que hace es guardar los cambios en la base de datos
             DB::commit();
-
+            $this->dispatch('messages-error', messages: 'El registro fue eliminado correctamente');
         } catch (\Throwable $e) {
             //este metodo lo que hace es deshacer los cambios en la base de datos
             DB::rollback();
@@ -221,8 +266,5 @@ class RequisitosComponents extends Component
         $this->fichaAplicacion = '';
         $this->vencimiento = '';
         $this->entregable = '';
-
-
     }
-
 }

@@ -2,13 +2,16 @@
 
 namespace App\Livewire;
 
+use App\Mail\ActaFichaTecnica;
 use App\Mail\NotificationRequeriment;
 use App\Models\Application;
 use App\Models\DocumentApplications;
 use App\Models\NotificationsApplications;
 use App\Models\ReqApplications;
 use App\Models\ReqRelationProduts;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Storage;
 use Livewire\Attributes\On;
 use Livewire\WithFileUploads;
 use Livewire\WithPagination;
@@ -91,6 +94,7 @@ class PreCalificacionTecnicaDetail extends Component
             ->section('content');
     }
 
+
     public function showFormChangeState($id)
     {
         $this->reqApplicationID = $id;
@@ -132,16 +136,80 @@ class PreCalificacionTecnicaDetail extends Component
                         'medicamentos.cod_medicamento',
                         'companies.legal_name',
                         'companies.email',
+                        'companies.address',
+                        'companies.phone',
+                        'companies.city',
                         'applications.id',
+                        'applications.status',
                         DB::raw('(SELECT COUNT(*) FROM req_applications WHERE req_applications.states_req_applications = 3 AND req_applications.application_id = applications.id) as req_applications_count'))
                     ->where('applications.id', $this->apllicationID)
-                    ->where('applications.status', 1)
+                    ->where('applications.status', '>', 0)
                     ->first();
-            Mail::to($dataSends->email)->send(new NotificationRequeriment($dataSends->cod_medicamento . '-'
+
+            $applicationsData =
+                Application::join('familia_producto', 'applications.family_id', '=', 'familia_producto.id')
+                    ->join('medicamentos', 'applications.product_id', '=', 'medicamentos.id')
+                    ->join('companies', 'applications.fabric_id', '=', 'companies.id')
+                    ->select('applications.*',
+                        'medicamentos.descripcion',
+                        'medicamentos.cod_medicamento',
+                        'companies.legal_name',
+                        'companies.email',
+                        'companies.address',
+                        'companies.phone',
+                        'companies.city',
+                        'applications.id',
+                        'applications.status',
+                        DB::raw('(SELECT COUNT(*) FROM req_applications WHERE req_applications.states_req_applications > 3 AND req_applications.application_id = applications.id) as req_applications_count'))
+                    ->where('applications.id', $this->apllicationID)
+                    ->where('applications.status', '>=', 1)
+                    ->first();
+
+            $dataApplication =
+                ReqApplications::join('requisitos', 'requisitos.id', '=', 'req_applications.requirement_id')
+                    ->join('medicamentos', 'medicamentos.id', '=', 'req_applications.product_id')
+                    ->join('grupos_requisitos', 'grupos_requisitos.id', '=', 'requisitos.grupo_requisito_id')
+                    ->where('req_applications.application_id', $this->apllicationID)
+                    ->where('req_applications.states_req_applications', '<=', 5)
+                    ->select(
+                        'grupos_requisitos.grupo as grupo_nombre',
+                        'req_applications.id',
+                        'requisitos.codigo',
+                        'requisitos.descripcion',
+                        'requisitos.obligatorio',
+                        'requisitos.entregable',
+                        'requisitos.vence',
+                        'req_applications.date_vence',
+                        'req_applications.states_req_applications',
+                    )
+                    ->orderBy('grupos_requisitos.grupo')
+                    ->get()
+                    ->groupBy('grupo_nombre') // Agrupa por 'grupo_nombre' en lugar de 'grupos_requisitos.grupo'
+                    ->collect(); // Convierte a colección de soporte
+
+            $viewData = compact('applicationsData', 'dataApplication');
+
+            $pdf = Pdf::loadView('pdfs.pdf-acta-ficha-tec', $viewData)
+                ->setPaper('a4')
+                ->setOptions([
+                    'isHtml5ParserEnabled' => true,
+                    'isRemoteEnabled' => true,
+                    'defaultFont' => 'helvetica',
+                ]);
+
+            $filename =
+                'acta-recepcion-docA-' . $applicationsData->llegal_name . '-' . $applicationsData->cod_medicamento .
+                '.pdf';
+
+            $pdfContent = $pdf->output();
+            Storage::disk('local')->put('temp/' . $filename, $pdfContent);
+
+            Mail::to($dataSends->email)->send(new ActaFichaTecnica($dataSends->cod_medicamento . '-'
                 . $dataSends->descripcion,
                 $dataSends->descripcion,
                 $this->messagesSendsAplications,
-                'Notificacion'));
+                'Notificacion', $filename));
+            Storage::disk('local')->delete('temp/' . $filename);
 
             DB::commit();
 
@@ -235,7 +303,9 @@ class PreCalificacionTecnicaDetail extends Component
     public function showObservacionRequerimont($id)
     {
         $this->reqApplicationID = $id;
-        $this->observacionesGlobals = NotificationsApplications::where('req_application_id', $id)->get();
+        $this->observacionesGlobals = NotificationsApplications::where('req_application_id', $id)
+            ->orderBy('id', 'asc')
+            ->get();
 
         $this->dispatch('showObservacionRequerimont');
 

@@ -10,13 +10,12 @@ use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class NotificationRequeriment extends Mailable
+class ActaFichaTecnica extends Mailable
 {
     use Queueable, SerializesModels;
 
     public $products, $requeriments, $messagesNotifications, $stateNotification;
     public $filename;
-    public $segundoFilename;
 
     /**
      * Create a new message instance.
@@ -25,18 +24,15 @@ class NotificationRequeriment extends Mailable
                                 $requeriments,
                                 $messagesNotifications,
                                 $stateNotification,
-                                $filename,
-                                $segundoFilename)
+                                $filename)
     {
         $this->products = $products;
         $this->requeriments = $requeriments;
         $this->messagesNotifications = $messagesNotifications;
         $this->stateNotification = $stateNotification;
         $this->filename = $filename;
-        $this->segundoFilename = $segundoFilename;
 
     }
-
 
     /**
      * Get the message envelope.
@@ -44,7 +40,7 @@ class NotificationRequeriment extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Notificaciones de requerimientos',
+            subject: 'Acta Ficha Tecnica',
         );
     }
 
@@ -55,12 +51,6 @@ class NotificationRequeriment extends Mailable
     {
         return new Content(
             view: 'mails.notification-requeriment',
-            with: [
-                'products' => $this->products,
-                'requeriments' => $this->requeriments,
-                'messagesNotifications' => $this->messagesNotifications,
-                'stateNotification' => $this->stateNotification
-            ],
         );
     }
 
@@ -74,9 +64,6 @@ class NotificationRequeriment extends Mailable
         return [
             Attachment::fromPath(storage_path('app/temp/' . $this->filename))
                 ->as($this->filename)
-                ->withMime('application/pdf'),
-            Attachment::fromPath(storage_path('app/temp/' . $this->segundoFilename))  // Añade segunda ruta
-            ->as($this->segundoFilename)
                 ->withMime('application/pdf'),
         ];
     }

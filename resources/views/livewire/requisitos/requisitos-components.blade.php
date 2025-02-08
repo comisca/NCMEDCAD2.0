@@ -174,8 +174,8 @@
 
         function confirm(id) {
             Swal.fire({
-                title: 'Eliminar Medicamento?',
-                text: "Estas seguro de eliminar este Medicamento?",
+                title: 'Eliminar Requisito?',
+                text: "Estas seguro de eliminar este Requisito?",
                 type: 'question',
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',
@@ -184,7 +184,7 @@
                 cancelButtonText: 'No, Cancelar'
             }).then((result) => {
                 if (result.value) {
-                    Livewire.dispatch('deletedata', {medicamentoId: id})
+                    Livewire.dispatch('deleteReqId', {reqId: id})
                     swal.close();
                 }
             });

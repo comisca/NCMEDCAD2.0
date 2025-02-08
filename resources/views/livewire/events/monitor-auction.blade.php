@@ -39,7 +39,8 @@
                     @if($auction->type_auction == 'Inversa')
                         <div>
                             <span>Porcentaje de descuento:</span>
-                            <span class="badge">{{$auction->porcentage_reductions}} %</span>
+                            <span
+                                class="badge"> {{ number_format($auction->porcentage_reductions, 4, '.', ',') }} %</span>
                         </div>
                     @endif
                 </div>
@@ -58,11 +59,11 @@
                     </div>
                     <div>
                         <span>Cantidad de subasta:</span>
-                        <span class="badge">{{$auction->total}}</span>
+                        <span class="badge">{{ number_format($auction->total, 0, '', ',')}}</span>
                     </div>
                     <div>
                         <span>Precio de referencia:</span>
-                        <span class="badge">${{$auction->price_reference}}</span>
+                        <span class="badge">${{ number_format($auction->price_reference, 4, '.', ',') }}</span>
                     </div>
                 </div>
             </div>

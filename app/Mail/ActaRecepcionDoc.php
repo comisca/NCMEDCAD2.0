@@ -10,33 +10,34 @@ use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class NotificationRequeriment extends Mailable
+class ActaRecepcionDoc extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public $products, $requeriments, $messagesNotifications, $stateNotification;
+    public $dataRequiurements;
+    public $dataApplicant;
     public $filename;
     public $segundoFilename;
+    public $storagePath;
+    public $storagePath2;
 
     /**
      * Create a new message instance.
      */
-    public function __construct($products,
-                                $requeriments,
-                                $messagesNotifications,
-                                $stateNotification,
+    public function __construct($dataRequiurements,
+                                $dataApplicant,
                                 $filename,
-                                $segundoFilename)
+                                $segundoFilename,
+                                $storagePath,
+                                $storagePath2)
     {
-        $this->products = $products;
-        $this->requeriments = $requeriments;
-        $this->messagesNotifications = $messagesNotifications;
-        $this->stateNotification = $stateNotification;
+        $this->dataRequiurements = $dataRequiurements;
+        $this->dataApplicant = $dataApplicant;
         $this->filename = $filename;
         $this->segundoFilename = $segundoFilename;
-
+        $this->storagePath = $storagePath;
+        $this->storagePath2 = $storagePath2;
     }
-
 
     /**
      * Get the message envelope.
@@ -44,7 +45,7 @@ class NotificationRequeriment extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Notificaciones de requerimientos',
+            subject: 'Acta Recepcion Documentos',
         );
     }
 
@@ -54,13 +55,9 @@ class NotificationRequeriment extends Mailable
     public function content(): Content
     {
         return new Content(
-            view: 'mails.notification-requeriment',
-            with: [
-                'products' => $this->products,
-                'requeriments' => $this->requeriments,
-                'messagesNotifications' => $this->messagesNotifications,
-                'stateNotification' => $this->stateNotification
-            ],
+            view: 'mails.acta-recepcion-doc',
+            with: ['dataRequiurements' => $this->dataRequiurements,
+                'dataApplicant' => $this->dataApplicant],
         );
     }
 

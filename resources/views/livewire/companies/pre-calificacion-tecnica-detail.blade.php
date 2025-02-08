@@ -48,33 +48,36 @@
                                 </div>
                             </div>
                         </div>
-
-                        <div class="col-xl-4 col-md-4 mb-4">
-                            <div class="col mr-2">
-                                <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
-                                    Envio de Notificacion:
-                                </div>
-                                <div class="h5 mb-0 font-weight-bold text-gray-800">
-                                    <button id="showNotificationModal" type="button" class="btn
-                                    btn-primary">Crear Notificacion
-                                    </button>
+                        @if(Session::has('id_user'))
+                            <div class="col-xl-4 col-md-4 mb-4">
+                                <div class="col mr-2">
+                                    <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                        Envio de Notificacion:
+                                    </div>
+                                    <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                        <button id="showNotificationModal" type="button" class="btn
+                                        btn-primary">Crear Notificacion
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
 
-                        <div class="col-xl-4 col-md-4 mb-4">
-                            <div class="col mr-2">
-                                <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
-                                    Certificacion:
-                                </div>
-                                <div class="h5 mb-0 font-weight-bold text-gray-800">
-                                    <button wire:click="precalificarReq()" id="showNotificationModal" type="button"
-                                            class="btn
+                        @endif
+                        @if(Session::has('id_user'))
+                            <div class="col-xl-4 col-md-4 mb-4">
+                                <div class="col mr-2">
+                                    <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                        Certificacion:
+                                    </div>
+                                    <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                        <button wire:click="precalificarReq()" id="showNotificationModal" type="button"
+                                                class="btn
                                     btn-primary">Precalificar
-                                    </button>
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
+                        @endif
 
                         {{--                        <div class="col-auto">--}}
                         {{--                            <i class="fas fa-calendar fa-2x text-gray-300"></i>--}}
@@ -418,7 +421,7 @@
 
             })
 
-            
+
             @this.on('showDoc', (event) => {
                 $('#modalDocApplications').modal('show');
 

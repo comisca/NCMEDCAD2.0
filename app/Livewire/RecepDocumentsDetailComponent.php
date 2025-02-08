@@ -2,10 +2,12 @@
 
 namespace App\Livewire;
 
+use App\Mail\ActaRecepcionDoc;
 use App\Mail\NotificationRequeriment;
 use App\Models\Application;
 use App\Models\Companies;
 use App\Models\DocumentApplications;
+use App\Models\DocumentsTables;
 use App\Models\NotificationsApplications;
 use App\Models\ReqApplications;
 use App\Models\ReqRelationProfile;
@@ -15,6 +17,8 @@ use Livewire\Attributes\On;
 use Livewire\WithFileUploads;
 use Livewire\WithPagination;
 use Livewire\Component;
+use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Facades\Storage;
 use Session;
 use DB;
 
@@ -29,6 +33,7 @@ class RecepDocumentsDetailComponent extends Component
     public $apllicationI, $nameDoc, $descriptionDoc, $docFile, $reqApplicationID, $otroid;
     public $docDatas = [], $docGlobalView, $selectStates, $messagesSends, $observacionesGlobals, $sendNotificationsCompanies;
     public $dataRequisitos, $idCompany, $nameTableRelations, $dataVenceInput, $inputDateVence;
+    public $documentDataDetail;
 
     public function paginationView()
     {
@@ -97,6 +102,127 @@ class RecepDocumentsDetailComponent extends Component
 
 
         }
+    }
+
+    public function createActaReceive()
+    {
+
+        if ($this->selectedRequeriment == 'T') {
+
+            $dataRequiurementsF =
+                ReqApplications::join('requisitos', 'requisitos.id', '=', 'req_applications.requirement_id')
+                    ->join('medicamentos', 'medicamentos.id', '=', 'req_applications.product_id')
+                    ->join('grupos_requisitos', 'grupos_requisitos.id', '=', 'requisitos.grupo_requisito_id')
+                    ->where('req_applications.application_id', $this->apllicationID)
+                    ->where('req_applications.status', '>=', 1)
+                    ->select(
+                        'grupos_requisitos.grupo as grupo_nombre',
+                        'req_applications.id',
+                        'requisitos.codigo',
+                        'requisitos.descripcion',
+                        'requisitos.obligatorio',
+                        'requisitos.entregable',
+                        'requisitos.vence',
+                        'req_applications.date_vence',
+                        'req_applications.states_req_applications',
+                    )
+                    ->orderBy('grupos_requisitos.grupo')
+                    ->get()
+                    ->groupBy('grupo_nombre') // Agrupa por 'grupo_nombre' en lugar de 'grupos_requisitos.grupo'
+                    ->collect(); // Convierte a colección de soporte
+
+        } else {
+            $company = Companies::where('id', $this->idCompany)->first();
+
+            $dataRequiurementsD = Application::join('companies', 'applications.fabric_id', '=', 'companies.id')
+                ->join('req_relation_profile_tables',
+                    'applications.fabric_id',
+                    '=',
+                    'req_relation_profile_tables.company_id')
+                ->join('requisitos', 'requisitos.id', '=', 'req_relation_profile_tables.req_id')
+                ->where('applications.distribution_id', $this->idCompany)
+                ->where('applications.status', '>=', 1)
+                ->select(
+                    'companies.legal_name as grupo_nombre',
+                    'req_relation_profile_tables.id',
+                    'requisitos.codigo',
+                    'requisitos.descripcion',
+                    'requisitos.obligatorio',
+                    'requisitos.entregable',
+                    'requisitos.vence',
+                    'req_relation_profile_tables.date_vence',
+                    'req_relation_profile_tables.status',
+                )
+                ->orderBy('requisitos.descripcion')
+                ->get()
+                ->groupBy('grupo_nombre') // Agrupa por 'grupo_nombre' en lugar de 'grupos_requisitos.grupo'
+                ->collect(); // Convierte a colección de soporte
+
+
+        }
+        $dataApplicant = Application::join('familia_producto', 'applications.family_id', '=', 'familia_producto.id')
+            ->join('medicamentos', 'applications.product_id', '=', 'medicamentos.id')
+            ->join('companies', 'applications.fabric_id', '=', 'companies.id')
+            ->select(
+                'applications.*',
+                'medicamentos.descripcion',
+                'medicamentos.cod_medicamento',
+                'companies.legal_name',
+                'companies.email',
+                'applications.id',
+                DB::raw('(SELECT COUNT(*) FROM req_applications WHERE req_applications.states_req_applications = 3 AND req_applications.application_id = applications.id) as req_applications_count')
+            )
+            ->where('applications.id', $this->apllicationID)
+            ->where('applications.status', '>=', 1)
+            ->first();
+        if ($this->selectedRequeriment == 'T') {
+            // Genera el PDF
+            $viewData = compact('dataApplicant', 'dataRequiurementsF');
+            $pdf = Pdf::loadView('pdfs.pdf-recepcion-doc', $viewData)
+                ->setPaper('a4')
+                ->setOptions([
+                    'isHtml5ParserEnabled' => true,
+                    'isRemoteEnabled' => true,
+                    'defaultFont' => 'helvetica',
+                ]);
+
+            // Nombre del archivo PDF
+//        $filename = 'acta-' . $id . '-event.pdf';
+
+            // Retorna el PDF como descarga
+            return response()->streamDownload(
+                function () use ($pdf) {
+                    echo $pdf->output();
+                },
+                'acta-recepcion-doc-' . $dataApplicant->llegal_name . '-' . $dataApplicant->cod_medicamento . '.pdf'
+            );
+        } else {
+            // Genera el PDF
+            $viewData2 = compact('dataApplicant', 'dataRequiurementsD');
+            $pdf2 = Pdf::loadView('pdfs.pdf-recepcion-doc2', $viewData2)
+                ->setPaper('a4')
+                ->setOptions([
+                    'isHtml5ParserEnabled' => true,
+                    'isRemoteEnabled' => true,
+                    'defaultFont' => 'helvetica',
+                ]);
+
+            // Nombre del archivo PDF
+//        $filename = 'acta-' . $id . '-event.pdf';
+
+            // Retorna el PDF como descarga
+            return response()->streamDownload(
+                function () use ($pdf2) {
+                    echo $pdf2->output();
+                },
+                'acta-recepcion-doc-' . $dataApplicant->llegal_name . '-' . $dataApplicant->cod_medicamento . '.pdf'
+            );
+        }
+
+
+//        Mail::to($dataPf->email)->send(new ActaRecepcionDoc());
+
+
     }
 
 
@@ -191,17 +317,125 @@ class RecepDocumentsDetailComponent extends Component
                         DB::raw('(SELECT COUNT(*) FROM req_applications WHERE req_applications.states_req_applications = 3 AND req_applications.application_id = applications.id) as req_applications_count')
                     )
                     ->where('applications.id', $this->apllicationID)
-                    ->where('applications.status', 1)
+                    ->where('applications.status', '>', 0)
                     ->first();
+
+
+            $dataRequiurementsF =
+                ReqApplications::join('requisitos', 'requisitos.id', '=', 'req_applications.requirement_id')
+                    ->join('medicamentos', 'medicamentos.id', '=', 'req_applications.product_id')
+                    ->join('grupos_requisitos', 'grupos_requisitos.id', '=', 'requisitos.grupo_requisito_id')
+                    ->where('req_applications.application_id', $this->apllicationID)
+                    ->where('req_applications.status', '>=', 1)
+                    ->select(
+                        'grupos_requisitos.grupo as grupo_nombre',
+                        'req_applications.id',
+                        'requisitos.codigo',
+                        'requisitos.descripcion',
+                        'requisitos.obligatorio',
+                        'requisitos.entregable',
+                        'requisitos.vence',
+                        'req_applications.date_vence',
+                        'req_applications.states_req_applications',
+                    )
+                    ->orderBy('grupos_requisitos.grupo')
+                    ->get()
+                    ->groupBy('grupo_nombre') // Agrupa por 'grupo_nombre' en lugar de 'grupos_requisitos.grupo'
+                    ->collect(); // Convierte a colección de soporte
+
+
+            $company = Companies::where('id', $this->idCompany)->first();
+
+            $dataRequiurementsD = Application::join('companies', 'applications.fabric_id', '=', 'companies.id')
+                ->join('req_relation_profile_tables',
+                    'applications.fabric_id',
+                    '=',
+                    'req_relation_profile_tables.company_id')
+                ->join('requisitos', 'requisitos.id', '=', 'req_relation_profile_tables.req_id')
+                ->where('applications.distribution_id', $this->idCompany)
+                ->where('applications.status', '>=', 1)
+                ->select(
+                    'companies.legal_name as grupo_nombre',
+                    'req_relation_profile_tables.id',
+                    'requisitos.codigo',
+                    'requisitos.descripcion',
+                    'requisitos.obligatorio',
+                    'requisitos.entregable',
+                    'requisitos.vence',
+                    'req_relation_profile_tables.date_vence',
+                    'req_relation_profile_tables.status',
+                )
+                ->orderBy('requisitos.descripcion')
+                ->get()
+                ->groupBy('grupo_nombre') // Agrupa por 'grupo_nombre' en lugar de 'grupos_requisitos.grupo'
+                ->collect(); // Convierte a colección de soporte
+
+
+            $dataApplicant = Application::join('familia_producto', 'applications.family_id', '=', 'familia_producto.id')
+                ->join('medicamentos', 'applications.product_id', '=', 'medicamentos.id')
+                ->join('companies', 'applications.fabric_id', '=', 'companies.id')
+                ->select(
+                    'applications.*',
+                    'medicamentos.descripcion',
+                    'medicamentos.cod_medicamento',
+                    'companies.legal_name',
+                    'companies.email',
+                    'applications.id',
+                    DB::raw('(SELECT COUNT(*) FROM req_applications WHERE req_applications.states_req_applications = 3 AND req_applications.application_id = applications.id) as req_applications_count')
+                )
+                ->where('applications.id', $this->apllicationID)
+                ->where('applications.status', '>=', 1)
+                ->first();
+
+            // Genera el PDF
+            $viewData = compact('dataApplicant', 'dataRequiurementsD');
+            $viewData2 = compact('dataApplicant', 'dataRequiurementsF');
+            $pdf = Pdf::loadView('pdfs.pdf-recepcion-doc2', $viewData)
+                ->setPaper('a4')
+                ->setOptions([
+                    'isHtml5ParserEnabled' => true,
+                    'isRemoteEnabled' => true,
+                    'defaultFont' => 'helvetica',
+                ]);
+
+            $viewData = compact('dataApplicant', 'dataRequiurementsF');
+            $pdf2 = Pdf::loadView('pdfs.pdf-recepcion-doc', $viewData2)
+                ->setPaper('a4')
+                ->setOptions([
+                    'isHtml5ParserEnabled' => true,
+                    'isRemoteEnabled' => true,
+                    'defaultFont' => 'helvetica',
+                ]);
+
+            // Nombre del archivo PDF
+            $filename = 'acta-recepcion-docA-' . $dataApplicant->llegal_name . '-' . $dataApplicant->cod_medicamento .
+                '.pdf';
+            $filename2 = 'acta-recepcion-docT-' . $dataApplicant->llegal_name . '-' . $dataApplicant->cod_medicamento
+                . '.pdf';
+
+            // Guarda el PDF temporalmente
+            $pdfContent = $pdf->output();
+            Storage::disk('local')->put('temp/' . $filename, $pdfContent);
+            $pdfContent2 = $pdf2->output();
+            Storage::disk('local')->put('temp/' . $filename2, $pdfContent2);
+
             Mail::to($dataSends->email)->send(new NotificationRequeriment(
                 $dataSends->cod_medicamento . '-'
                 . $dataSends->descripcion,
                 $dataSends->descripcion,
                 $this->messagesSendsAplications,
-                'Notificacion'
+                'Notificacion',
+                $filename,
+                $filename2,
+                storage_path('app/temp/' . $filename),
+                storage_path('app/temp/' . $filename2),
             ));
+            Storage::disk('local')->delete('temp/' . $filename);
+            Storage::disk('local')->delete('temp/' . $filename2);
+
 
             DB::commit();
+
 
             $this->messagesSendsAplications = '';
 
@@ -211,7 +445,7 @@ class RecepDocumentsDetailComponent extends Component
             DB::rollback();
 
             //este metodo lo que hace es mostrar el error en la consola
-            dd($e->getMessage());
+            dd($e);
         }
     }
 
@@ -330,6 +564,25 @@ class RecepDocumentsDetailComponent extends Component
         $this->nameTableRelations = $nameTable;
         $this->reqApplicationID = $id;
         $this->dispatch('showUpDoc');
+    }
+
+    #[On('detailCompany')]
+    public function detailCompany($id)
+    {
+
+        if ($this->selectedRequeriment == 'T') {
+            $this->documentDataDetail = DocumentApplications::where('req_application_id', $id)
+                ->where('name_table', 'req_applications')
+                ->get();
+        } else {
+            $this->documentDataDetail = DocumentApplications::where('req_application_id', $id)
+                ->where('name_table', 'req_relation_profile_tables')
+                ->get();
+        }
+
+
+        $this->dispatch('detail_company', ['id' => $id]);
+
     }
 
 
@@ -517,4 +770,6 @@ class RecepDocumentsDetailComponent extends Component
         $this->reqApplicationID = $id;
         $this->dispatch('showFormChangeState');
     }
+
+
 }

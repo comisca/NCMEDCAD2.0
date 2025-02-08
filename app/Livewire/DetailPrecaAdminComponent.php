@@ -223,7 +223,10 @@ class DetailPrecaAdminComponent extends Component
 
         $this->nameTableRelations = 'req_relation_profile_tables';
         $this->reqApplicationID = $id;
-        $this->observacionesGlobals = NotificationsApplications::where('req_application_id', $id)->get();
+        $this->observacionesGlobals = NotificationsApplications::where('req_application_id', $id)
+            ->orderBy('id', 'asc')
+            ->get();
+
         $this->dispatch('showObservacionRequerimont');
     }
 

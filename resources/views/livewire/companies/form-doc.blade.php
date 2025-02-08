@@ -63,6 +63,13 @@
                         btn-rounded">
                                             Ver detalle
                                         </button>
+                                        {{--                                        <button--}}
+                                        {{--                                            onclick="$dispatch('detailCompany', { id: ' . $itemsDocuments->attachment . ' })"--}}
+                                        {{--                                            type="button"--}}
+                                        {{--                                            class="btn btn-link btn-sm--}}
+                                        {{--                        btn-rounded">--}}
+                                        {{--                                            Ver detalle--}}
+                                        {{--                                        </button>--}}
                                     </td>
                                 </tr>
                                 <div>

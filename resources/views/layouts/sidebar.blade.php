@@ -65,8 +65,8 @@
                             <li><a href="{{url('/fichatecnica')}}">Creacion de Aplicacion</a></li>
 
                             <li><a href="{{url('/precalificacion/company')}}">Precalificacion Tecnica</a></li>
-                            <li><a href="{{url('/precalificacion/company/admin')}}">Precalificacion
-                                    Administrativa</a></li>
+                            {{--                            <li><a href="{{url('/precalificacion/company/admin')}}">Precalificacion--}}
+                            {{--                                    Administrativa</a></li>--}}
                             <li><a href="/subastas">Eventos</a></li>
                         </ul>
 

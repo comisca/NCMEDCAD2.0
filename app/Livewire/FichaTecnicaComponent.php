@@ -2,6 +2,7 @@
 
 namespace App\Livewire;
 
+use App\Mail\NotificationFabricAdmin;
 use App\Mail\PreRegister;
 use App\Models\Application;
 use App\Models\Companies;
@@ -355,6 +356,22 @@ class FichaTecnicaComponent extends Component
                         ]);
                     }
                 }
+            }
+
+            $verifyFabricToOtherAplication = Application::where('distribution_id', '!=', Session::get('id_company'))
+                ->where('fabric_id', $this->companieF)
+                ->where('status', 1)
+                ->count();
+
+            if ($verifyFabricToOtherAplication > 0) {
+                // entonces aqui va la logica para enviar un correo al equipo de la UMOT notificando que el fabricante
+                // esta asociado a otra distribuidora
+                $nameD = Companies::where('id', Session::get('id_company'))->first()->legal_name;
+                $nameF = Companies::where('id', $this->companieF)->first()->legal_name;
+
+                Mail::to('henry.orellana@oceansbits.com')
+                    ->send(new NotificationFabricAdmin($nameD, $nameF));
+
             }
 
 

@@ -24,10 +24,7 @@ class GroupRequisitosFamily extends Component
         return 'vendor.livewire.bootstrap';
     }
 
-    public function mount()
-    {
-
-    }
+    public function mount() {}
 
 
     public function render()
@@ -38,7 +35,6 @@ class GroupRequisitosFamily extends Component
                 ->where('familia_producto', 'like', '%' . $this->searchQuety . '%')
                 ->orderBy('id', 'desc')
                 ->paginate($this->Pagination);
-
         } else {
             $data = FamiliaProducto::where('status', 1)
                 ->orderBy('id', 'desc')
@@ -54,14 +50,13 @@ class GroupRequisitosFamily extends Component
     {
         $this->idSelecte = $id;
         $this->dispatch('addGroupsAnwers', $id);
-
     }
 
     public function create()
     {
 
         $rules = [
-            'nameGroup' => 'required|min:2|unique:grupos_productos,grupo',
+            'nameGroup' => 'required|min:2|unique:grupos_requisitos,grupo',
             'descriptionGroup' => 'required',
         ];
         $messages = [
@@ -93,7 +88,6 @@ class GroupRequisitosFamily extends Component
 
             $this->resetUI();
             $this->dispatch('messages-succes', messages: 'El grupo de productos se ha creado correctamente');
-
         } catch (\Throwable $e) {
             //este metodo lo que hace es deshacer los cambios en la base de datos
             DB::rollback();
@@ -135,7 +129,6 @@ class GroupRequisitosFamily extends Component
             //este metodo lo que hace es guardar los cambios en la base de datos
             DB::commit();
             $this->dispatch('messages-succes', messages: 'El grupo de productos se ha eliminado correctamente');
-
         } catch (\Throwable $e) {
             //este metodo lo que hace es deshacer los cambios en la base de datos
             DB::rollback();
@@ -156,7 +149,6 @@ class GroupRequisitosFamily extends Component
 
             //este metodo lo que hace es guardar los cambios en la base de datos
             DB::commit();
-
         } catch (\Throwable $e) {
             //este metodo lo que hace es deshacer los cambios en la base de datos
             DB::rollback();
@@ -167,10 +159,5 @@ class GroupRequisitosFamily extends Component
     }
 
 
-    public function resetUI()
-    {
-
-
-    }
-
+    public function resetUI() {}
 }
