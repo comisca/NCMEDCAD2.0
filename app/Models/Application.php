@@ -23,6 +23,8 @@ class Application extends Model
         'number_registration_fabric',
         'trade_name',
         'country_id',
+        'calification_tec',
+        'calification_admin',
         'status'
     ];
 }

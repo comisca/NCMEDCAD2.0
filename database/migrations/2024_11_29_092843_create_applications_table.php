@@ -23,6 +23,8 @@ return new class extends Migration {
             $table->string('number_registration_fabric');
             $table->text('message')->nullable();
             $table->integer('states_applications');
+            $table->integer('calification_tec')->default(0);
+            $table->integer('calification_admin')->default(0);
             $table->integer('status');
             $table->timestamps();
         });

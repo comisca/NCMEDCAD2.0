@@ -64,6 +64,11 @@ class MedicamentosComponent extends Component
                     ->where('grupos_productos.status', 1)
                     ->where('grupos_requisitos.status', 1)
                     ->where('medicamentos.cod_medicamento', 'like', '%' . $this->searchQuety . '%')
+                    ->select('medicamentos.*',
+                        'medicamentos.id as idMed',
+                        'familia_producto.familia_producto as familia_producto',
+                        'grupos_productos.descripcion as grupo_familia',
+                        'grupos_requisitos.descripcion as grupo_requisito')
                     ->paginate($this->pagination);
 
         } else {
@@ -73,6 +78,11 @@ class MedicamentosComponent extends Component
                     ->join('grupos_requisitos', 'medicamentos.id_grupo_requerimiento', '=', 'grupos_requisitos.id')
                     ->where('grupos_productos.status', 1)
                     ->where('grupos_requisitos.status', 1)
+                    ->select('medicamentos.*',
+                        'medicamentos.id as idMed',
+                        'familia_producto.familia_producto as familia_producto',
+                        'grupos_productos.descripcion as grupo_familia',
+                        'grupos_requisitos.descripcion as grupo_requisito')
                     ->orderBy('medicamentos.id', 'desc')->paginate($this->pagination);
         }
         return view('livewire.medicamentos.medicamentos-component', ['data' => $medicamentos])
@@ -132,7 +142,7 @@ class MedicamentosComponent extends Component
     {
         $this->tittleModal = 'Editar Medicamento';
         $this->detaiModal = 'Formulario para editar medicamento';
-
+//        dd($id);
         $medicamento = Medicamentos::where('id', '=', $id)->first();
 
         $this->cod_medicamento = $medicamento->cod_medicamento;

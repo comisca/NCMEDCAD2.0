@@ -16,6 +16,7 @@ class DocumentApplications extends Model
         'document_name',
         'descriptions',
         'attachment',
-        'status'
+        'status',
+        'name_table'
     ];
 }

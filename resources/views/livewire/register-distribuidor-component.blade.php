@@ -37,7 +37,8 @@
                             <label for="inputNameCompany">Perfil a participar</label>
                             <select id="inputState" wire:model="typeCompany"
                                     class="form-control @error('typeCompany') is-invalid @enderror">
-                                <option value="F" selected>Fabricantes</option>
+                                <option selected>Selecciona un tipo de participante</option>
+                                <option value="F">Fabricantes</option>
                                 <option value="D">Distribuidor</option>
                             </select>
                             @error('typeCompany')

@@ -83,6 +83,8 @@ class RegisterDistribuidorComponent extends Component
 //            'phoneContact' => 'required',
             'lastName' => 'required',
             'userNameCompany' => 'required',
+            'typeCompany' => 'required',
+            'familyProductsInput' => 'required',
 //            'userName' => 'required|min:2|unique:companies,user_name',
         ];
 
@@ -100,6 +102,8 @@ class RegisterDistribuidorComponent extends Component
 //            'phoneContact.required' => 'El telefono de contacto es obligatorio',
             'phone.required' => 'El telefono es obligatorio',
             'userNameCompany.required' => 'El usuario es obligatorio',
+            'typeCompany.required' => 'EL tipo de participante es obligatorio',
+            'familyProductsInput.required' => 'La familia de producto es obligatorio',
 //            'userName.required' => 'El Objetivo es obligatorio',
 //            'userName.min' => 'El usuario debe ser mayor a 2 caracteres',
 //            'userName.unique' => 'el usuario ya existe',

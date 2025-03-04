@@ -12,9 +12,12 @@ use App\Models\FamiliaProducto;
 use App\Models\Medicamentos;
 use App\Models\ReqApplications;
 use App\Models\ReqRelationProduts;
+use App\Models\ReqRelationProfile;
+use App\Models\ReqRelationProfileTable;
 use App\Models\StateCountries;
 use Illuminate\Support\Facades\Mail;
 use Livewire\Attributes\On;
+use Livewire\WithFileUploads;
 use Livewire\WithPagination;
 use Livewire\Component;
 use Session;
@@ -25,6 +28,7 @@ class FichaTecnicaComponent extends Component
 {
 
     use WithPagination;
+    use WithFileUploads;
 
     public $Pagination = 10;
     public $searchInput;
@@ -116,7 +120,8 @@ class FichaTecnicaComponent extends Component
             'email' => 'required',
 //            'phoneContact' => 'required',
             'lastName' => 'required',
-            'userNameCompany' => 'required',
+            'familyProductsInput' => 'required',
+
 //            'userName' => 'required|min:2|unique:companies,user_name',
         ];
 
@@ -133,7 +138,8 @@ class FichaTecnicaComponent extends Component
             'email.required' => 'El correo es obligatorio',
 //            'phoneContact.required' => 'El telefono de contacto es obligatorio',
             'phone.required' => 'El telefono es obligatorio',
-            'userNameCompany.required' => 'El usuario es obligatorio',
+            'familyProductsInput.required' => 'La familia de producto es obligatorio',
+
 //            'userName.required' => 'El Objetivo es obligatorio',
 //            'userName.min' => 'El usuario debe ser mayor a 2 caracteres',
 //            'userName.unique' => 'el usuario ya existe',
@@ -173,7 +179,7 @@ class FichaTecnicaComponent extends Component
                 'first_name' => $this->firstName,
                 'last_name' => $this->lastName,
                 'email' => $this->email,
-                'user_name' => $this->userNameCompany,
+//                'user_name' => $this->userNameCompany,
 //                'user_name' => $this->userName,
                 'password' => '123456',
                 'type_company' => 'F',
@@ -187,83 +193,6 @@ class FichaTecnicaComponent extends Component
             $company->save();
 
 
-            if ($this->docRegister) {
-                $doc_rec = 'doc_' . uniqid() . '.' . $this->docRegister->extension();
-                $docRecUrl = $this->docRegister->storeAs('public/document/companies', $doc_rec);
-//                $docSize = $this->docRegister->getSize(); // Get the file size
-//                $docExtension = $this->docRegister->getClientOriginalExtension();
-
-                DocumentsTables::create([
-                    'document_id' => 2,
-                    'table_name' => 'companies',
-                    'table_id' => $company->id,
-                    'document_name' => 'Documento de Registro',
-                    'attachment' => $doc_rec,
-//                    'size' => $docSize,
-//                    'extension' => $docExtension,
-                    'status' => 1
-                ]);
-
-
-            }
-            if ($this->docId) {
-
-                $doc_Id = 'doc_' . uniqid() . '.' . $this->docId->extension();
-                $docIdUrl = $this->docId->storeAs('public/document/companies', $doc_Id);
-//                $docSizedocId = $this->docId->getSize(); // Get the file size
-//                $docExtensiondocId = $this->docId->getClientOriginalExtension();
-                DocumentsTables::create([
-                    'document_id' => 2,
-                    'table_name' => 'companies',
-                    'table_id' => $company->id,
-                    'document_name' => 'Documento de Identidad',
-                    'attachment' => $doc_Id,
-//                    'size' => $docSizedocId,
-//                    'extension' => $docExtensiondocId,
-                    'status' => 1
-                ]);
-
-
-            }
-            if ($this->docPoder) {
-                $doc_Poder = 'doc_' . uniqid() . '.' . $this->docPoder->extension();
-                $docPoderUrl = $this->docPoder->storeAs('public/document/companies', $doc_Poder);
-//                $docSizedocPoder = $this->docPoder->getSize(); // Get the file size
-//                $docExtensiondocPoder = $this->docPoder->getClientOriginalExtension();
-
-                DocumentsTables::create([
-                    'document_id' => 2,
-                    'table_name' => 'companies',
-                    'table_id' => $company->id,
-                    'document_name' => 'Documento de Poder',
-                    'attachment' => $doc_Id,
-//                    'size' => $docSizedocPoder,
-//                    'extension' => $docExtensiondocPoder,
-                    'status' => 1
-                ]);
-
-
-            }
-
-            if ($this->docLicense) {
-
-                $doc_License = 'doc_' . uniqid() . '.' . $this->docLicense->extension();
-                $docLicenceUrl = $this->docLicense->storeAs('public/logo/companies', $doc_License);
-//                $docSizedocLicense = $this->docLicense->getSize(); // Get the file size
-//                $docExtensiondocLicense = $this->docLicense->getClientOriginalExtension();
-
-                DocumentsTables::create([
-                    'document_id' => 2,
-                    'table_name' => 'companies',
-                    'table_id' => $company->id,
-                    'document_name' => 'Documento de Licencia',
-                    'attachment' => $doc_Id,
-//                    'size' => $docSizedocLicense,
-//                    'extension' => $docExtensiondocLicense,
-                    'status' => 1
-                ]);
-
-            }
             $this->companieF = $company->id;
 //            Mail::to($this->email)->send(new PreRegister($this->BusinnessName));
 
@@ -321,7 +250,17 @@ class FichaTecnicaComponent extends Component
                 ->where('status', 1)
                 ->get();
 
-            $applicationnew = Application::create([
+
+            //traerme los requerimientos de la ficha administrativa de cada perfil
+            $reqF = ReqRelationProfile::where('type_profile', 'F')
+                ->where('status', 1)
+                ->get();
+
+            $reqD = ReqRelationProfile::where('type_profile', 'D')
+                ->where('status', 1)
+                ->get();
+
+            $newAppD = $applicationnew = Application::create([
                 'family_id' => $this->inputFamilyProduct,
                 'product_id' => $this->idSelectedProducts,
                 'trade_name' => $this->legalName,
@@ -357,6 +296,31 @@ class FichaTecnicaComponent extends Component
                     }
                 }
             }
+
+            if (!empty($reqD)) {
+                foreach ($reqD as $itemReq) {
+                    ReqRelationProfileTable::create([
+                        'company_id' => Session::get('id_company'),
+                        'req_id' => $itemReq->req_id,
+                        'type_profile' => 'D',
+                        'status' => 9
+                    ]);
+
+                }
+            }
+
+            if (!empty($reqF)) {
+                foreach ($reqF as $itemReqF) {
+                    ReqRelationProfileTable::create([
+                        'company_id' => $this->companieF,
+                        'req_id' => $itemReqF->req_id,
+                        'type_profile' => 'F',
+                        'status' => 9
+                    ]);
+
+                }
+            }
+
 
             $verifyFabricToOtherAplication = Application::where('distribution_id', '!=', Session::get('id_company'))
                 ->where('fabric_id', $this->companieF)

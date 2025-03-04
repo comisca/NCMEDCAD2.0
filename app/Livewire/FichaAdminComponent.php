@@ -22,7 +22,7 @@ class FichaAdminComponent extends Component
     public $Pagination = 10;
     public $searchInput;
     public $familySelectedId, $groupSelectedId, $groupDataSelected, $productsDataSelected, $productSelectInput;
-    public $requisitodDataSelected, $productDataTable;
+    public $requisitodDataSelected, $productDataTable, $selectedReqFiltre;
 
     public function paginationView()
     {
@@ -38,10 +38,10 @@ class FichaAdminComponent extends Component
     public function render()
     {
         $familyProductsData = FamiliaProducto::where('status', 1)->get();
-        $this->requisitodDataSelected = Requisitos::where('status', 1)
-            ->where('tipo_requisitos', 'ADMINISTRATIVOS')
-            ->orderBy('id', 'asc')
-            ->get();
+//        $this->requisitodDataSelected = Requisitos::where('status', 1)
+//            ->where('tipo_requisitos', 'ADMINISTRATIVOS')
+//            ->orderBy('id', 'asc')
+//            ->get();
 
         return view('livewire.requisitos.ficha-admin-component', ['familyProductsData' => $familyProductsData])
             ->extends('layouts.master')
@@ -60,12 +60,14 @@ class FichaAdminComponent extends Component
 //            Medicamentos::where('activo', 1)->where('id_familia_producto', $this->familySelectedId)
 //                ->orderBy('id', 'desc')
 //                ->get();
+//        dd($this->selectedReqFiltre);
 
-        $this->requisitodDataSelected = Requisitos::where('grupo_requisito_id', $this->groupSelectedId)
-            ->where('status', 1)
+        $this->requisitodDataSelected = Requisitos::where('status', 1)
             ->where('tipo_requisitos', 'ADMINISTRATIVOS')
+            ->where('tipo_participante', $this->selectedReqFiltre)
             ->orderBy('id', 'asc')
             ->get();
+
         $this->productDataTable =
             ReqRelationProfile::join('requisitos', 'requisitos.id', '=', 'req_relation_profiles.req_id')
 //                ->join('medicamentos', 'medicamentos.id', '=', 'req_relation_produts.product_id')

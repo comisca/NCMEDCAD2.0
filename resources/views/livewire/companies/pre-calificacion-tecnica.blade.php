@@ -7,10 +7,10 @@
     <div class="container">
         <form>
             <fieldset class="form-group">
-                <legend>FICHA TÉCNICA</legend>
-                <p>Por favor, complete todos los campos requeridos en la ficha técnica. Asegúrese de seguir cada uno de
-                    los pasos indicados para garantizar el registro correcto y evitar cualquier error en el proceso.
-                    Esto permitirá que la información sea procesada de manera eficiente y precisa.</p>
+                <legend>{{$namePages}}</legend>
+                {{--                <p>Por favor, complete todos los campos requeridos en la ficha técnica. Asegúrese de seguir cada uno de--}}
+                {{--                    los pasos indicados para garantizar el registro correcto y evitar cualquier error en el proceso.--}}
+                {{--                    Esto permitirá que la información sea procesada de manera eficiente y precisa.</p>--}}
                 <div class="form-row">
 
                     <!-- PROBANDO BUSCADORES -->
@@ -51,7 +51,8 @@
                                 <th scope="col">Nombre Comercial</th>
                                 <th scope="col">Producto</th>
                                 <th scope="col">Fabricante</th>
-                                <th scope="col">Estado</th>
+                                <th scope="col">Precalificacion Administrativa</th>
+                                <th scope="col">Precalificacion Tecnica</th>
                                 <th scope="col">Acción</th>
                             </tr>
                             </thead>
@@ -66,30 +67,42 @@
                                         </td>
                                         <td>{{$itemsdataApplicationSelected->legal_name}}</td>
                                         <td>
-                                            @if($itemsdataApplicationSelected->req_applications_count > 0)
-                                                No Calificado
+                                            @if($itemsdataApplicationSelected->calification_admin == 1)
+                                                <span class="badge badge-success">PRECALIFICADO</span>
                                             @else
-                                                Calificado
+                                                <span class="badge badge-danger">EN OBSERVACION</span>
                                             @endif
 
                                         </td>
                                         <td>
-                                            <a
-                                                href="/recepcion/doc/eval/{{$itemsdataApplicationSelected->id}}/{{Session::get('id_company')}}"
+                                            @if($itemsdataApplicationSelected->calification_tec == 1 )
+                                                <span class="badge badge-success">PRECALIFICADO</span>
+                                            @else
+                                                <span class="badge badge-danger">EN OBSERVACION</span>
+                                            @endif
 
-                                                type="button"
-                                                class="btn btn-success">Recepcion de productos
-                                            </a>
-                                            <a href="/documents/validation/{{$itemsdataApplicationSelected->id}}"
+                                        </td>
+                                        <td>
+                                            @if ($typeid == 'recepcion')
+                                                <a
+                                                    href="/recepcion/doc/eval/{{$itemsdataApplicationSelected->id}}/{{Session::get('id_company')}}"
 
-                                               type="button"
-                                               class="btn btn-success">Precalificacion Tecnica
-                                            </a>
-                                            <a href="/documents/validation/pre/admin/{{Session::get('id_company')}}"
+                                                    type="button"
+                                                    class="btn btn-success">Recepcion de productos
+                                                </a>
+                                            @elseif($typeid == 'tecnica')
+                                                <a href="/documents/validation/{{$itemsdataApplicationSelected->id}}"
 
-                                               type="button"
-                                               class="btn btn-success">Precalificacion Adminitrador
-                                            </a>
+                                                   type="button"
+                                                   class="btn btn-success">Precalificacion Tecnica
+                                                </a>
+                                            @else
+                                                <a href="/documents/validation/pre/admin/{{$itemsdataApplicationSelected->id}}"
+
+                                                   type="button"
+                                                   class="btn btn-success">Precalificacion Administrativa
+                                                </a>
+                                            @endif
 
                                         </td>
 

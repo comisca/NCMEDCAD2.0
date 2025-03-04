@@ -59,16 +59,16 @@ class RequisitosComponents extends Component
         if (strlen($this->searchQuety) > 0) {
             $requisitos =
                 Requisitos::join('grupos_requisitos', 'requisitos.grupo_requisito_id', '=', 'grupos_requisitos.id')
-                ->where('requisitos.descripcion', 'like', '%' . $this->searchQuety . '%')
-                ->where('requisitos.status', 1)
-                ->select('requisitos.*', 'grupos_requisitos.descripcion as grupo_requisito')
-                ->paginate($this->pagination);
+                    ->where('requisitos.descripcion', 'like', '%' . $this->searchQuety . '%')
+                    ->where('requisitos.status', 1)
+                    ->select('requisitos.*', 'grupos_requisitos.descripcion as grupo_requisito')
+                    ->paginate($this->pagination);
         } else {
             $requisitos =
                 Requisitos::join('grupos_requisitos', 'requisitos.grupo_requisito_id', '=', 'grupos_requisitos.id')
-                ->select('requisitos.*', 'grupos_requisitos.descripcion as grupo_requisito')
-                ->where('requisitos.status', 1)
-                ->orderBy('requisitos.id', 'desc')->paginate($this->pagination);
+                    ->select('requisitos.*', 'grupos_requisitos.descripcion as grupo_requisito')
+                    ->where('requisitos.status', 1)
+                    ->orderBy('requisitos.id', 'desc')->paginate($this->pagination);
         }
 
         return view('livewire.requisitos.requisitos-components', ['data' => $requisitos])
@@ -80,7 +80,7 @@ class RequisitosComponents extends Component
     {
 
         $rules = [
-            'codRequisitos' => 'required|min:2|unique:requisitos,codigo',
+            'codRequisitos' => 'required',
             'groupFamilyId' => 'required',
             'tiporequisito' => 'required',
             'tipopaeticipante' => 'required',
@@ -91,8 +91,6 @@ class RequisitosComponents extends Component
         ];
         $messages = [
             'codRequisitos.required' => 'El codigo del grupo de productos es requerido',
-            'codRequisitos.min' => 'El codigo del grupo de productos debe tener al menos 2 caracteres',
-            'codRequisitos.unique' => 'Este codigo ya se encuentra registrado',
             'groupFamilyId.required' => 'La familia de productos es requerida',
             'tiporequisito.required' => 'El tipo de requisito es requerido',
             'tipopaeticipante.required' => 'El tipo de participante es requerido',
@@ -165,7 +163,7 @@ class RequisitosComponents extends Component
     {
 
         $rules = [
-            'codRequisitos' => 'required|min:2|unique:requisitos,codigo,' . $this->idSelecte,
+            'codRequisitos' => 'required',
             'groupFamilyId' => 'required',
             'tiporequisito' => 'required',
             'tipopaeticipante' => 'required',
@@ -176,8 +174,6 @@ class RequisitosComponents extends Component
         ];
         $messages = [
             'codRequisitos.required' => 'El codigo del grupo de productos es requerido',
-            'codRequisitos.min' => 'El codigo del grupo de productos debe tener al menos 2 caracteres',
-            'codRequisitos.unique' => 'Este codigo ya se encuentra registrado',
             'groupFamilyId.required' => 'La familia de productos es requerida',
             'tiporequisito.required' => 'El tipo de requisito es requerido',
             'tipopaeticipante.required' => 'El tipo de participante es requerido',

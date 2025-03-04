@@ -57,7 +57,7 @@
                             </td>
                             <td>{{$itemsdataApplicationSelected->legal_name}}</td>
                             <td>
-                                @if($itemsdataApplicationSelected->req_applications_count > 0)
+                                @if($itemsdataApplicationSelected->calification_tec == 0)
                                     No Calificado
                                 @else
                                     Calificado

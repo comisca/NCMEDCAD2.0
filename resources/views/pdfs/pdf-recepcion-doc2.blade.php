@@ -69,37 +69,39 @@
 </div>
 
 @if(!empty($dataRequiurementsD))
-    @foreach ($dataRequiurementsD as $grupo => $items)
-        <div class="section-title">  {{ $grupo }}</div>
+    @foreach ($dataRequiurementsD as $tipo => $empresas)
+        @foreach ($empresas as $empresa => $items)
+            <div class="section-title">  {{ $empresa }}</div>
 
-        <table class="requirements-table">
-            <thead>
-            <tr>
-                <th>Código</th>
-                <th>Descripción</th>
-                <th>Tipo validación</th>
-            </tr>
-            </thead>
-            <tbody>
-            @foreach ($items as $item)
+            <table class="requirements-table">
+                <thead>
                 <tr>
-                    <td>{{ $item->codigo }}</td>
-                    <td>{{ $item->descripcion }}</td>
-                    <td class="validation-type">
-                        @if($item->states_req_applications  < 6)
-                            Recibido/Conforme
-                        @elseif($item->states_req_applications  == 10)
-                            Pendiente de revision
-                        @elseif($item->states_req_applications  == 9)
-                            Observacion
-                        @endif
-                    </td>
+                    <th>Código</th>
+                    <th>Descripción</th>
+                    <th>Tipo validación</th>
                 </tr>
-            @endforeach
-            <!-- Continuar con el resto de requisitos técnicos -->
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                @foreach ($items as $item)
+                    <tr>
+                        <td>{{ $item->codigo }}</td>
+                        <td>{{ $item->descripcion }}</td>
+                        <td class="validation-type">
+                            @if($item->states_req_applications  < 6)
+                                Recibido/Conforme
+                            @elseif($item->states_req_applications  == 10)
+                                Pendiente de revision
+                            @elseif($item->states_req_applications  == 9)
+                                Observacion
+                            @endif
+                        </td>
+                    </tr>
+                @endforeach
+                <!-- Continuar con el resto de requisitos técnicos -->
+                </tbody>
+            </table>
 
+        @endforeach
     @endforeach
 @endif
 

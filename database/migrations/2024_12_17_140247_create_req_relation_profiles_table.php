@@ -14,6 +14,7 @@ return new class extends Migration {
             $table->id();
             $table->bigInteger('req_id')->unsigned();
             $table->bigInteger('profile_id')->unsigned()->nullable();
+            $table->bigInteger('application_id')->unsigned();
             $table->string('type_profile');
             $table->integer('status');
             $table->timestamps();

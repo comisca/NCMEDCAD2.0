@@ -71,7 +71,7 @@ Route::middleware(['auth:company'])->group(function () {
 
     Route::get('/companies/dashboard', \App\Livewire\DocumentsCompanyComponent::class);
     Route::get('/fichatecnica', FichaTecnicaComponent::class);
-    Route::get('/precalificacion/company', \App\Livewire\PreCalificacionTecnica::class);
+    Route::get('/precalificacion/company/{typeid}', \App\Livewire\PreCalificacionTecnica::class);
 });
 
 Route::get('/documents/validation/{id}', \App\Livewire\PreCalificacionTecnicaDetail::class);
@@ -95,10 +95,10 @@ Route::get('/monitor/subasta/{id}', \App\Livewire\MonitorAuction::class);
 
 Route::get('/messeger/success', \App\Livewire\MessagessSucces::class);
 
-Route::get('/test-event', function () {
-    event(new \App\Events\TestEvent('Hello, Reverb!'));
-    return 'Event emitted!';
-});
+//Route::get('/test-event', function () {
+//    event(new \App\Events\TestEvent('Hello, Reverb!'));
+//    return 'Event emitted!';
+//});
 
 //Route::post('/update-auction-end', function (Request $request) {
 //    try {

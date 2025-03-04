@@ -123,7 +123,7 @@
 
                                             <li class="list-inline-item">
                                                 <a href="#"
-                                                   wire:click="createNeedes({{$eventItems->id_product_event}})"
+                                                   wire:click="createNeedes({{$eventItems->id_product_event}},{{$eventItems->id_medicamento}})"
                                                    class="px-2 text-primary" data-toggle="tooltip" data-placement="top"
                                                    title="Agregar Necesidades"><i
                                                         class="uil uil-plus font-size-18"></i></a>

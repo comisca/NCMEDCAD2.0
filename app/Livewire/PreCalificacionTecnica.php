@@ -16,14 +16,26 @@ class PreCalificacionTecnica extends Component
 
     public $Pagination = 10;
     public $searchInput;
+    public $typeid;
+    public $namePages;
+
 
     public function paginationView()
     {
         return 'vendor.livewire.bootstrap';
     }
 
-    public function mount()
+    public function mount($typeid)
     {
+        $this->typeid = $typeid;
+        if ($typeid == 'recepcion') {
+            $this->namePages = 'Recepcion de documentos';
+        } elseif ($typeid == 'tecnica') {
+            $this->namePages = 'Pre-calificacion tecnica';
+        } else {
+            $this->namePages = 'Pre-calificacion Administrativa';
+        }
+
 
     }
 

@@ -70,13 +70,21 @@ class ConfigRequisitos extends Component
                     'grupos_requisitos.grupo as grupo_nombre',
                     'req_relation_produts.id',
                     'requisitos.codigo',
-                    'requisitos.descripcion'
+                    'requisitos.descripcion',
+                    'req_relation_produts.id as id_req_products',
                 )
                 ->orderBy('grupos_requisitos.grupo')
                 ->get()
                 ->groupBy('grupo_nombre') // Agrupa por 'grupo_nombre' en lugar de 'grupos_requisitos.grupo'
                 ->collect(); // Convierte a colección de soporte
 
+
+    }
+
+    #[On('deletereqproduct')]
+    public function deletereqpro($id_req_products)
+    {
+        ReqRelationProduts::where('id', $id_req_products)->update(['status' => 0]);
 
     }
 

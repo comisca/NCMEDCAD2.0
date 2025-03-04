@@ -47,6 +47,18 @@
                                     {{$applicationsData->email}}
                                 </div>
                             </div>
+                            <div class="col mr-2">
+                                <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                    Estado de la Aplicacion:
+                                </div>
+                                <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                    @if($applicationsData->calification_tec == 1)
+                                        <span class="badge badge-success">PRECALIFICADO</span>
+                                    @else
+                                        <span class="badge badge-danger">EN OBSERVACION</span>
+                                    @endif
+                                </div>
+                            </div>
                         </div>
                         @if(Session::has('id_user'))
                             <div class="col-xl-4 col-md-4 mb-4">
@@ -133,20 +145,20 @@
                                                         <th scope="row">{{$item->id}}</th>
                                                         <td> {{ $item->codigo }} - {{ $item->descripcion }}</td>
                                                         <td>
-                                                            <a href="#" wire:click="showDoc({{$item->id}})"> Ver
+                                                            <a href="#" onclick="confirmShowDoc({{$item->id}})"> Ver
                                                                 Documentos</a><br>
 
                                                         </td>
                                                         <td>
                                                             @if($item->states_req_applications == 0)
-                                                                <a href="#" wire:click="showUpDoc({{$item->id}},
+                                                                <a href="#" onclick="confirmUPShowDoc({{$item->id}},
                                                             {{$item->vence ?? 0}})"> Subir
                                                                     Documentacion</a>
                                                             @endif
                                                         </td>
                                                         <td>
                                                             <a href="#"
-                                                               wire:click="showObservacionRequerimont({{$item->id}})">
+                                                               onclick="confirmViewObservation({{$item->id}})">
                                                                 Ver
                                                                 Observaciones</a>
                                                         </td>
@@ -166,6 +178,8 @@
                                                                 SI
                                                             @elseif($item->states_req_applications == 0)
                                                                 NO
+                                                            @elseif($item->states_req_applications == 5)
+                                                                En Revision
                                                             @else
                                                                 N/A
                                                             @endif
@@ -450,6 +464,25 @@
             })
 
         });
+
+        function confirmViewObservation(id) {
+
+            Livewire.dispatch('showViewObservationsJST', {id: id})
+            $('#modalShowObservacion').modal('show');
+        }
+
+        function confirmUPShowDoc(id, dataVenceparameter) {
+
+            Livewire.dispatch('showUpDocumentsJST', {id: id, dataVenceparameter: dataVenceparameter})
+            $('#modalUpDoct').modal('show');
+        }
+
+        function confirmShowDoc(id) {
+
+            Livewire.dispatch('showDocumentsJST', {id: id})
+            $('#modalDocApplications').modal('show');
+        }
+
 
         function confirm(id) {
             Swal.fire({

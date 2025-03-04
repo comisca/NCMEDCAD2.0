@@ -29,7 +29,8 @@ class PreCalificacionTecnicaDetail extends Component
     public $searchInput, $messagesSendsAplications, $apllicationID;
     public $apllicationI, $nameDoc, $descriptionDoc, $docFile, $reqApplicationID, $otroid;
     public $docDatas = [], $docGlobalView, $selectStates, $messagesSends, $observacionesGlobals, $sendNotificationsCompanies;
-    public $inputDateVence, $dataVenceInput;
+    public $inputDateVence, $dataVenceInput, $limitObservations;
+    public $offset = 0; //;
 
     public function paginationView()
     {
@@ -39,7 +40,7 @@ class PreCalificacionTecnicaDetail extends Component
     public function mount($id)
     {
         $this->otroid = $id;
-
+        $this->limitObservations = 1;
     }
 
     public function updated()
@@ -260,6 +261,14 @@ class PreCalificacionTecnicaDetail extends Component
                     'states_req_applications' => $this->selectStates
                 ]);
 
+            if ($this->selectStates == 0) {
+                Application::where('id', $this->apllicationID)
+                    ->update([
+                        'calification_tec' => 0
+                    ]);
+            }
+
+
             if ($this->selectStates == 3) {
                 $dataSends =
                     ReqApplications::join('requisitos', 'requisitos.id', '=', 'req_applications.requirement_id')
@@ -300,11 +309,24 @@ class PreCalificacionTecnicaDetail extends Component
 
     }
 
+    public function viewMoreObservations()
+    {
+        $this->limitObservations = 20;
+        // No necesitas incrementar el offset aquí
+        $this->observacionesGlobals = NotificationsApplications::where('req_application_id', $this->reqApplicationID)
+            ->orderBy('id', 'desc')
+            ->limit($this->limitObservations)
+            ->get();
+    }
+
+    #[On('showViewObservationsJST')]
     public function showObservacionRequerimont($id)
     {
         $this->reqApplicationID = $id;
         $this->observacionesGlobals = NotificationsApplications::where('req_application_id', $id)
-            ->orderBy('id', 'asc')
+            ->orderBy('id', 'desc')
+            ->offset($this->offset)
+            ->limit($this->limitObservations)
             ->get();
 
         $this->dispatch('showObservacionRequerimont');
@@ -319,18 +341,21 @@ class PreCalificacionTecnicaDetail extends Component
 
     }
 
+    #[On('showDocumentsJST')]
     public function showDoc($id)
     {
         $this->reqApplicationID = $id;
         $this->docDatas = [];
-        $this->docDatas = DocumentApplications::where('req_application_id', $id)->get();
+        $this->docDatas = DocumentApplications::where('req_application_id', $id)
+            ->orderBy('id', 'desc')
+            ->get();
 //        dd($this->docDatas);
         $this->dispatch('showDoc');
 
 
     }
 
-
+    #[On('showUpDocumentsJST')]
     public function showUpDoc($id, $dataVenceparameter)
     {
         $this->reqApplicationID = $id;
@@ -367,6 +392,11 @@ class PreCalificacionTecnicaDetail extends Component
             }
             Db::beginTransaction();
 
+            DocumentApplications::where('req_application_id', $this->reqApplicationID)
+                ->update([
+                    'status' => 0
+                ]);
+
             $newDoc = DocumentApplications::create([
                 'req_application_id' => $this->reqApplicationID,
                 'document_name' => $this->nameDoc,
@@ -375,6 +405,10 @@ class PreCalificacionTecnicaDetail extends Component
                 'status' => 1
             ]);
 
+            ReqApplications::where('id', $this->reqApplicationID)
+                ->update([
+                    'states_req_applications' => 5,
+                ]);
 
             DB::commit();
             $this->reqApplicationID = '';
@@ -461,7 +495,7 @@ class PreCalificacionTecnicaDetail extends Component
 
 
         $dataReqApplication = ReqApplications::where('application_id', $this->apllicationID)
-            ->where('states_req_applications', '>', 1)
+            ->where('states_req_applications', '=', 0)
             ->count();
 
 
@@ -469,7 +503,7 @@ class PreCalificacionTecnicaDetail extends Component
 
             Application::where('id', $this->apllicationID)
                 ->update([
-                    'status' => 10
+                    'calification_tec' => 1
                 ]);
 
             $this->dispatch('precalificarReqExito',
@@ -478,7 +512,7 @@ class PreCalificacionTecnicaDetail extends Component
         } else {
             Application::where('id', $this->apllicationID)
                 ->update([
-                    'status' => 1
+                    'calification_tec' => 0
                 ]);
 
             $this->dispatch('precalificarReq',

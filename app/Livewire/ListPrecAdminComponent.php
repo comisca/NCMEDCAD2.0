@@ -31,14 +31,17 @@ class ListPrecAdminComponent extends Component
     public function updated()
     {
         $this->dataGlobal = Application::join('familia_producto', 'applications.family_id', '=', 'familia_producto.id')
-            ->join('companies', 'applications.distribution_id', '=', 'companies.id')
+            ->join('medicamentos', 'applications.product_id', '=', 'medicamentos.id')
+            ->join('companies', 'applications.fabric_id', '=', 'companies.id')
             ->select(
-                'familia_producto.id',
-                'familia_producto.familia_producto',
-                'companies.id as idcompany'
+                'applications.*',
+                'medicamentos.descripcion',
+                'medicamentos.cod_medicamento',
+                'companies.legal_name',
+                DB::raw('(SELECT COUNT(*) FROM req_applications WHERE req_applications.states_req_applications = 3 AND req_applications.application_id = applications.id) as req_applications_count')
             )
-            ->distinct()
-            ->where('applications.distribution_id', $this->particioanteId) // Filtrar por empresa
+            ->where('applications.distribution_id', $this->particioanteId)
+            ->where('applications.status', '>=', 1)
             ->get();
 
     }

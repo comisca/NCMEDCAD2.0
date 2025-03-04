@@ -15,7 +15,7 @@
                         <div class="col-xl-4 col-md-4 mb-4">
                             <div class="col mr-2">
                                 <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
-                                    Nombre Empresao:
+                                    Nombre Empresa Distribuidora:
                                 </div>
                                 <div class="h5 mb-0 font-weight-bold text-gray-800">
                                     {{$applicationsData->legal_name}}
@@ -28,6 +28,14 @@
                                 <div class="h5 mb-0 font-weight-bold text-gray-800">
                                     {{$applicationsData->address}},{{$applicationsData->city}}
                                     ,,{{$applicationsData->country}}
+                                </div>
+                            </div>
+                            <div class="col mr-2">
+                                <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                    Ficha de Evaluacion:
+                                </div>
+                                <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                    {{$applicationsola->descripcion}} ( {{$applicationsola->cod_medicamento}})
                                 </div>
                             </div>
                         </div>
@@ -46,6 +54,26 @@
                                 </div>
                                 <div class="h5 mb-0 font-weight-bold text-gray-800">
                                     {{$applicationsData->email}}
+                                </div>
+                            </div>
+                            <div class="col mr-2">
+                                <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                    Fabricante:
+                                </div>
+                                <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                    {{$applicationsola->legal_name}}
+                                </div>
+                            </div>
+                            <div class="col mr-2">
+                                <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                    Estado de la Aplicacion:
+                                </div>
+                                <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                    @if($applicationsola->calification_admin == 1)
+                                        <span class="badge badge-success">PRECALIFICADO</span>
+                                    @else
+                                        <span class="badge badge-danger">EN OBSERVACION</span>
+                                    @endif
                                 </div>
                             </div>
                         </div>
@@ -88,7 +116,8 @@
                                         Certificacion:
                                     </div>
                                     <div class="h5 mb-0 font-weight-bold text-gray-800">
-                                        <button id="showNotificationModal" type="button" class="btn
+                                        <button wire:click="precalificarReq()" id="showNotificationModal"
+                                                type="button" class="btn
                                     btn-primary">Precalificar
                                         </button>
                                     </div>
@@ -104,9 +133,9 @@
             </div>
         </div>
         <div class="col-lg-12">
-            @if(!empty($dataApplication))
+            @if(!empty($dataRequisitos))
                 <div class="accordion" id="accordionExample">
-                    @foreach ($dataApplication as $grupo => $items)
+                    @foreach ($dataRequisitos as $tipo => $empresas)
                         <div class="card">
                             <div class="card-header" id="heading{{ $loop->index }}">
                                 <h2 class="mb-0">
@@ -116,7 +145,7 @@
                                         data-target="#collapse{{ $loop->index }}"
                                         aria-expanded="{{ $loop->first ? 'true' : 'false' }}"
                                         aria-controls="collapse{{ $loop->index }}">
-                                        {{ $grupo }}
+                                        {{ $tipo }}
                                     </button>
                                 </h2>
                             </div>
@@ -127,84 +156,107 @@
                                  data-parent="#accordionExample">
                                 <div class="card-body">
                                     <ul>
-                                        @foreach ($items as $item)
+                                        @foreach ($empresas as $empresa => $items)
                                             <li>
+                                                <h4>{{ $empresa }}</h4>
+                                                @foreach($items as $item)
+                                                    <table class="table">
+                                                        <thead class="thead-dark">
+                                                        <tr>
+                                                            <th scope="col">#</th>
+                                                            <th scope="col">Requisito</th>
+                                                            <th scope="col">Documentacion</th>
+                                                            <th scope="col">Subir</th>
+                                                            <th scope="col">Observaciones</th>
+                                                            <th scope="col">Fecha de vencimiento</th>
+                                                            <th scope="col">Obligatorio</th>
+                                                            <th scope="col">Estado</th>
+                                                            <th scope="col">Acción</th>
+                                                        </tr>
+                                                        </thead>
+                                                        <tbody>
 
-                                                <table class="table">
-                                                    <thead class="thead-dark">
-                                                    <tr>
-                                                        <th scope="col">#</th>
-                                                        <th scope="col">Requisito</th>
-                                                        <th scope="col">Documentacion</th>
-                                                        <th scope="col">Subir</th>
-                                                        <th scope="col">Observaciones</th>
-                                                        <th scope="col">Fecha de vencimiento</th>
-                                                        <th scope="col">Obligatorio</th>
-                                                        <th scope="col">Califica?</th>
-                                                        <th scope="col">Acción</th>
-                                                    </tr>
-                                                    </thead>
-                                                    <tbody>
-
-                                                    <tr>
-                                                        <th scope="row">{{$item->id}}</th>
-                                                        <td> {{ $item->codigo }} - {{ $item->descripcion }}</td>
-                                                        <td>
-                                                            <a href="#" wire:click="showDoc({{$item->id}})"> Ver
-                                                                Documentos</a><br>
-
-                                                        </td>
-                                                        <td>
-                                                            @if($item->status == 0)
-                                                                <a href="#" wire:click="showUpDoc({{$item->id}},
-                                                            {{$item->vence ?? 0}})"> Subir
-                                                                    Documentacion</a>
-                                                            @endif
-                                                        </td>
-                                                        <td>
-                                                            <a href="#"
-                                                               wire:click="showObservacionRequerimont({{$item->id}})">
-                                                                Ver
-                                                                Observaciones</a>
-                                                        </td>
-                                                        <td>
-                                                            @if($item->vence == 1)
-                                                                {{--                                                                {{$item->date_vence}}--}}
-                                                                <input type="date" value="{{$item->date_vence}}">
-                                                            @endif
-                                                        </td>
-                                                        <td>
-                                                            @if($item->obligatorio == 1)
-                                                                <input type="checkbox" checked disabled>
-                                                            @endif
-                                                        </td>
-                                                        <td>
-                                                            @if($item->status == 1)
-                                                                SI
-                                                            @elseif($item->status == 0)
-                                                                NO
-                                                            @else
-                                                                N/A
-                                                            @endif
+                                                        <tr>
+                                                            <th scope="row">{{$item->id}}</th>
+                                                            <td> {{ $item->codigo }} - {{ $item->descripcion }}</td>
+                                                            <td>
 
 
-                                                        </td>
-                                                        <td>
-                                                            @if(Session::has('id_user'))
                                                                 <a href="#"
-                                                                   wire:click="showFormChangeState({{$item->id}})"
-                                                                   type="button"
-                                                                   class="btn btn-success">Evaluacion
-                                                                </a>
-                                                            @endif
-                                                        </td>
-
-                                                    </tr>
+                                                                   onclick="confirmShowDoc({{$item->id}},
+                                                                      'req_applications')">
+                                                                    Ver
+                                                                    Documentos</a>
 
 
-                                                    </tbody>
-                                                </table>
+                                                            </td>
+                                                            <td>
 
+
+                                                                @if($item->status  == 0)
+
+                                                                    <a href="#"
+                                                                       onclick="confirmUPShowDoc({{$item->id}},
+                                                                       'req_applications',{{$item->vence  ?? 0}})">
+                                                                        Subir
+                                                                        Documentacion</a>
+                                                                @endif
+
+
+                                                            </td>
+                                                            <td>
+
+                                                                <a href="#"
+                                                                   onclick="confirmViewObservation({{$item->id}})">
+                                                                    Ver
+                                                                    Observaciones</a>
+
+
+                                                            </td>
+                                                            <td>
+                                                                @if($item->vence == 1)
+                                                                    {{--                                                                {{$item->date_vence}}--}}
+                                                                    <input type="date"
+                                                                           value="{{$item->date_vence}}">
+                                                                @endif
+                                                            </td>
+                                                            <td>
+                                                                @if($item->obligatorio == 1)
+                                                                    <input type="checkbox" checked disabled>
+                                                                @endif
+                                                            </td>
+                                                            <td>
+
+                                                                @if($item->status == 1)
+                                                                    SI
+                                                                @elseif($item->status == 0)
+                                                                    NO
+                                                                @elseif($item->status == 5)
+                                                                    En Revision
+                                                                @else
+                                                                    N/A
+                                                                @endif
+
+
+                                                            </td>
+                                                            <td>
+                                                                @if(Session::has('id_user'))
+
+                                                                    <a href="#"
+                                                                       wire:click="showFormChangeState({{$item->id}})"
+                                                                       type="button"
+                                                                       class="btn btn-success">Evaluacion
+                                                                    </a>
+
+                                                                @endif
+                                                            </td>
+
+                                                        </tr>
+
+
+                                                        </tbody>
+                                                    </table>
+                                                @endforeach
                                             </li>
                                         @endforeach
                                     </ul>
@@ -290,9 +342,53 @@
             });
 
 
-
             @this.
-            on('messages-succes', (event) => {
+            on('precalificarReqExito', (event) => {
+
+                toastr.success(event.message, 'Exito', {
+                    "closeButton": true,
+                    "debug": false,
+                    "newestOnTop": false,
+                    "progressBar": false,
+                    "positionClass": "toast-bottom-full-width",
+                    "preventDuplicates": false,
+                    "onclick": null,
+                    "showDuration": 300,
+                    "hideDuration": 1000,
+                    "timeOut": 5000,
+                    "extendedTimeOut": 1000,
+                    "showEasing": "swing",
+                    "hideEasing": "linear",
+                    "showMethod": "fadeIn",
+                    "hideMethod": "fadeOut"
+                })
+
+
+            })
+
+            @this.on('precalificarReq', (event) => {
+
+                toastr.success(event.message, 'Exito', {
+                    "closeButton": true,
+                    "debug": false,
+                    "newestOnTop": false,
+                    "progressBar": false,
+                    "positionClass": "toast-bottom-full-width",
+                    "preventDuplicates": false,
+                    "onclick": null,
+                    "showDuration": 300,
+                    "hideDuration": 1000,
+                    "timeOut": 5000,
+                    "extendedTimeOut": 1000,
+                    "showEasing": "swing",
+                    "hideEasing": "linear",
+                    "showMethod": "fadeIn",
+                    "hideMethod": "fadeOut"
+                })
+
+
+            })
+            @this.on('messages-succes', (event) => {
                 toastr.success(event.messages, 'Exito', {
                     "closeButton": true,
                     "debug": false,
@@ -421,6 +517,25 @@
 
         });
 
+        function confirmViewObservation(id) {
+
+            Livewire.dispatch('showViewObservationsJSA', {id: id})
+            $('#modalShowObservacion').modal('show');
+        }
+
+        function confirmUPShowDoc(id, dataVenceparameter) {
+
+            Livewire.dispatch('showUpDocumentsJSA', {id: id, dataVenceparameter: dataVenceparameter})
+            $('#modalUpDoct').modal('show');
+        }
+
+        function confirmShowDoc(id) {
+
+            Livewire.dispatch('showDocumentsJSA', {id: id})
+            $('#modalDocApplications').modal('show');
+        }
+
+
         function confirm(id) {
             Swal.fire({
                 title: 'Eliminar Rol?',
@@ -438,6 +553,44 @@
                 }
             });
 
+        }
+    </script>
+    <script>
+        let pdfWindowCounter = 0;  // Contador para generar IDs únicos
+
+        window.viewPdf = function (url) {
+            pdfWindowCounter++;  // Incrementar el contador
+            const windowName = 'PDF_Viewer_' + pdfWindowCounter;  // Crear nombre único para la ventana
+
+            const pdfWindow = window.open('', windowName,
+                'width=800,height=600,left=200,top=100,resizable=yes,menubar=no,location=no,status=yes');
+
+            pdfWindow.document.write(`
+            <!DOCTYPE html>
+            <html>
+            <head>
+                <title>Visor de PDF ${pdfWindowCounter}</title>
+                <style>
+                    body {
+                        margin: 0;
+                        padding: 0;
+                        overflow: hidden;
+                        background-color: #525659;
+                    }
+                    iframe {
+                        width: 100%;
+                        height: 100vh;
+                        border: none;
+                    }
+                </style>
+            </head>
+            <body>
+                <iframe src="${url}" width="100%" height="100%"></iframe>
+            </body>
+            </html>
+        `);
+
+            pdfWindow.document.close();
         }
     </script>
 @endsection

@@ -39,9 +39,11 @@
                 <thead class="thead-dark">
                 <tr>
                     <th scope="col">#</th>
-                    <th scope="col">FAMILIA</th>
-                    <th scope="col">DESCRIPCION</th>
-                    <th scope="col">ACCION</th>
+                    <th scope="col">Nombre Comercial</th>
+                    <th scope="col">Producto</th>
+                    <th scope="col">Fabricante</th>
+                    <th scope="col">Estado</th>
+                    <th scope="col">Acción</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -49,12 +51,21 @@
                     @foreach($dataGlobal as $itemsdataApplicationSelected)
                         <tr>
                             <th scope="row">{{$itemsdataApplicationSelected->id}}</th>
-                            <td>{{$itemsdataApplicationSelected->familia_producto}}</td>
-
-                            <td>GESTION DE PRE CALIFICACION PARA LA EMPRESA</td>
-
+                            <td>{{$itemsdataApplicationSelected->trade_name}}</td>
+                            <td>{{$itemsdataApplicationSelected->descripcion}}
+                                ({{$itemsdataApplicationSelected->cod_medicamento}})
+                            </td>
+                            <td>{{$itemsdataApplicationSelected->legal_name}}</td>
                             <td>
-                                <a href="/documents/validation/pre/admin/{{$itemsdataApplicationSelected->idcompany}}"
+                                @if($itemsdataApplicationSelected->calification_admin == 0)
+                                    No Calificado
+                                @else
+                                    Calificado
+                                @endif
+
+                            </td>
+                            <td>
+                                <a href="/documents/validation/pre/admin/{{$itemsdataApplicationSelected->id}}"
 
                                    type="button"
                                    class="btn btn-success">VER DETALLE

@@ -9,7 +9,7 @@
                 {{--                </button>--}}
             </div>
             <div class="modal-body">
-                <div wire:poll.visible>
+                <div>
                     <table class="table align-middle mb-0 bg-white">
                         <thead class="bg-light">
                         <tr>
@@ -53,6 +53,8 @@
                 </div>
             </div>
             <div class="modal-footer">
+                <button wire:click="viewMoreObservations()" type="button" class="btn btn-primary">Ver Historial
+                </button>
                 <button type="button" class="btn btn-light" data-dismiss="modal">Close</button>
 
 

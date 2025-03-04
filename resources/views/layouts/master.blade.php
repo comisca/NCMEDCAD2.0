@@ -182,7 +182,7 @@
 
 <!-- Adds any relevant Third-Party Scripts (e.g. Flatpickr) -->
 @rappasoftTableThirdPartyScripts
-@include('components.shortcuts')
+{{--@include('components.shortcuts')--}}
 
 </body>
 </html>

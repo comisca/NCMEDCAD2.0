@@ -135,22 +135,22 @@ class ListCompanyComponent extends Component
                 $company->status = 1;
                 $company->save();
 
-                $reqAdmin = ReqRelationProfile::where('type_profile', $company->type_company)
-                    ->where('status', 1)
-                    ->get();
-
-                if (!empty($reqAdmin)) {
-                    foreach ($reqAdmin as $itemReq) {
-
-                        ReqRelationProfileTable::create([
-                            'company_id' => $company->id,
-                            'req_id' => $itemReq->req_id,
-                            'type_profile' => $company->type_company,
-                            'status' => 1
-                        ]);
-
-                    }
-                }
+//                $reqAdmin = ReqRelationProfile::where('type_profile', $company->type_company)
+//                    ->where('status', 1)
+//                    ->get();
+//
+//                if (!empty($reqAdmin)) {
+//                    foreach ($reqAzdmin as $itemReq) {
+//
+//                        ReqRelationProfileTable::create([
+//                            'company_id' => $company->id,
+//                            'req_id' => $itemReq->req_id,
+//                            'type_profile' => $company->type_company,
+//                            'status' => 1
+//                        ]);
+//
+//                    }
+//                }
 
             } else {
 

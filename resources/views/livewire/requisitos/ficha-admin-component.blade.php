@@ -10,18 +10,18 @@
                     <div class="col-lg-12">
                         <h5>Configuracion de ficha administrativa</h5>
                         <div class="form-group row">
-                            <label class="col-md-2 col-form-label">Familias de Productos</label>
-                            {{--                            <div class="col-md-10">--}}
-                            {{--                                <select wire:model.live="familySelectedId" class="form-control">--}}
-                            {{--                                    <option value="0">Selecciona Familia de productos</option>--}}
-                            {{--                                    @if(!empty($familyProductsData))--}}
-                            {{--                                        @foreach($familyProductsData as $itmesfamilyProductsData)--}}
-                            {{--                                            <option--}}
-                            {{--                                                value="{{$itmesfamilyProductsData->id}}">{{$itmesfamilyProductsData->familia_producto}}</option>--}}
-                            {{--                                        @endforeach--}}
-                            {{--                                    @endif--}}
-                            {{--                                </select>--}}
-                            {{--                            </div>--}}
+                            <label class="col-md-2 col-form-label">Filtro Perfil</label>
+                            <div class="col-md-10">
+                                <select wire:model.live="selectedReqFiltre" class="form-control">
+                                    <option value="0">Selecciona El Perfil</option>
+                                    <option
+                                        value="FABRICANTES">FABRICANTES
+                                    </option>
+                                    <option
+                                        value="DISTRIBUIDOR/REPRESENTANTES">DISTRIBUIDOR/REPRESENTANTES
+                                    </option>
+                                </select>
+                            </div>
                         </div>
                     </div>
 
@@ -56,6 +56,7 @@
                             <table class="table align-middle mb-0 bg-white">
                                 <thead class="bg-light">
                                 <tr>
+                                    <th>ID</th>
                                     <th>COD</th>
                                     <th>Requisito</th>
                                     <th>Accion</th>
@@ -70,6 +71,13 @@
                                                 <div class="d-flex align-items-center">
 
                                                     {{$itemsrequisitodDataSelected->id}}
+
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="d-flex align-items-center">
+
+                                                    {{$itemsrequisitodDataSelected->codigo}}
 
                                                 </div>
                                             </td>

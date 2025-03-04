@@ -63,16 +63,16 @@
                                 <span class="text-danger">{{$message}}</span>
                                 @enderror
                             </div>
-                            <div class="form-group col-4">
-                                <label for="inputNameCompany">Usuario de acceso</label>
-                                <input wire:model="userNameCompany" type="text"
-                                       class="form-control @error('userNameCompany') is-invalid @enderror"
-                                       id="inputAddress"
-                                       placeholder="empresasv">
-                                @error('userNameCompany')
-                                <span class="text-danger">{{$message}}</span>
-                                @enderror
-                            </div>
+                            {{--                            <div class="form-group col-4">--}}
+                            {{--                                <label for="inputNameCompany">Usuario de acceso</label>--}}
+                            {{--                                <input wire:model="userNameCompany" type="text"--}}
+                            {{--                                       class="form-control @error('userNameCompany') is-invalid @enderror"--}}
+                            {{--                                       id="inputAddress"--}}
+                            {{--                                       placeholder="empresasv">--}}
+                            {{--                                @error('userNameCompany')--}}
+                            {{--                                <span class="text-danger">{{$message}}</span>--}}
+                            {{--                                @enderror--}}
+                            {{--                            </div>--}}
 
                             <div class="form-group col-12">
                                 <label for="inputNameCompany">Logo de la empresa</label>
@@ -157,15 +157,15 @@
                     <fieldset class="form-group">
                         <legend>Contacto de registro legal</legend>
                         <div class="form-row">
-                            <div class="form-group col-12">
-                                <label for="inputNameCompany">Adjuntar documentanción de registro legal</label>
-                                <input wire:model="docRegister" type="file" accept=".pdf,application/pdf"
-                                       class="form-control @error('docRegister') is-invalid @enderror" id="docRegister"
-                                       placeholder="Documentos.pdf">
-                                @error('docRegister')
-                                <span class="text-danger">{{$message}}</span>
-                                @enderror
-                            </div>
+                            {{--                            <div class="form-group col-12">--}}
+                            {{--                                <label for="inputNameCompany">Adjuntar documentanción de registro legal</label>--}}
+                            {{--                                <input wire:model="docRegister" type="file" accept=".pdf,application/pdf"--}}
+                            {{--                                       class="form-control @error('docRegister') is-invalid @enderror" id="docRegister"--}}
+                            {{--                                       placeholder="Documentos.pdf">--}}
+                            {{--                                @error('docRegister')--}}
+                            {{--                                <span class="text-danger">{{$message}}</span>--}}
+                            {{--                                @enderror--}}
+                            {{--                            </div>--}}
                             <div class="form-group col-6">
                                 <label for="inputNameCompany">Nombre</label>
                                 <input type="text" wire:model="firstName"
@@ -197,33 +197,33 @@
                     <fieldset class="form-group">
                         <legend>Adjuntar documentación</legend>
                         <div class="form-row">
-                            <div class="form-group col-4">
-                                <label for="inputNameCompany">Documento de Identidad</label>
-                                <input wire:model="docId" type="file" accept=".pdf,application/pdf"
-                                       class="form-control @error('docId') is-invalid @enderror" id="docId"
-                                       placeholder="Documentos.pdf">
-                                @error('docId')
-                                <span class="text-danger">{{$message}}</span>
-                                @enderror
-                            </div>
-                            <div class="form-group col-4">
-                                <label for="inputNameCompany">Poder de Representación</label>
-                                <input wire:model="docPoder" type="file" accept=".pdf,application/pdf"
-                                       class="form-control @error('docPoder') is-invalid @enderror" id="docPoder"
-                                       placeholder="Documentos.pdf">
-                                @error('docPoder')
-                                <span class="text-danger">{{$message}}</span>
-                                @enderror
-                            </div>
-                            <div class="form-group col-4">
-                                <label for="inputNameCompany">Licencia de Funcionamiento</label>
-                                <input wire:model="docLicense" type="file" accept=".pdf,application/pdf"
-                                       class="form-control @error('docLicense') is-invalid @enderror" id="docLicense"
-                                       placeholder="Documentos.pdf">
-                                @error('docLicense')
-                                <span class="text-danger">{{$message}}</span>
-                                @enderror
-                            </div>
+                            {{--                            <div class="form-group col-4">--}}
+                            {{--                                <label for="inputNameCompany">Documento de Identidad</label>--}}
+                            {{--                                <input wire:model="docId" type="file" accept=".pdf,application/pdf"--}}
+                            {{--                                       class="form-control @error('docId') is-invalid @enderror" id="docId"--}}
+                            {{--                                       placeholder="Documentos.pdf">--}}
+                            {{--                                @error('docId')--}}
+                            {{--                                <span class="text-danger">{{$message}}</span>--}}
+                            {{--                                @enderror--}}
+                            {{--                            </div>--}}
+                            {{--                            <div class="form-group col-4">--}}
+                            {{--                                <label for="inputNameCompany">Poder de Representación</label>--}}
+                            {{--                                <input wire:model="docPoder" type="file" accept=".pdf,application/pdf"--}}
+                            {{--                                       class="form-control @error('docPoder') is-invalid @enderror" id="docPoder"--}}
+                            {{--                                       placeholder="Documentos.pdf">--}}
+                            {{--                                @error('docPoder')--}}
+                            {{--                                <span class="text-danger">{{$message}}</span>--}}
+                            {{--                                @enderror--}}
+                            {{--                            </div>--}}
+                            {{--                            <div class="form-group col-4">--}}
+                            {{--                                <label for="inputNameCompany">Licencia de Funcionamiento</label>--}}
+                            {{--                                <input wire:model="docLicense" type="file" accept=".pdf,application/pdf"--}}
+                            {{--                                       class="form-control @error('docLicense') is-invalid @enderror" id="docLicense"--}}
+                            {{--                                       placeholder="Documentos.pdf">--}}
+                            {{--                                @error('docLicense')--}}
+                            {{--                                <span class="text-danger">{{$message}}</span>--}}
+                            {{--                                @enderror--}}
+                            {{--                            </div>--}}
                         </div>
                     </fieldset>
 
@@ -239,7 +239,7 @@
             </div>
             <div class="modal-footer">
 
-                <button type="button" class="btn bg-primary" wire:click="createFabric()">Guardar</button>
+                {{--                <button type="button" class="btn bg-primary" wire:click="createFabric()">Guardar</button>--}}
 
 
             </div>

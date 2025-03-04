@@ -2,6 +2,7 @@
 
 namespace App\Livewire;
 
+use App\Mail\ActaFichaTecnica;
 use App\Mail\NotificationRequeriment;
 use App\Models\Application;
 use App\Models\Companies;
@@ -9,7 +10,9 @@ use App\Models\DocumentApplications;
 use App\Models\NotificationsApplications;
 use App\Models\ReqApplications;
 use App\Models\ReqRelationProfileTable;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Storage;
 use Livewire\Attributes\On;
 use Livewire\WithFileUploads;
 use Livewire\WithPagination;
@@ -27,7 +30,8 @@ class DetailPrecaAdminComponent extends Component
     public $searchInput, $messagesSendsAplications, $apllicationID;
     public $apllicationI, $nameDoc, $descriptionDoc, $docFile, $reqApplicationID, $otroid;
     public $docDatas = [], $docGlobalView, $selectStates, $messagesSends, $observacionesGlobals, $sendNotificationsCompanies;
-    public $inputDateVence, $dataVenceInput;
+    public $inputDateVence, $dataVenceInput, $nameTableRelations, $limitObservations;
+    public $offset = 0; //;
 
     public function paginationView()
     {
@@ -37,6 +41,7 @@ class DetailPrecaAdminComponent extends Component
     public function mount($id)
     {
         $this->otroid = $id;
+        $this->limitObservations = 1;
 
     }
 
@@ -47,33 +52,104 @@ class DetailPrecaAdminComponent extends Component
         $this->apllicationID = $this->otroid;
 
         $applicationsData = Companies::where('id', $this->apllicationID)->first();
-        $dataApplication =
-            Application::join('companies', 'applications.fabric_id', '=', 'companies.id')
-                ->join('req_relation_profile_tables',
-                    'applications.fabric_id',
-                    '=',
-                    'req_relation_profile_tables.company_id')
-                ->join('requisitos', 'requisitos.id', '=', 'req_relation_profile_tables.req_id')
-                ->where('applications.distribution_id', $this->apllicationID)
-                ->where('req_relation_profile_tables.status', '<=', 5)
-                ->select(
-                    'companies.legal_name as grupo_nombre',
-                    'req_relation_profile_tables.id',
-                    'requisitos.codigo',
-                    'requisitos.descripcion',
-                    'requisitos.obligatorio',
-                    'requisitos.entregable',
-                    'requisitos.vence',
-                    'req_relation_profile_tables.date_vence',
-                    'req_relation_profile_tables.status',
-                )
-                ->orderBy('requisitos.descripcion')
-                ->get()
-                ->groupBy('grupo_nombre') // Agrupa por 'grupo_nombre' en lugar de 'grupos_requisitos.grupo'
-                ->collect(); // Convierte a colección de soporte
+//        $dataApplication =
+//            Application::join('companies', 'applications.fabric_id', '=', 'companies.id')
+//                ->join('req_relation_profile_tables',
+//                    'applications.fabric_id',
+//                    '=',
+//                    'req_relation_profile_tables.company_id')
+//                ->join('requisitos', 'requisitos.id', '=', 'req_relation_profile_tables.req_id')
+//                ->where('applications.distribution_id', $this->apllicationID)
+//                ->where('req_relation_profile_tables.status', '<=', 5)
+//                ->select(
+//                    'companies.legal_name as grupo_nombre',
+//                    'req_relation_profile_tables.id',
+//                    'requisitos.codigo',
+//                    'requisitos.descripcion',
+//                    'requisitos.obligatorio',
+//                    'requisitos.entregable',
+//                    'requisitos.vence',
+//                    'req_relation_profile_tables.date_vence',
+//                    'req_relation_profile_tables.status',
+//                )
+//                ->orderBy('requisitos.descripcion')
+//                ->get()
+//                ->groupBy('grupo_nombre') // Agrupa por 'grupo_nombre' en lugar de 'grupos_requisitos.grupo'
+//                ->collect(); // Convierte a colección de soporte
+
+
+        $dataFabricantes = Application::join('companies', 'applications.fabric_id', '=', 'companies.id')
+            ->join('req_relation_profile_tables',
+                'applications.fabric_id',
+                '=',
+                'req_relation_profile_tables.company_id')
+            ->join('requisitos', 'requisitos.id', '=', 'req_relation_profile_tables.req_id')
+            ->where('req_relation_profile_tables.application_id', $this->apllicationID)
+            ->where('applications.status', '>=', 1)
+            ->select(
+                'companies.legal_name as grupo_nombre',
+                'req_relation_profile_tables.id',
+                'requisitos.codigo',
+                'requisitos.descripcion',
+                'requisitos.obligatorio',
+                'requisitos.entregable',
+                'requisitos.vence',
+                'req_relation_profile_tables.date_vence',
+                'req_relation_profile_tables.status',
+            )
+            ->orderBy('requisitos.descripcion')
+            ->get()
+            ->groupBy('grupo_nombre') // Agrupa por 'grupo_nombre' en lugar de 'grupos_requisitos.grupo'
+            ->collect(); // Convierte a colección de soporte
+
+
+        $dataDistribuidores = Application::join('companies', 'applications.distribution_id', '=', 'companies.id')
+            ->join('req_relation_profile_tables',
+                'applications.distribution_id',
+                '=',
+                'req_relation_profile_tables.company_id')
+            ->join('requisitos', 'requisitos.id', '=', 'req_relation_profile_tables.req_id')
+            ->where('req_relation_profile_tables.application_id', $this->apllicationID)
+            ->where('applications.status', '>=', 1)
+            ->select(
+                'companies.legal_name as grupo_nombre',
+                'req_relation_profile_tables.id',
+                'requisitos.codigo',
+                'requisitos.descripcion',
+                'requisitos.obligatorio',
+                'requisitos.entregable',
+                'requisitos.vence',
+                'req_relation_profile_tables.date_vence',
+                'req_relation_profile_tables.status',
+            )
+            ->orderBy('requisitos.descripcion')
+            ->get()
+            ->groupBy('grupo_nombre') // Agrupa por 'grupo_nombre' en lugar de 'grupos_requisitos.grupo'
+            ->collect(); // Convierte a colección de soporte
+
+
+        $dataApplication = [
+            'Fabricantes' => $dataFabricantes,
+            'Distribuidores' => $dataDistribuidores
+        ];
+        $applicationsola = Application::join('familia_producto', 'applications.family_id', '=', 'familia_producto.id')
+            ->join('medicamentos', 'applications.product_id', '=', 'medicamentos.id')
+            ->join('companies', 'applications.fabric_id', '=', 'companies.id')
+            ->select('applications.*',
+                'medicamentos.descripcion',
+                'medicamentos.cod_medicamento',
+                'companies.legal_name',
+                'companies.email',
+                'applications.id',
+                DB::raw('(SELECT COUNT(*) FROM req_applications WHERE req_applications.states_req_applications > 3 AND req_applications.application_id = applications.id) as req_applications_count'))
+            ->where('applications.id', $this->apllicationID)
+            ->where('applications.status', '>=', 1)
+            ->first();
 
         return view('livewire.detail-preca-admin-component',
-            ['dataApplication' => $dataApplication, 'applicationsData' => $applicationsData])
+            ['dataRequisitos' => $dataApplication,
+                'applicationsData' => $applicationsData,
+                'applicationsola' => $applicationsola])
             ->extends('layouts.master')
             ->section('content');
     }
@@ -110,29 +186,104 @@ class DetailPrecaAdminComponent extends Component
                 'distribuidor_id' => 0,
                 'status' => 1
             ]);
-            $dataSends =
+            $applicationsData =
                 Application::join('familia_producto', 'applications.family_id', '=', 'familia_producto.id')
                     ->join('medicamentos', 'applications.product_id', '=', 'medicamentos.id')
                     ->join('companies', 'applications.distribution_id', '=', 'companies.id')
-                    ->select(
-                        'applications.*',
+                    ->select('applications.*',
                         'medicamentos.descripcion',
                         'medicamentos.cod_medicamento',
                         'companies.legal_name',
                         'companies.email',
+                        'companies.address',
+                        'companies.phone',
+                        'companies.city',
                         'applications.id',
-                        DB::raw('(SELECT COUNT(*) FROM req_applications WHERE req_applications.states_req_applications = 3 AND req_applications.application_id = applications.id) as req_applications_count')
-                    )
+                        'applications.status',
+                        DB::raw('(SELECT COUNT(*) FROM req_applications WHERE req_applications.states_req_applications > 3 AND req_applications.application_id = applications.id) as req_applications_count'))
                     ->where('applications.id', $this->apllicationID)
-                    ->where('applications.status', 1)
+                    ->where('applications.status', '>=', 1)
                     ->first();
-            Mail::to($dataSends->email)->send(new NotificationRequeriment(
-                $dataSends->cod_medicamento . '-'
-                . $dataSends->descripcion,
-                $dataSends->descripcion,
+
+            $dataFabricantes = Application::join('companies', 'applications.fabric_id', '=', 'companies.id')
+                ->join('req_relation_profile_tables',
+                    'applications.fabric_id',
+                    '=',
+                    'req_relation_profile_tables.company_id')
+                ->join('requisitos', 'requisitos.id', '=', 'req_relation_profile_tables.req_id')
+                ->where('req_relation_profile_tables.application_id', $this->apllicationID)
+                ->where('applications.status', '>=', 1)
+                ->select(
+                    'companies.legal_name as grupo_nombre',
+                    'req_relation_profile_tables.id',
+                    'requisitos.codigo',
+                    'requisitos.descripcion',
+                    'requisitos.obligatorio',
+                    'requisitos.entregable',
+                    'requisitos.vence',
+                    'req_relation_profile_tables.date_vence',
+                    'req_relation_profile_tables.status',
+                )
+                ->orderBy('requisitos.descripcion')
+                ->get()
+                ->groupBy('grupo_nombre') // Agrupa por 'grupo_nombre' en lugar de 'grupos_requisitos.grupo'
+                ->collect(); // Convierte a colección de soporte
+
+
+            $dataDistribuidores = Application::join('companies', 'applications.distribution_id', '=', 'companies.id')
+                ->join('req_relation_profile_tables',
+                    'applications.distribution_id',
+                    '=',
+                    'req_relation_profile_tables.company_id')
+                ->join('requisitos', 'requisitos.id', '=', 'req_relation_profile_tables.req_id')
+                ->where('req_relation_profile_tables.application_id', $this->apllicationID)
+                ->where('applications.status', '>=', 1)
+                ->select(
+                    'companies.legal_name as grupo_nombre',
+                    'req_relation_profile_tables.id',
+                    'requisitos.codigo',
+                    'requisitos.descripcion',
+                    'requisitos.obligatorio',
+                    'requisitos.entregable',
+                    'requisitos.vence',
+                    'req_relation_profile_tables.date_vence',
+                    'req_relation_profile_tables.status',
+                )
+                ->orderBy('requisitos.descripcion')
+                ->get()
+                ->groupBy('grupo_nombre') // Agrupa por 'grupo_nombre' en lugar de 'grupos_requisitos.grupo'
+                ->collect(); // Convierte a colección de soporte
+
+
+            $dataApplication = [
+                'Fabricantes' => $dataFabricantes,
+                'Distribuidores' => $dataDistribuidores
+            ];
+
+
+            $viewData = compact('applicationsData', 'dataApplication');
+
+            $pdf = Pdf::loadView('pdfs.pdf-acta-ficha-admin', $viewData)
+                ->setPaper('a4')
+                ->setOptions([
+                    'isHtml5ParserEnabled' => true,
+                    'isRemoteEnabled' => true,
+                    'defaultFont' => 'helvetica',
+                ]);
+
+            $filename =
+                'acta-recepcion-docA-' . $applicationsData->llegal_name . '-' . $applicationsData->cod_medicamento .
+                '.pdf';
+
+            $pdfContent = $pdf->output();
+            Storage::disk('local')->put('temp/' . $filename, $pdfContent);
+
+            Mail::to($applicationsData->email)->send(new ActaFichaTecnica($applicationsData->cod_medicamento . '-'
+                . $applicationsData->descripcion,
+                $applicationsData->descripcion,
                 $this->messagesSendsAplications,
-                'Notificacion'
-            ));
+                'Notificacion', $filename));
+            Storage::disk('local')->delete('temp/' . $filename);
 
             DB::commit();
 
@@ -146,6 +297,38 @@ class DetailPrecaAdminComponent extends Component
             //este metodo lo que hace es mostrar el error en la consola
             dd($e->getMessage());
         }
+    }
+
+    public function precalificarReq()
+    {
+
+
+        $dataReqApplication = ReqRelationProfileTable::where('application_id', $this->apllicationID)
+            ->where('status', '=', 0)
+            ->count();
+
+
+        if ($dataReqApplication <= 0) {
+
+            Application::where('id', $this->apllicationID)
+                ->update([
+                    'calification_admin' => 1
+                ]);
+
+            $this->dispatch('precalificarReqExito',
+                message: 'La precalificacion fue todo un exito');
+
+        } else {
+            Application::where('id', $this->apllicationID)
+                ->update([
+                    'calification_admin' => 0
+                ]);
+
+            $this->dispatch('precalificarReq',
+                message: 'No se puede precalificar la solicitud, aun hay requerimientos pendientes');
+        }
+
+
     }
 
     public function chageStateRequeriment()
@@ -179,29 +362,35 @@ class DetailPrecaAdminComponent extends Component
                 ->update([
                     'status' => $this->selectStates,
                 ]);
-
-            if ($this->selectStates == 3) {
-                $dataSends =
-                    ReqApplications::join('requisitos', 'requisitos.id', '=', 'req_applications.requirement_id')
-                        ->join('medicamentos', 'medicamentos.id', '=', 'req_applications.product_id')
-                        ->join('companies', 'companies.id', '=', 'req_applications.distribution_id')
-                        ->where('req_applications.id', $this->reqApplicationID)
-                        ->where('req_applications.status', 1)
-                        ->select(
-                            'req_applications.id',
-                            'requisitos.codigo',
-                            'requisitos.descripcion',
-                            'req_applications.states_req_applications',
-                            'medicamentos.cod_medicamento',
-                            'medicamentos.descripcion as medicamento_descripcion',
-                            'companies.email',
-                        )->first();
-                //                Mail::to($dataSends->email)->send(new NotificationRequeriment($dataSends->cod_medicamento . '-'
-                //                    . $dataSends->medicamento_descripcion,
-                //                    $dataSends->descripcion,
-                //                    $this->messagesSends,
-                //                    'Observacion'));
+            if ($this->selectStates == 0) {
+                Application::where('id', $this->apllicationID)
+                    ->update([
+                        'calification_admin' => 0
+                    ]);
             }
+
+//            if ($this->selectStates == 3) {
+//                $dataSends =
+//                    ReqApplications::join('requisitos', 'requisitos.id', '=', 'req_applications.requirement_id')
+//                        ->join('medicamentos', 'medicamentos.id', '=', 'req_applications.product_id')
+//                        ->join('companies', 'companies.id', '=', 'req_applications.distribution_id')
+//                        ->where('req_applications.id', $this->reqApplicationID)
+//                        ->where('req_applications.status', 1)
+//                        ->select(
+//                            'req_applications.id',
+//                            'requisitos.codigo',
+//                            'requisitos.descripcion',
+//                            'req_applications.states_req_applications',
+//                            'medicamentos.cod_medicamento',
+//                            'medicamentos.descripcion as medicamento_descripcion',
+//                            'companies.email',
+//                        )->first();
+//                //                Mail::to($dataSends->email)->send(new NotificationRequeriment($dataSends->cod_medicamento . '-'
+//                //                    . $dataSends->medicamento_descripcion,
+//                //                    $dataSends->descripcion,
+//                //                    $this->messagesSends,
+//                //                    'Observacion'));
+//            }
 
             DB::commit();
 
@@ -218,13 +407,26 @@ class DetailPrecaAdminComponent extends Component
         }
     }
 
+    public function viewMoreObservations()
+    {
+        $this->limitObservations = 20;
+        // No necesitas incrementar el offset aquí
+        $this->observacionesGlobals = NotificationsApplications::where('req_application_id', $this->reqApplicationID)
+            ->orderBy('id', 'desc')
+            ->limit($this->limitObservations)
+            ->get();
+    }
+
+    #[On('showViewObservationsJSA')]
     public function showObservacionRequerimont($id)
     {
 
         $this->nameTableRelations = 'req_relation_profile_tables';
         $this->reqApplicationID = $id;
         $this->observacionesGlobals = NotificationsApplications::where('req_application_id', $id)
-            ->orderBy('id', 'asc')
+            ->orderBy('id', 'desc')
+            ->offset($this->offset)
+            ->limit($this->limitObservations)
             ->get();
 
         $this->dispatch('showObservacionRequerimont');
@@ -237,6 +439,7 @@ class DetailPrecaAdminComponent extends Component
         $this->dispatch('viewDocAdmShow');
     }
 
+    #[On('showDocumentsJSA')]
     public function showDoc($id)
     {
         $this->nameTableRelations = 'req_relation_profile_tables';
@@ -249,6 +452,7 @@ class DetailPrecaAdminComponent extends Component
         $this->dispatch('showDoc');
     }
 
+    #[On('showUpDocumentsJSA')]
     public function showUpDoc($id, $dataVenceparameter)
     {
         $this->dataVenceInput = $dataVenceparameter;

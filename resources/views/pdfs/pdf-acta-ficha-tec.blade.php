@@ -100,7 +100,7 @@
 </div>
 
 <div class="evaluation-result">
-    EL RESULTADO DE LA EVALUACIÓN TÉCNICA ES: @if($applicationsData->status == 10)
+    EL RESULTADO DE LA EVALUACIÓN TÉCNICA ES: @if($applicationsData->calification_tec == 1)
         PRECALIFICADO
     @else
         NO PRECALIFICADO

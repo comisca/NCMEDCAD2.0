@@ -56,6 +56,7 @@
                             <table class="table align-middle mb-0 bg-white">
                                 <thead class="bg-light">
                                 <tr>
+                                    <th>ID</th>
                                     <th>COD</th>
                                     <th>Requisito</th>
                                     <th>Accion</th>
@@ -70,6 +71,13 @@
                                                 <div class="d-flex align-items-center">
 
                                                     {{$itemsrequisitodDataSelected->id}}
+
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="d-flex align-items-center">
+
+                                                    {{$itemsrequisitodDataSelected->codigo}}
 
                                                 </div>
                                             </td>
@@ -152,7 +160,13 @@
                                                 <div class="card-body">
                                                     <ul>
                                                         @foreach ($items as $item)
-                                                            <li>{{ $item->codigo }} - {{ $item->descripcion }}</li>
+                                                            <li>{{ $item->codigo }} - {{ $item->descripcion }} <a
+                                                                    href="#"
+                                                                    onclick="conformireq({{$item->id_req_products}})"
+                                                                    title="Elminar
+                                                                    Requisito"><span
+                                                                        class="fa fa-trash"></span></a></li>
+
                                                         @endforeach
                                                     </ul>
                                                 </div>
@@ -284,10 +298,10 @@
 
         });
 
-        function confirm(id) {
+        function conformireq(id) {
             Swal.fire({
-                title: 'Eliminar Rol?',
-                text: "Estas seguro de eliminar este rol?",
+                title: 'Eliminar Requisito del Producto?',
+                text: "Estas Seguro de eliminar este requisito de este producto?",
                 type: 'question',
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',
@@ -296,7 +310,7 @@
                 cancelButtonText: 'No, Cancelar'
             }).then((result) => {
                 if (result.value) {
-                    Livewire.dispatch('deleteroles', {postId: id})
+                    Livewire.dispatch('deletereqproduct', {id_req_products: id})
                     swal.close();
                 }
             });

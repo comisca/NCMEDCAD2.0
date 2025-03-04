@@ -59,7 +59,7 @@
                                         <td>{{ $itemsPostor->fabric_first_name }}</td>
                                         <td>{{ $itemsPostor->trade_name }}</td>
                                         <td>
-                                            @if($itemsPostor->status_application == 10)
+                                            @if($itemsPostor->calification_tec == 1 && $itemsPostor->calification_admin == 1)
                                                 <span class="badge badge-success">Precalificado</span>
                                             @else
                                                 <span class="badge badge-danger">Con Observacion</span>

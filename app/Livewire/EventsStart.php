@@ -32,7 +32,7 @@ class EventsStart extends Component
     public $timeStart, $timeDuration, $porcReduce, $timeRecovery, $typeSubasta, $observacionSubasta;
     public $countriesData, $instotutionsData, $countryEventData, $instotutionCountryData;
     public $qtyProductsReferent, $priceProductReferent, $selectedType;
-    public $idCountrySelecteds;
+    public $idCountrySelecteds, $idMedicamentos;
 
     public function paginationView()
     {
@@ -59,6 +59,7 @@ class EventsStart extends Component
             ->where('product_events.event_id', $this->selectedEvents)
             ->select('product_events.id as id_product_event',
                 'medicamentos.*',
+                'medicamentos.id as id_medicamento',
                 'product_events.*')
             ->get();
 
@@ -73,9 +74,10 @@ class EventsStart extends Component
             ->section('content');
     }
 
-    public function createNeedes($idevent)
+    public function createNeedes($idevent, $idmed)
     {
         $this->selectedProductEvent = $idevent;
+        $this->idMedicamentos = $idmed;
         $this->countriesData = Countries::where('status', 1)->get();
 
         $this->dispatch('create-needs-create', messages: 'El evento fue agregado con exito');
@@ -95,6 +97,8 @@ class EventsStart extends Component
         $this->instotutionCountryData =
             IntituteCountries::join('intitutions', 'intitute_countries.intitute_id', '=', 'intitutions.id')
                 ->where('intitute_countries.country_event_id', $id)
+//                ->where('intitute_countries.events_id', $this->selectedProductEvent)
+                ->where('intitute_countries.product_id', $this->selectedProductEvent)
                 ->select('intitute_countries.*', 'intitutions.*', 'intitute_countries.id as id_intitute_country')
                 ->get();
 
@@ -159,7 +163,9 @@ class EventsStart extends Component
             ->join('companies as distribution_company', 'applications.distribution_id', '=', 'distribution_company.id')
             ->join('companies as fabric_company', 'applications.fabric_id', '=', 'fabric_company.id')
             ->where('medicamentos.id', $productEvernt->product_id)
-            ->where('applications.status', 10)
+            ->where('applications.status', 1)
+            ->where('applications.calification_tec', 1)
+            ->where('applications.calification_admin', 1)
             ->select(
                 'applications.*',
                 'medicamentos.*',
