@@ -7,7 +7,6 @@
         <div class="loading-text">Espera un momento, Ejecutando!!...</div>
     </div>
     <div class="row">
-
         <div class="container">
             <form>
                 <fieldset class="form-group">
@@ -20,7 +19,7 @@
                          </div>-->
                         <div class="form-group col-6">
                             <label for="inputNameCompany">Familia de productos interes</label>
-                            <select id="inputState" wire:model="familyProductsInput"
+                            <select id="inputState" wire:model.live="familyProductsInput"
                                     class="form-control @error('familyProductsInput') is-invalid @enderror">
                                 <option selected>Selecciona una familia de productos</option>
                                 @foreach($familyProducts as $familyProduct)
@@ -28,21 +27,19 @@
                                 @endforeach
                             </select>
                             @error('familyProductsInput')
-                            <span class="text-danger">{{$message}}</span>
+                                <span class="text-danger">{{$message}}</span>
                             @enderror
                         </div>
-
-
                         <div class="form-group col-6">
-                            <label for="inputNameCompany">Perfil a participar</label>
+                            <label for="inputNameCompany">Perfil de Empresa</label>
                             <select id="inputState" wire:model="typeCompany"
                                     class="form-control @error('typeCompany') is-invalid @enderror">
-                                <option selected>Selecciona un tipo de participante</option>
+                                <option selected>Selecciona un tipo de empresa para participar en el mecanismo</option>
                                 <option value="F">Fabricantes</option>
                                 <option value="D">Distribuidor</option>
                             </select>
                             @error('typeCompany')
-                            <span class="text-danger">{{$message}}</span>
+                                <span class="text-danger">{{$message}}</span>
                             @enderror
                         </div>
                         <div class="form-group col-8">
@@ -51,20 +48,20 @@
                                    class="form-control @error('BusinnessName') is-invalid @enderror" id="inputAddress"
                                    placeholder="SICA SA de CV">
                             @error('BusinnessName')
-                            <span class="text-danger">{{$message}}</span>
+                                <span class="text-danger">{{$message}}</span>
                             @enderror
                         </div>
                         <div class="form-group col-4">
-                            <label for="inputNameCompany">Usuario de acceso</label>
+                            <label for="inputNameCompany">Nombre de Usuario</label>
                             <input wire:model="userNameCompany" type="text"
                                    class="form-control @error('userNameCompany') is-invalid @enderror" id="inputAddress"
-                                   placeholder="empresasv">
+                                   placeholder="Nombre de Usuario a utilizar en Plataforma">
                             @error('userNameCompany')
                             <span class="text-danger">{{$message}}</span>
                             @enderror
                         </div>
 
-                        <div class="form-group col-12">
+                        {{-- <div class="form-group col-12">
                             <label for="inputNameCompany">Logo de la empresa</label>
                             <input wire:model="avatar" type="file"
                                    class="form-control @error('avatar') is-invalid @enderror" id="inputAddress"
@@ -72,46 +69,48 @@
                             @error('avatar')
                             <span class="text-danger">{{$message}}</span>
                             @enderror
-                        </div>
-                        <div class="form-group col-3">
-                            <select id="inputState" wire:model.live="country"
-                                    class="form-control @error('country') is-invalid @enderror">
-                                <option selected>Seleccione Pais</option>
+                        </div> --}}
+                        <div class="form-group col-12">
+                            <label class="fw-bold mb-2">Dirección de Empresa</label>
+                            <div class="row">
+                                <div class="form-group col-3">
+                                    <select id="inputState" wire:model.live="country"
+                                            class="form-control @error('country') is-invalid @enderror">
+                                        <option selected>Seleccione Pais</option>
+                                        @if(!empty($countries))
+                                            @foreach($countries as $itemsCountries)
+                                                <option value="{{$itemsCountries->id}}">{{$itemsCountries->name}}</option>
+                                            @endforeach
+                                        @endif
+                                    </select>
+                                    @error('country')
+                                        <span class="text-danger">{{$message}}</span>
+                                    @enderror
+                                </div>
+                                <div class="form-group col-3">
+                                    <select id="inputState" wire:model="city"
+                                            class="form-control @error('city') is-invalid @enderror">
+                                        <option selected>Selecciona el Estado o Ciudad</option>
+                                        @if(!empty($inputStates))
+                                            @foreach($inputStates as $inputState)
+                                                <option value="{{$inputState->id}}">{{$inputState->name}}</option>
 
-                                @if(!empty($countries))
-                                    @foreach($countries as $itemsCountries)
-                                        <option value="{{$itemsCountries->id}}">{{$itemsCountries->name}}</option>
-                                    @endforeach
-                                @endif
-                            </select>
-                            @error('country')
-                            <span class="text-danger">{{$message}}</span>
-                            @enderror
-                        </div>
-                        <div class="form-group col-3">
-                            <select id="inputState" wire:model="city"
-                                    class="form-control @error('city') is-invalid @enderror">
-                                <option selected>Selecciona el Estado o Ciudad</option>
-                                @if(!empty($inputStates))
-                                    @foreach($inputStates as $inputState)
-                                        <option value="{{$inputState->id}}">{{$inputState->name}}</option>
-
-                                    @endforeach
-                                @endif
-
-                            </select>
-                            @error('city')
-                            <span class="text-danger">{{$message}}</span>
-                            @enderror
-                        </div>
-                        <div class="form-group col-6">
-                            <!--<label for="inputAddress">Dirección</label>-->
-                            <input type="text" wire:model="address"
-                                   class="form-control @error('address') is-invalid @enderror" id="inputAddress"
-                                   placeholder="Escribe tu Dirección" required>
-                            @error('address')
-                            <span class="text-danger">{{$message}}</span>
-                            @enderror
+                                            @endforeach
+                                        @endif
+                                    </select>
+                                    @error('city')
+                                        <span class="text-danger">{{$message}}</span>
+                                    @enderror
+                                </div>
+                                <div class="form-group col-6">
+                                    <input type="text" wire:model="address"
+                                        class="form-control @error('address') is-invalid @enderror" id="inputAddress"
+                                        placeholder="Escribe tu Dirección" required>
+                                    @error('address')
+                                        <span class="text-danger">{{$message}}</span>
+                                    @enderror
+                                </div>
+                            </div>
                         </div>
                         <div class="form-group col-4">
                             <label for="inputEmail4">Teléfono</label>
@@ -119,7 +118,7 @@
                                    class="form-control @error('phone') is-invalid @enderror"
                                    id="inputEmail4">
                             @error('phone')
-                            <span class="text-danger">{{$message}}</span>
+                                <span class="text-danger">{{$message}}</span>
                             @enderror
                         </div>
                         <div class="form-group col-4">
@@ -132,20 +131,73 @@
                                    wire:model="whatsapp"
                                    class="form-control @error('whatsapp') is-invalid @enderror" id="whatsapp">
                             @error('whatsapp')
-                            <span class="text-danger">{{$message}}</span>
+                                <span class="text-danger">{{$message}}</span>
                             @enderror
                         </div>
-                        <div class="form-group col-12">
-                            <label for="inputNameCompany">Url o dirección WEB</label>
-                            <input type="text" wire:model="website" class="form-control" id="inputAddress"
-                                   placeholder="https://ejemplo.com">
+                        <div class="form-group col-4">
+                            <label for="inputNameCompany">E-mail de la Empresa</label>
+                            <input type="text" wire:model="emailCompany" class="form-control" id="inputAddress"
+                                   placeholder="E-mail de la Empresa">
                         </div>
+                        <p>Valor de $mostrarSeccionMedicamentos: {{ var_dump($mostrarSeccionMedicamentos) }}</p>
+                        @if ($mostrarSeccionMedicamentos)
+                        <div class="form-group col-12">
+                            <div class="row">
+                                <div class="form-group col-12">
+                                    <label class="fw-bold mb-2">Medicamento de Interes</label>
+                                    <div class="row">
+                                        <div class="col-4">
+                                            <input type="text" wire:model="nombreProductoInteres" class="form-control" placeholder="Nombre del producto" required>
+                                        </div>
+                                        <div class="col-4">
+                                            <input type="text" wire:model="paisProductoInteres" class="form-control" placeholder="País de procedencia" required>
+                                        </div>
+                                        <div class="col-3">
+                                            <input type="text" wire:model="codigoProductoInteres" class="form-control" placeholder="Código del producto" required>
+                                        </div>
+                                        <div class="col-1">
+                                            <button type="button" id="agregarProductoButton" wire:click="agregarProductoInteres" class="btn btn-primary" {{ count($this->productosInteres) > 5 ? 'disabled' : '' }}>Agregar</button>
+                                        </div>
+                                    </div>
+                                    <table class="table mt-3">
+                                        <thead>
+                                            <tr>
+                                                <th>N°</th>
+                                                <th>Nombre del producto</th>
+                                                <th>País de procedencia</th>
+                                                <th>Código del producto</th>
+                                                <th>Acciones</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach ($productosInteres as $index => $producto)
+                                                <tr>
+                                                    <td>{{$index+1}}</td>
+                                                    <td>{{ $producto['nombreProductoInteres'] }}</td>
+                                                    <td>{{ $producto['paisProductoInteres'] }}</td>
+                                                    <td>{{ $producto['codigoProductoInteres'] }}</td>
+                                                    <td>
+                                                        <button type="button" id="eliminarProductoButton" onclick="eliminarProducto({{ $index }})" class="btn btn-danger btn-sm">Eliminar</button>
+                                                    </td>
+                                                </tr>
+                                            @endforeach
+                                        </tbody>
+                                    </table>
+                                </div>
+                                @if (session()->has('error'))
+                                    <div class="alert alert-danger">
+                                        {{ session('error') }}
+                                    </div>
+                                @endif
+                            </div>
+                        </div>
+                        @endif
                     </div>
                 </fieldset>
 
                 <!--Segunda parte del Formulario Persona de CONTACTO -->
                 <fieldset class="form-group">
-                    <legend>Contacto de registro legal</legend>
+                    <legend>Contacto del Representante Legal</legend>
                     <div class="form-row">
                         <div class="form-group col-12">
                             <label for="inputNameCompany">Adjuntar documentanción de registro legal</label>
@@ -157,7 +209,7 @@
                             @enderror
                         </div>
                         <div class="form-group col-6">
-                            <label for="inputNameCompany">Nombre</label>
+                            <label for="inputNameCompany">Nombre de Contacto</label>
                             <input type="text" wire:model="firstName"
                                    class="form-control @error('firstName') is-invalid @enderror" id="inputAddress"
                                    placeholder="Ejemplo SA de CV">
@@ -175,7 +227,7 @@
                             @enderror
                         </div>
                         <div class="form-group col-3">
-                            <label for="inputNameCompany">E-mail:</label>
+                            <label for="inputNameCompany">E-mail de Contacto:</label>
                             <input type="mail" wire:model="email"
                                    class="form-control @error('email') is-invalid @enderror"
                                    id="inputAddress" placeholder="SICA SA de CV">
@@ -185,7 +237,7 @@
                         </div>
                 </fieldset>
                 <fieldset class="form-group">
-                    <legend>Adjuntar documentación</legend>
+                    <legend>Adjuntar Documentación del Representante Legal Vigente</legend>
                     <div class="form-row">
                         <div class="form-group col-4">
                             <label for="inputNameCompany">Documento de Identidad</label>
@@ -197,7 +249,7 @@
                             @enderror
                         </div>
                         <div class="form-group col-4">
-                            <label for="inputNameCompany">Poder de Representación</label>
+                            <label for="inputNameCompany">Credencial de Representación</label>
                             <input wire:model="docPoder" type="file" accept=".pdf,application/pdf"
                                    class="form-control @error('docPoder') is-invalid @enderror" id="docPoder"
                                    placeholder="Documentos.pdf">
@@ -217,7 +269,7 @@
                     </div>
                 </fieldset>
 
-                <button type="button" wire:click="create()" class="btn btn-primary">Guardar</button>
+                <button type="button" wire:click="create('{{$mostrarSeccionMedicamentos}}')" class="btn btn-primary">Guardar</button>
 
                 <button type="button" class="btn btn-danger">Cancelar</button>
 
@@ -225,8 +277,6 @@
 
             </form>
         </div>
-
-
         {{--    <livewire:search-universal></livewire:search-universal>--}}
     </div>
 </div>
@@ -293,10 +343,10 @@
 
         });
 
-        function confirm(id) {
+        function eliminarProducto(id) {
             Swal.fire({
-                title: 'Eliminar Rol?',
-                text: "Estas seguro de eliminar este rol?",
+                title: 'Eliminar Producto Interes?',
+                text: "Estas seguro de eliminar este producto?",
                 type: 'question',
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',
@@ -305,11 +355,17 @@
                 cancelButtonText: 'No, Cancelar'
             }).then((result) => {
                 if (result.value) {
-                    Livewire.dispatch('deleteroles', {postId: id})
+                    Livewire.dispatch('confirmarEliminarProductoInteres', {index: id})
                     swal.close();
                 }
             });
 
         }
+        document.getElementById('agregarProductoButton').addEventListener('click', function(event) {
+            event.preventDefault(); 
+        });
+        document.getElementById('eliminarProductoButton').addEventListener('click', function(event) {
+            event.preventDefault(); 
+        });
     </script>
 @endsection

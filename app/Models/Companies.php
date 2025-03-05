@@ -44,6 +44,7 @@ class Companies extends Model implements Authenticatable, Authorizable
         'country_id',
         'state_id',
         'family_id',
-        'phone_whatsapp'
+        'phone_whatsapp',
+        'email_company'
     ];
 }
