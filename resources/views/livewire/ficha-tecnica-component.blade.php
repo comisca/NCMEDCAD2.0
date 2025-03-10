@@ -45,7 +45,7 @@
                                     Contacto:
                                 </div>
                                 <div class="h5 mb-0 font-weight-bold text-gray-800">
-                                    {{$companiesHeader->first_name}}   {{$companiesHeader->last_name}}
+                                    {{$companiesHeader->first_name}}
                                 </div>
                             </div>
                         </div>
