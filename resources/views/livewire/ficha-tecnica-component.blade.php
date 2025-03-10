@@ -11,6 +11,91 @@
                 <li class="breadcrumb-item active" aria-current="page">Ficha Técnica</li>
             </ol>
         </nav>
+        <div class="col-xl-12 col-md-6 mb-4">
+            <div class="card border-left-primary shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col-xl-6 col-md-6 mb-6">
+                            <div class="col mr-2">
+                                <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                    ID:
+                                </div>
+                                <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                    {{$companiesHeader->id}}
+                                </div>
+                            </div>
+                            <div class="col mr-2">
+                                <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                    Nombre:
+                                </div>
+                                <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                    {{$companiesHeader->legal_name}}
+                                </div>
+                            </div>
+                            <div class="col mr-2">
+                                <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                    Direccion:
+                                </div>
+                                <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                    {{$companiesHeader->address}}  {{$companiesHeader->city}} {{$companiesHeader->country}}
+                                </div>
+                            </div>
+                            <div class="col mr-2">
+                                <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                    Contacto:
+                                </div>
+                                <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                    {{$companiesHeader->first_name}}   {{$companiesHeader->last_name}}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xl-6 col-md-6 mb-6">
+                            <div class="col mr-2">
+                                <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                    Tipo:
+                                </div>
+                                <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                    @if($companiesHeader->type_company == 'F')
+                                        Fabricante
+                                    @elseif($companiesHeader->type_company == 'D')
+                                        Distribuidor/Representante
+                                    @endif
+                                </div>
+                            </div>
+                            <div class="col mr-2">
+                                <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                    Telefono #1:
+                                </div>
+                                <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                    {{$companiesHeader->phone}}
+                                </div>
+                            </div>
+                            <div class="col mr-2">
+                                <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                    Telefono #2:
+                                </div>
+                                <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                    {{$companiesHeader->phone_whatsapp}}
+                                </div>
+                            </div>
+                            <div class="col mr-2">
+                                <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                    Email:
+                                </div>
+                                <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                    {{$companiesHeader->email}}
+                                </div>
+                            </div>
+
+                        </div>
+
+                        {{--                        <div class="col-auto">--}}
+                        {{--                            <i class="fas fa-calendar fa-2x text-gray-300"></i>--}}
+                        {{--                        </div>--}}
+                    </div>
+                </div>
+            </div>
+        </div>
         <div
             class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
             <h1 class="h2">FICHA TÉCNICA</h1><br>
@@ -137,7 +222,7 @@
     <script>
         document.addEventListener('livewire:initialized', function () {
 
-            // Configuración de los modales
+            // Configuración de los modales  $('.select2').select2();
             const $modalFichaTecnica = $('#modalFichaTecnica');
             const $modalCreateFabric = $('#modalCreateFabric');
 
@@ -219,6 +304,7 @@
             })
 
 
+
             @this.on('messages-error', (event) => {
                 toastr.error(event.messages, 'Exito', {
                     "closeButton": true,
@@ -269,5 +355,14 @@
             });
 
         }
+
+
     </script>
+
+    <script>
+        $(document).ready(function () {
+            $('#js-example-basic-multiple').select2();
+        });
+    </script>
+
 @endsection

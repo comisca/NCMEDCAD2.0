@@ -20,7 +20,7 @@
                 <form>
 
                     <div class="mb-3">
-                        <label for="legalName" class="form-label">Nombre Comercial</label>
+                        <label for="legalName" class="form-label">Nombre Comercial del producto a ofertar</label>
 
                         <input wire:model="legalName" type="text"
                                class="form-control @error('legalName') is-invalid @enderror">
@@ -32,7 +32,7 @@
                     </div>
 
                     <div class="mb-3">
-                        <label for="numRegisterSalud" class="form-label">Numero de Registros de Salud</label>
+                        <label for="numRegisterSalud" class="form-label">Numero de Registros Sanitario</label>
 
                         <input wire:model="numRegisterSalud" type="text"
                                class="form-control @error('numRegisterSalud') is-invalid @enderror">
@@ -78,8 +78,8 @@
                     {{--                    </div>--}}
                     <div class="mb-3">
                         <label for="companieF" class="form-label">Fabricante</label>
-                        <select id="companieF" wire:model="companieF"
-                                class="form-control @error('companieF') is-invalid @enderror">
+                        <select id="js-example-basic-single" wire:model="companieF"
+                                class="form-control  @error('companieF') is-invalid @enderror">
                             <option selected>Selecciona un Fabricante</option>
                             @if(!@empty($bussinessFabricante))
                                 @foreach ($bussinessFabricante as $itemsBussinessFabricante)
