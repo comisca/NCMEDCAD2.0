@@ -139,7 +139,6 @@
                             <input type="text" wire:model="emailCompany" class="form-control" id="inputAddress"
                                    placeholder="E-mail de la Empresa">
                         </div>
-                        <p>Valor de $mostrarSeccionMedicamentos: {{ var_dump($mostrarSeccionMedicamentos) }}</p>
                         @if ($mostrarSeccionMedicamentos)
                         <div class="form-group col-12">
                             <div class="row">
