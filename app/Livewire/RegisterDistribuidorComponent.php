@@ -10,6 +10,7 @@ use App\Models\FamiliaProducto;
 use App\Models\ReqRelationProfile;
 use App\Models\ReqRelationProfileTable;
 use App\Models\StateCountries;
+use App\Models\ProductoInteres;
 use Illuminate\Support\Facades\Mail;
 use Livewire\Attributes\On;
 use Livewire\WithFileUploads;
@@ -28,15 +29,20 @@ class RegisterDistribuidorComponent extends Component
     public $Pagination = 10;
     public $searchInput;
     public $bandera = 0;
-    public $BusinnessName, $country, $city, $address, $phone, $facsimile, $website;
+    public $BusinnessName, $country, $city, $address, $phone, $facsimile, $website, $emailCompany;
     public $firstName, $lastName, $email, $phoneContact, $userName, $typeCompany, $avatar;
     public $inputCountries, $inputStates, $inputCities, $whatsapp, $docRegister, $docId;
     public $docPoder, $docLicense, $familyProductsInput, $userNameCompany;
+    public $mostrarSeccionMedicamentos = false;
+    public $productosInteres = []; // Almacena los productos de interés localmente
+    public $nombreProductoInteres, $paisProductoInteres, $codigoProductoInteres; // Almacena el nombre del producto ingresado por el usuario
+
 
     public function paginationView()
     {
         return 'vendor.livewire.bootstrap';
     }
+    
 
     public function mount()
     {
@@ -51,10 +57,41 @@ class RegisterDistribuidorComponent extends Component
         if (!empty($this->country)) {
             $this->inputStates = StateCountries::where('country_id', $this->country)->get();
         }
-
-
     }
+    public function updatedFamilyProductsInput($value)
+    {    
+        $this->mostrarSeccionMedicamentos= $value == 1 ? true : false;
+       
+    }
+    public function agregarProductoInteres()
+    {
+        if (!empty($this->nombreProductoInteres) && !empty($this->paisProductoInteres) && !empty($this->codigoProductoInteres)) {
+            
+            if (count($this->productosInteres) < 5) {
+                $this->productosInteres[] = [
+                    'nombreProductoInteres' => $this->nombreProductoInteres,
+                    'paisProductoInteres' => $this->paisProductoInteres,
+                    'codigoProductoInteres' => $this->codigoProductoInteres
+                ];
+                $this->nombreProductoInteres = ''; // Limpia el campo de entrada
+                $this->paisProductoInteres = ''; // Limpia el campo de entrada
+                $this->codigoProductoInteres = ''; // Limpia el campo de entrada
+            } else {
+                session()->flash('error', 'Solo se pueden agregar 5 productos de interés.');
 
+            }
+        }else{
+            session()->flash('error', 'Todos los campos son obligatorios.');
+            return;
+        }
+    }
+    #[On('confirmarEliminarProductoInteres')]
+    public function eliminarProductoInteres($index)
+    {
+        unset($this->productosInteres[$index]);
+        $this->productosInteres = array_values($this->productosInteres); // Reindexar el array
+    }
+ 
 
     public function render()
     {
@@ -67,7 +104,7 @@ class RegisterDistribuidorComponent extends Component
             ->section('content');
     }
 
-    public function create()
+    public function create($mostrarSeccionMed)
     {
 
 
@@ -139,7 +176,7 @@ class RegisterDistribuidorComponent extends Component
                 'phone' => $this->phone,
                 'facsimile' => $this->facsimile,
                 'phone_whatsapp' => $this->whatsapp,
-                'website' => $this->website,
+                'email_company' => $this->emailCompany,
                 'first_name' => $this->firstName,
                 'last_name' => $this->lastName,
                 'email' => $this->email,
@@ -234,6 +271,16 @@ class RegisterDistribuidorComponent extends Component
                 ]);
 
             }
+            if ($mostrarSeccionMed == true) {
+                foreach ($this->productosInteres as $productoInteres) {
+                    ProductoInteres::create([
+                        'company_id' => $company->id,
+                        'nombre_producto' => $productoInteres['nombreProductoInteres'],
+                        'pais_producto' => $productoInteres['paisProductoInteres'],
+                        'codigo_producto' => $productoInteres['codigoProductoInteres']
+                    ]);
+                }
+            }
 
             Mail::to($this->email)->send(new PreRegister($this->BusinnessName));
 
@@ -323,6 +370,7 @@ class RegisterDistribuidorComponent extends Component
         $this->email = '';
         $this->phoneContact = '';
         $this->userName = '';
+        $this->mostrarSeccionMedicamentos = false;
 
     }
 
