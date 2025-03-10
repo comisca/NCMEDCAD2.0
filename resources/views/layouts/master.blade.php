@@ -184,5 +184,6 @@
 @rappasoftTableThirdPartyScripts
 {{--@include('components.shortcuts')--}}
 
+
 </body>
 </html>

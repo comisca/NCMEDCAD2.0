@@ -88,11 +88,16 @@ class FichaTecnicaComponent extends Component
             ->where('type_company', 'F')
             ->get();
 
+        $companiesHeader = Companies::where('id', Session::get('id_company'))
+            ->where('status', 1)
+            ->first();
+
 
         return view('livewire.ficha-tecnica-component',
             ['familyProducts' => $familyProducts,
                 'bussinessFabricante' => $bussinessFabricante,
-                'countries' => $countries])
+                'countries' => $countries,
+                'companiesHeader' => $companiesHeader,])
             ->extends('layouts.master')
             ->section('content');
     }
