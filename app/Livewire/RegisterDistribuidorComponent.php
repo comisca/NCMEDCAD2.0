@@ -73,9 +73,9 @@ class RegisterDistribuidorComponent extends Component
                     'paisProductoInteres' => $this->paisProductoInteres,
                     'codigoProductoInteres' => $this->codigoProductoInteres
                 ];
-                $this->nombreProductoInteres = ''; // Limpia el campo de entrada
-                $this->paisProductoInteres = ''; // Limpia el campo de entrada
-                $this->codigoProductoInteres = ''; // Limpia el campo de entrada
+                $this->nombreProductoInteres = '';
+                $this->paisProductoInteres = '';
+                $this->codigoProductoInteres = '';
             } else {
                 session()->flash('error', 'Solo se pueden agregar 5 productos de interés.');
 
