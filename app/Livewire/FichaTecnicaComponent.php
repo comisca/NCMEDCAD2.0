@@ -270,7 +270,7 @@ class FichaTecnicaComponent extends Component
                 'product_id' => $this->idSelectedProducts,
                 'trade_name' => $this->legalName,
                 'number_registration_salud' => $this->numRegisterSalud,
-//                'number_registration_fabric' => $this->registerNumber,
+                'number_registration_fabric' => $this->registerNumber,
                 'country_id' => $this->countryRegister,
                 'fabric_id' => $this->companieF,
                 'distribution_id' => Session::get('id_company'),
