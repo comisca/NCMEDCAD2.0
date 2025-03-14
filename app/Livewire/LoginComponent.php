@@ -76,6 +76,7 @@ class LoginComponent extends Component
                             Session::put('id_company', $companyLoging->id);
                             Session::put('email_user', $companyLoging->email);
                             Session::put('name_user', $companyLoging->legal_name);
+                            Session::put('type_company', $companyLoging->type_company);
 
                             return redirect('/companies/dashboard');
                         }

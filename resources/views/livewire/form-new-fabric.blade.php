@@ -54,7 +54,7 @@
                                 @enderror
                             </div>
                             <div class="form-group col-8">
-                                <label for="inputNameCompany">Nombre de Fabricante o Distribuidor</label>
+                                <label for="inputNameCompany">Nombre de la compañia</label>
                                 <input wire:model="BusinnessName" type="text"
                                        class="form-control @error('BusinnessName') is-invalid @enderror"
                                        id="inputAddress"
@@ -83,6 +83,9 @@
                                 <span class="text-danger">{{$message}}</span>
                                 @enderror
                             </div>
+                            <div class="form-group col-12">
+                                <label class="fw-bold mb-2">Dirección de Lugar de Fabricación</label>
+                                <div class="row">
                             <div class="form-group col-3">
                                 <select id="inputState" wire:model.live="country"
                                         class="form-control @error('country') is-invalid @enderror">
@@ -123,6 +126,8 @@
                                 <span class="text-danger">{{$message}}</span>
                                 @enderror
                             </div>
+                                </div>
+                            </div>
                             <div class="form-group col-4">
                                 <label for="inputEmail4">Teléfono</label>
                                 <input type="tel" wire:model="phone"
@@ -139,14 +144,13 @@
                             <div class="form-group col-4">
                                 <label for="inputPassword4">Número Whatssapp</label>
                                 <input type="phone"
-                                       wire:model="whatsapp"
                                        class="form-control @error('whatsapp') is-invalid @enderror" id="whatsapp">
                                 @error('whatsapp')
                                 <span class="text-danger">{{$message}}</span>
                                 @enderror
                             </div>
                             <div class="form-group col-12">
-                                <label for="inputNameCompany">Url o dirección WEB</label>
+                                <label for="inputNameCompany">Web del Fabricante</label>
                                 <input type="text" wire:model="website" class="form-control" id="inputAddress"
                                        placeholder="https://ejemplo.com">
                             </div>
@@ -155,7 +159,7 @@
 
                     <!--Segunda parte del Formulario Persona de CONTACTO -->
                     <fieldset class="form-group">
-                        <legend>Contacto de registro legal</legend>
+                        <legend>Datos de Contacto del Fabricante</legend>
                         <div class="form-row">
                             {{--                            <div class="form-group col-12">--}}
                             {{--                                <label for="inputNameCompany">Adjuntar documentanción de registro legal</label>--}}
@@ -167,7 +171,7 @@
                             {{--                                @enderror--}}
                             {{--                            </div>--}}
                             <div class="form-group col-6">
-                                <label for="inputNameCompany">Nombre</label>
+                                <label for="inputNameCompany">Nombre de Contacto</label>
                                 <input type="text" wire:model="firstName"
                                        class="form-control @error('firstName') is-invalid @enderror" id="inputAddress"
                                        placeholder="Ejemplo SA de CV">
@@ -185,7 +189,7 @@
                                 @enderror
                             </div>
                             <div class="form-group col-3">
-                                <label for="inputNameCompany">E-mail:</label>
+                                <label for="inputNameCompany">Correo electrónico de contacto:</label>
                                 <input type="mail" wire:model="email"
                                        class="form-control @error('email') is-invalid @enderror"
                                        id="inputAddress" placeholder="SICA SA de CV">

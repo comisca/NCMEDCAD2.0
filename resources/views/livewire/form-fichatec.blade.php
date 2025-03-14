@@ -77,7 +77,7 @@
                     {{--                        @enderror--}}
                     {{--                    </div>--}}
                     <div class="mb-3">
-                        <label for="companieF" class="form-label">Fabricante</label>
+                        <label for="companieF" class="form-label">Fabricante (Buscar fabricante de la lista siguiente, en caso no encuentre su fabricante puede agregarlo en el botón (Crear Fabricante”)</label>
                         <select id="js-example-basic-single" wire:model="companieF"
                                 class="form-control  @error('companieF') is-invalid @enderror">
                             <option selected>Selecciona un Fabricante</option>
@@ -97,14 +97,15 @@
                         <span class="text-danger">{{$message}}</span>
                         @enderror
                     </div>
-
-
+                   
+                    @if(Session::get('type_company') == "D")
                     <div class="mb-3">
                         <button type="button" class="btn btn-primary" data-toggle="modal"
                                 data-target="#modalCreateFabric">
                             Crear Fabricante
                         </button>
                     </div>
+                    @endif
             </div>
             <div class="modal-footer">
 
