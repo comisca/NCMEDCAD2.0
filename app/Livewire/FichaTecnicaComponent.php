@@ -156,13 +156,13 @@ class FichaTecnicaComponent extends Component
 
         try {
 
-            if ($this->avatar) {
-                //Guardamos la imagen en la carpeta publica
-                $avatar_name = 'img_' . uniqid() . '.' . $this->avatar->extension();
-                $avatarurl = $this->avatar->storeAs('public/companies/avatar', $avatar_name);
-            } else {
-                $avatar_name = 'default.png';
-            }
+//            if ($this->avatar) {
+//                //Guardamos la imagen en la carpeta publica
+//                $avatar_name = 'img_' . uniqid() . '.' . $this->avatar->extension();
+//                $avatarurl = $this->avatar->storeAs('public/companies/avatar', $avatar_name);
+//            } else {
+//                $avatar_name = 'default.png';
+//            }
 
 
             $countrieSelectedInsert = Countries::where('id', $this->country)->first();
@@ -192,7 +192,7 @@ class FichaTecnicaComponent extends Component
                 'country_id' => $this->country,
                 'state_id' => $this->city,
                 'family_id' => $this->familyProductsInput,
-                'logo_companies' => $avatar_name
+//                'logo_companies' => $avatar_name
             ]);
             $company->syncRoles('Company');
             $company->save();
@@ -236,13 +236,13 @@ class FichaTecnicaComponent extends Component
             'legalName' => 'required',
             'countryRegister' => 'required',
             'numRegisterSalud' => 'required',
-            'companieF' => 'required',
+//            'companieF' => 'required',
         ];
         $messages = [
             'legalName.required' => 'El nombre comercial es requerido',
             'countryRegister.required' => 'El numero de registro de pais es requerido',
             'numRegisterSalud.required' => 'El numero de registro de salud es requerido',
-            'companieF.required' => 'La seleccion de fabricante es requerida',
+//            'companieF.required' => 'La seleccion de fabricante es requerida',
         ];
 
         $this->validate($rules, $messages);
@@ -265,6 +265,12 @@ class FichaTecnicaComponent extends Component
                 ->where('status', 1)
                 ->get();
 
+            if (Session::get('type_company') == "D") {
+                $idfabricantes = $this->companieF;
+            } else {
+                $idfabricantes = Session::get('id_company');
+            }
+
             $newAppD = $applicationnew = Application::create([
                 'family_id' => $this->inputFamilyProduct,
                 'product_id' => $this->idSelectedProducts,
@@ -272,7 +278,7 @@ class FichaTecnicaComponent extends Component
                 'number_registration_salud' => $this->numRegisterSalud,
                 'number_registration_fabric' => $this->registerNumber,
                 'country_id' => $this->countryRegister,
-                'fabric_id' => $this->companieF,
+                'fabric_id' => $idfabricantes,
                 'distribution_id' => Session::get('id_company'),
                 'states_applications' => 1,
                 'status' => 1
@@ -283,7 +289,7 @@ class FichaTecnicaComponent extends Component
                     $exitreqapplicationData = ReqApplications::where('application_id', $applicationnew->id)
                         ->where('requirement_id', $item->requirement_id)
                         ->where('product_id', $this->idSelectedProducts)
-                        ->where('fabric_id', $this->companieF)
+                        ->where('fabric_id', $idfabricantes)
                         ->where('status', 1)
                         ->first();
 
@@ -294,7 +300,7 @@ class FichaTecnicaComponent extends Component
                             'requirement_id' => $item->requirement_id,
                             'distribution_id' => Session::get('id_company'),
                             'product_id' => $this->idSelectedProducts,
-                            'fabric_id' => $this->companieF,
+                            'fabric_id' => $idfabricantes,
                             'states_req_applications' => 9,
                             'status' => 1,
                         ]);
@@ -317,7 +323,7 @@ class FichaTecnicaComponent extends Component
             if (!empty($reqF)) {
                 foreach ($reqF as $itemReqF) {
                     ReqRelationProfileTable::create([
-                        'company_id' => $this->companieF,
+                        'company_id' => $idfabricantes,
                         'req_id' => $itemReqF->req_id,
                         'type_profile' => 'F',
                         'status' => 9
@@ -328,7 +334,7 @@ class FichaTecnicaComponent extends Component
 
 
             $verifyFabricToOtherAplication = Application::where('distribution_id', '!=', Session::get('id_company'))
-                ->where('fabric_id', $this->companieF)
+                ->where('fabric_id', $idfabricantes)
                 ->where('status', 1)
                 ->count();
 
@@ -336,7 +342,7 @@ class FichaTecnicaComponent extends Component
                 // entonces aqui va la logica para enviar un correo al equipo de la UMOT notificando que el fabricante
                 // esta asociado a otra distribuidora
                 $nameD = Companies::where('id', Session::get('id_company'))->first()->legal_name;
-                $nameF = Companies::where('id', $this->companieF)->first()->legal_name;
+                $nameF = Companies::where('id', $idfabricantes)->first()->legal_name;
 
                 Mail::to('henry.orellana@oceansbits.com')
                     ->send(new NotificationFabricAdmin($nameD, $nameF));

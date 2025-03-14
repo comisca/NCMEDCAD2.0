@@ -74,58 +74,60 @@
                             {{--                                @enderror--}}
                             {{--                            </div>--}}
 
-                            <div class="form-group col-12">
-                                <label for="inputNameCompany">Logo de la empresa</label>
-                                <input wire:model="avatar" type="file"
-                                       class="form-control @error('avatar') is-invalid @enderror" id="inputAddress"
-                                       placeholder="SICA SA de CV">
-                                @error('avatar')
-                                <span class="text-danger">{{$message}}</span>
-                                @enderror
-                            </div>
+                            {{--                            <div class="form-group col-12">--}}
+                            {{--                                <label for="inputNameCompany">Logo de la empresa</label>--}}
+                            {{--                                <input wire:model="avatar" type="file"--}}
+                            {{--                                       class="form-control @error('avatar') is-invalid @enderror" id="inputAddress"--}}
+                            {{--                                       placeholder="SICA SA de CV">--}}
+                            {{--                                @error('avatar')--}}
+                            {{--                                <span class="text-danger">{{$message}}</span>--}}
+                            {{--                                @enderror--}}
+                            {{--                            </div>--}}
                             <div class="form-group col-12">
                                 <label class="fw-bold mb-2">Dirección de Lugar de Fabricación</label>
                                 <div class="row">
-                            <div class="form-group col-3">
-                                <select id="inputState" wire:model.live="country"
-                                        class="form-control @error('country') is-invalid @enderror">
-                                    <option selected>Seleccione Pais</option>
+                                    <div class="form-group col-3">
+                                        <select id="inputState" wire:model.live="country"
+                                                class="form-control @error('country') is-invalid @enderror">
+                                            <option selected>Seleccione Pais</option>
 
-                                    @if(!empty($countries))
-                                        @foreach($countries as $itemsCountries)
-                                            <option value="{{$itemsCountries->id}}">{{$itemsCountries->name}}</option>
-                                        @endforeach
-                                    @endif
-                                </select>
-                                @error('country')
-                                <span class="text-danger">{{$message}}</span>
-                                @enderror
-                            </div>
-                            <div class="form-group col-3">
-                                <select id="inputState" wire:model="city"
-                                        class="form-control @error('city') is-invalid @enderror">
-                                    <option selected>Selecciona el Estado o Ciudad</option>
-                                    @if(!empty($inputStates))
-                                        @foreach($inputStates as $inputState)
-                                            <option value="{{$inputState->id}}">{{$inputState->name}}</option>
+                                            @if(!empty($countries))
+                                                @foreach($countries as $itemsCountries)
+                                                    <option
+                                                        value="{{$itemsCountries->id}}">{{$itemsCountries->name}}</option>
+                                                @endforeach
+                                            @endif
+                                        </select>
+                                        @error('country')
+                                        <span class="text-danger">{{$message}}</span>
+                                        @enderror
+                                    </div>
+                                    <div class="form-group col-3">
+                                        <select id="inputState" wire:model="city"
+                                                class="form-control @error('city') is-invalid @enderror">
+                                            <option selected>Selecciona el Estado o Ciudad</option>
+                                            @if(!empty($inputStates))
+                                                @foreach($inputStates as $inputState)
+                                                    <option value="{{$inputState->id}}">{{$inputState->name}}</option>
 
-                                        @endforeach
-                                    @endif
+                                                @endforeach
+                                            @endif
 
-                                </select>
-                                @error('city')
-                                <span class="text-danger">{{$message}}</span>
-                                @enderror
-                            </div>
-                            <div class="form-group col-6">
-                                <!--<label for="inputAddress">Dirección</label>-->
-                                <input type="text" wire:model="address"
-                                       class="form-control @error('address') is-invalid @enderror" id="inputAddress"
-                                       placeholder="Escribe tu Dirección" required>
-                                @error('address')
-                                <span class="text-danger">{{$message}}</span>
-                                @enderror
-                            </div>
+                                        </select>
+                                        @error('city')
+                                        <span class="text-danger">{{$message}}</span>
+                                        @enderror
+                                    </div>
+                                    <div class="form-group col-6">
+                                        <!--<label for="inputAddress">Dirección</label>-->
+                                        <input type="text" wire:model="address"
+                                               class="form-control @error('address') is-invalid @enderror"
+                                               id="inputAddress"
+                                               placeholder="Escribe tu Dirección" required>
+                                        @error('address')
+                                        <span class="text-danger">{{$message}}</span>
+                                        @enderror
+                                    </div>
                                 </div>
                             </div>
                             <div class="form-group col-4">
