@@ -32,6 +32,7 @@ return new class extends Migration {
             $table->bigInteger('state_id')->unsigned();
             $table->integer('status');
             $table->bigInteger('family_id')->unsigned();
+            $table->string('type_participante')->nullable();
             $table->timestamps();
         });
     }

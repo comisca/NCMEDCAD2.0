@@ -64,9 +64,10 @@
                         <ul class="sub-menu" aria-expanded="false">
                             <li><a href="{{url('/fichatecnica')}}">Creacion de Aplicacion</a></li>
 
-                            <li><a href="{{url('/precalificacion/company/recepcion')}}">Recepcion Documentos</a></li>
-                            <li><a href="{{url('/precalificacion/company/tecnica')}}">Precalificacion Tecnica</a></li>
-                            <li><a href="{{url('/precalificacion/company/admin')}}">Precalificacion
+                            <li><a href="{{url('/precalificacion/company/recepcion/admin')}}">Recepcion Documentos Admin</a></li>
+                            <li><a href="{{url('/precalificacion/company/recepcion/tecn')}}">Recepcion Documentos Tecn</a></li>
+                            <li><a href="{{url('/precalificacion/company/tecnica/tecn')}}">Precalificacion Tecnica</a></li>
+                            <li><a href="{{url('/precalificacion/company/admin/admin')}}">Precalificacion
                                     Administrativa</a></li>
                             {{--                            <li><a href="{{url('/precalificacion/company/admin')}}">Precalificacion--}}
                             {{--                                    Administrativa</a></li>--}}
@@ -110,7 +111,8 @@
                         </a>
                         <ul class="sub-menu" aria-expanded="false">
                             <li><a href="{{url('/listCompany')}}">Solicitudes de Pre-Registro</a></li>
-                            <li><a href="/recepcion/doc/list">Recepcion de Documentos</a></li>
+                            <li><a href="/recepcion/doc/list/admin">Recepcion de Documentos Admi</a></li>
+                            <li><a href="/recepcion/doc/list/tecn">Recepcion de Documentos Tec</a></li>
                             {{--                            <li><a href="{{url('/registerDistribuidor')}}">Registro de empresas</a></li>--}}
                             <li><a href="/pre/calificacion/tecnica">Precalificacion Tecnica</a></li>
                             <li><a href="/pre/calificacion/Administrativas">Precalificacion Administrativa</a></li>

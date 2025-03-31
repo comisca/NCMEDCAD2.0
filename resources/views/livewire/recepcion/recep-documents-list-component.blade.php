@@ -65,12 +65,23 @@
 
                             </td>
                             <td>
-                                <a href="/recepcion/doc/eval/{{$itemsdataApplicationSelected->id
+                                @if ($categoryRecep == 'admin')
+   <a href="/recepcion/doc/eval/{{$itemsdataApplicationSelected->id
                                 }}/{{$itemsdataApplicationSelected->distribution_id}}"
 
                                    type="button"
                                    class="btn btn-success">Ves detalle
                                 </a>
+                                @else
+                                   <a href="/recepcion/doc/tecni/{{$itemsdataApplicationSelected->id
+                                }}/{{$itemsdataApplicationSelected->distribution_id}}"
+
+                                   type="button"
+                                   class="btn btn-success">Ves detalle
+                                </a>
+                                    
+                                @endif
+                             
                             </td>
 
                         </tr>

@@ -16,7 +16,7 @@ class PreCalificacionTecnica extends Component
 
     public $Pagination = 10;
     public $searchInput;
-    public $typeid;
+    public $typeid, $categoryRece;
     public $namePages;
 
 
@@ -25,7 +25,7 @@ class PreCalificacionTecnica extends Component
         return 'vendor.livewire.bootstrap';
     }
 
-    public function mount($typeid)
+    public function mount($typeid, $category)
     {
         $this->typeid = $typeid;
         if ($typeid == 'recepcion') {
@@ -36,31 +36,33 @@ class PreCalificacionTecnica extends Component
             $this->namePages = 'Pre-calificacion Administrativa';
         }
 
-
+        $this->categoryRece = $category;
     }
 
 
     public function render()
     {
-//        $applicationsapp = Application::join('familia_producto', 'applications.family_id', '=', 'familia_producto.id')
-//            ->join('medicamentos', 'applications.product_id', '=', 'medicamentos.id')
-//            ->join('companies', 'applications.fabric_id', '=', 'companies.id')
-//            ->select('applications.*',
-//                'medicamentos.descripcion',
-//                'medicamentos.cod_medicamento',
-//                'companies.legal_name')
-//            ->where('distribution_id', Session::get('id_company'))
-//            ->where('applications.status', '>=',1)
-//            ->get();
+        //        $applicationsapp = Application::join('familia_producto', 'applications.family_id', '=', 'familia_producto.id')
+        //            ->join('medicamentos', 'applications.product_id', '=', 'medicamentos.id')
+        //            ->join('companies', 'applications.fabric_id', '=', 'companies.id')
+        //            ->select('applications.*',
+        //                'medicamentos.descripcion',
+        //                'medicamentos.cod_medicamento',
+        //                'companies.legal_name')
+        //            ->where('distribution_id', Session::get('id_company'))
+        //            ->where('applications.status', '>=',1)
+        //            ->get();
 
         $applicationsapp = Application::join('familia_producto', 'applications.family_id', '=', 'familia_producto.id')
             ->join('medicamentos', 'applications.product_id', '=', 'medicamentos.id')
             ->join('companies', 'applications.fabric_id', '=', 'companies.id')
-            ->select('applications.*',
+            ->select(
+                'applications.*',
                 'medicamentos.descripcion',
                 'medicamentos.cod_medicamento',
                 'companies.legal_name',
-                DB::raw('(SELECT COUNT(*) FROM req_applications WHERE req_applications.states_req_applications = 3 AND req_applications.application_id = applications.id) as req_applications_count'))
+                DB::raw('(SELECT COUNT(*) FROM req_applications WHERE req_applications.states_req_applications = 3 AND req_applications.application_id = applications.id) as req_applications_count')
+            )
             ->where('distribution_id', Session::get('id_company'))
             ->where('applications.status', 1)
             ->get();
@@ -79,7 +81,6 @@ class PreCalificacionTecnica extends Component
 
             //este metodo lo que hace es guardar los cambios en la base de datos
             DB::commit();
-
         } catch (\Throwable $e) {
             //este metodo lo que hace es deshacer los cambios en la base de datos
             DB::rollback();
@@ -100,7 +101,6 @@ class PreCalificacionTecnica extends Component
 
             //este metodo lo que hace es guardar los cambios en la base de datos
             DB::commit();
-
         } catch (\Throwable $e) {
             //este metodo lo que hace es deshacer los cambios en la base de datos
             DB::rollback();
@@ -121,7 +121,6 @@ class PreCalificacionTecnica extends Component
 
             //este metodo lo que hace es guardar los cambios en la base de datos
             DB::commit();
-
         } catch (\Throwable $e) {
             //este metodo lo que hace es deshacer los cambios en la base de datos
             DB::rollback();
@@ -132,10 +131,5 @@ class PreCalificacionTecnica extends Component
     }
 
 
-    public function resetUI()
-    {
-
-
-    }
-
+    public function resetUI() {}
 }

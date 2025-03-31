@@ -17,14 +17,16 @@ class RecepDocumentsListComponent extends Component
 
     public $Pagination = 10;
     public $searchInput, $dataGlobal, $particioanteId;
+    public $categoryRecep;
 
     public function paginationView()
     {
         return 'vendor.livewire.bootstrap';
     }
 
-    public function mount()
+    public function mount($category)
     {
+        $this->categoryRecep = $category;
     }
 
 
@@ -119,7 +121,5 @@ class RecepDocumentsListComponent extends Component
     }
 
 
-    public function resetUI()
-    {
-    }
+    public function resetUI() {}
 }

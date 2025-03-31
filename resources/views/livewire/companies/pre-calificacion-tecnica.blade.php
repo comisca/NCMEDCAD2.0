@@ -51,8 +51,8 @@
                                 <th scope="col">Nombre Comercial</th>
                                 <th scope="col">Producto</th>
                                 <th scope="col">Fabricante</th>
-                                <th scope="col">Precalificacion Administrativa</th>
-                                <th scope="col">Precalificacion Tecnica</th>
+                                {{--  <th scope="col">Precalificacion Administrativa</th>
+                                <th scope="col">Precalificacion Tecnica</th>  --}}
                                 <th scope="col">Acción</th>
                             </tr>
                             </thead>
@@ -66,7 +66,7 @@
                                             ({{$itemsdataApplicationSelected->cod_medicamento}})
                                         </td>
                                         <td>{{$itemsdataApplicationSelected->legal_name}}</td>
-                                        <td>
+                                        {{--  <td>
                                             @if($itemsdataApplicationSelected->calification_admin == 1)
                                                 <span class="badge badge-success">PRECALIFICADO</span>
                                             @else
@@ -81,15 +81,26 @@
                                                 <span class="badge badge-danger">EN OBSERVACION</span>
                                             @endif
 
-                                        </td>
+                                        </td>  --}}
                                         <td>
                                             @if ($typeid == 'recepcion')
-                                                <a
+                                            @if($categoryRece == 'admin')
+  <a
                                                     href="/recepcion/doc/eval/{{$itemsdataApplicationSelected->id}}/{{Session::get('id_company')}}"
 
                                                     type="button"
-                                                    class="btn btn-success">Recepcion de productos
+                                                    class="btn btn-success">Carga de Documentos
                                                 </a>
+                                            @else
+                                              <a
+                                                    href="/recepcion/doc/tecni/{{$itemsdataApplicationSelected->id}}/{{Session::get('id_company')}}"
+
+                                                    type="button"
+                                                    class="btn btn-success">Carga de Documentos
+                                                </a>
+                                                
+                                            @endif
+                                              
                                             @elseif($typeid == 'tecnica')
                                                 <a href="/documents/validation/{{$itemsdataApplicationSelected->id}}"
 

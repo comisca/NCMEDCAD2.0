@@ -124,9 +124,12 @@
                                         value="F">Fabricantes
                                     </option>
                                     <option
-                                        value="D">Distribuidor/Representante
+                                        value="D">Distribuidor
                                     </option>
-
+                                    
+                                      <option
+                                        value="F/D">Distribuidor/Representante
+                                    </option>
                                 </select>
                                 @error('productSelectInput')
                                 <span class="text-danger">{{$message}}</span>

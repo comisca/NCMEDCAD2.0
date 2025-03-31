@@ -65,18 +65,16 @@ class FichaTecnicaComponent extends Component
 
         $this->dataApplicationSelected =
             Application::join('familia_producto', 'applications.family_id', '=', 'familia_producto.id')
-                ->join('medicamentos', 'applications.product_id', '=', 'medicamentos.id')
-                ->select('applications.*', 'medicamentos.descripcion', 'medicamentos.cod_medicamento')
-                ->where('applications.family_id', $this->inputFamilyProduct)
-                ->where('applications.distribution_id', Session::get('id_company'))
-                ->where('applications.status', '>', 0)
-                ->get();
+            ->join('medicamentos', 'applications.product_id', '=', 'medicamentos.id')
+            ->select('applications.*', 'medicamentos.descripcion', 'medicamentos.cod_medicamento')
+            ->where('applications.family_id', $this->inputFamilyProduct)
+            ->where('applications.distribution_id', Session::get('id_company'))
+            ->where('applications.status', '>', 0)
+            ->get();
 
         if (!empty($this->country)) {
             $this->inputStates = StateCountries::where('country_id', $this->country)->get();
         }
-
-
     }
 
 
@@ -93,11 +91,15 @@ class FichaTecnicaComponent extends Component
             ->first();
 
 
-        return view('livewire.ficha-tecnica-component',
-            ['familyProducts' => $familyProducts,
+        return view(
+            'livewire.ficha-tecnica-component',
+            [
+                'familyProducts' => $familyProducts,
                 'bussinessFabricante' => $bussinessFabricante,
                 'countries' => $countries,
-                'companiesHeader' => $companiesHeader,])
+                'companiesHeader' => $companiesHeader,
+            ]
+        )
             ->extends('layouts.master')
             ->section('content');
     }
@@ -105,10 +107,9 @@ class FichaTecnicaComponent extends Component
 
     public function showDetailFicha($id)
     {
-//        dd('hola que tal');
+        //        dd('hola que tal');
         $this->idSelectedProducts = $id;
         $this->dispatch('showDetailFichaEvent', $id);
-
     }
 
     public function createFabric()
@@ -123,11 +124,11 @@ class FichaTecnicaComponent extends Component
             'address' => 'required',
             'firstName' => 'required',
             'email' => 'required',
-//            'phoneContact' => 'required',
+            //            'phoneContact' => 'required',
             'lastName' => 'required',
             'familyProductsInput' => 'required',
 
-//            'userName' => 'required|min:2|unique:companies,user_name',
+            //            'userName' => 'required|min:2|unique:companies,user_name',
         ];
 
         //Declaramos los mensajes de validacion
@@ -141,13 +142,13 @@ class FichaTecnicaComponent extends Component
             'firstName.required' => 'El nombre es obligatorio',
             'lastName.required' => 'El apellido es obligatorio',
             'email.required' => 'El correo es obligatorio',
-//            'phoneContact.required' => 'El telefono de contacto es obligatorio',
+            //            'phoneContact.required' => 'El telefono de contacto es obligatorio',
             'phone.required' => 'El telefono es obligatorio',
             'familyProductsInput.required' => 'La familia de producto es obligatorio',
 
-//            'userName.required' => 'El Objetivo es obligatorio',
-//            'userName.min' => 'El usuario debe ser mayor a 2 caracteres',
-//            'userName.unique' => 'el usuario ya existe',
+            //            'userName.required' => 'El Objetivo es obligatorio',
+            //            'userName.min' => 'El usuario debe ser mayor a 2 caracteres',
+            //            'userName.unique' => 'el usuario ya existe',
         ];
 
         //Validamos los datos
@@ -156,13 +157,13 @@ class FichaTecnicaComponent extends Component
 
         try {
 
-//            if ($this->avatar) {
-//                //Guardamos la imagen en la carpeta publica
-//                $avatar_name = 'img_' . uniqid() . '.' . $this->avatar->extension();
-//                $avatarurl = $this->avatar->storeAs('public/companies/avatar', $avatar_name);
-//            } else {
-//                $avatar_name = 'default.png';
-//            }
+            //            if ($this->avatar) {
+            //                //Guardamos la imagen en la carpeta publica
+            //                $avatar_name = 'img_' . uniqid() . '.' . $this->avatar->extension();
+            //                $avatarurl = $this->avatar->storeAs('public/companies/avatar', $avatar_name);
+            //            } else {
+            //                $avatar_name = 'default.png';
+            //            }
 
 
             $countrieSelectedInsert = Countries::where('id', $this->country)->first();
@@ -184,22 +185,22 @@ class FichaTecnicaComponent extends Component
                 'first_name' => $this->firstName,
                 'last_name' => $this->lastName,
                 'email' => $this->email,
-//                'user_name' => $this->userNameCompany,
-//                'user_name' => $this->userName,
+                //                'user_name' => $this->userNameCompany,
+                //                'user_name' => $this->userName,
                 'password' => '123456',
                 'type_company' => 'F',
                 'status' => 1,
                 'country_id' => $this->country,
                 'state_id' => $this->city,
                 'family_id' => $this->familyProductsInput,
-//                'logo_companies' => $avatar_name
+                //                'logo_companies' => $avatar_name
             ]);
             $company->syncRoles('Company');
             $company->save();
 
 
             $this->companieF = $company->id;
-//            Mail::to($this->email)->send(new PreRegister($this->BusinnessName));
+            //            Mail::to($this->email)->send(new PreRegister($this->BusinnessName));
 
 
             //Aqui se escribe el codigo que se desea hacer en la transaccion
@@ -207,11 +208,13 @@ class FichaTecnicaComponent extends Component
             //este metodo lo que hace es guardar los cambios en la base de datos
             DB::commit();
 
-//            $this->resetUI();
-            $this->dispatch('success_new_fabric',
-                messages: 'El Fabricante se ha registrado correctamente, se ha enviado un correo de confirmacion');
+            //            $this->resetUI();
+            $this->dispatch(
+                'success_new_fabric',
+                messages: 'El Fabricante se ha registrado correctamente, se ha enviado un correo de confirmacion'
+            );
 
-//                $this->dispatchBrowserEvent('message-success', ['message' => 'Distribuidor registrado correctamente']);
+            //                $this->dispatchBrowserEvent('message-success', ['message' => 'Distribuidor registrado correctamente']);
 
 
         } catch (\Throwable $e) {
@@ -220,11 +223,10 @@ class FichaTecnicaComponent extends Component
             dd($e->getMessage());
 
             //este metodo lo que hace es mostrar el error en la consola
-//               dd($e->getMessage());
+            //               dd($e->getMessage());
 
             $this->dispatch('error_messages', messages: 'la agenda no se ha creado correctamente');
         }
-
     }
 
 
@@ -236,13 +238,13 @@ class FichaTecnicaComponent extends Component
             'legalName' => 'required',
             'countryRegister' => 'required',
             'numRegisterSalud' => 'required',
-//            'companieF' => 'required',
+            //            'companieF' => 'required',
         ];
         $messages = [
             'legalName.required' => 'El nombre comercial es requerido',
             'countryRegister.required' => 'El numero de registro de pais es requerido',
             'numRegisterSalud.required' => 'El numero de registro de salud es requerido',
-//            'companieF.required' => 'La seleccion de fabricante es requerida',
+            //            'companieF.required' => 'La seleccion de fabricante es requerida',
         ];
 
         $this->validate($rules, $messages);
@@ -250,6 +252,7 @@ class FichaTecnicaComponent extends Component
             // dd('hola');
             //este metodo lo que hace es inicailizar las transacciones en la base de datos
             DB::beginTransaction();
+            $companieFD = Companies::where('id', Session::get('id_company'))->first();
 
             $dataRelation = ReqRelationProduts::where('product_id', $this->idSelectedProducts)
                 ->where('status', 1)
@@ -262,6 +265,10 @@ class FichaTecnicaComponent extends Component
                 ->get();
 
             $reqD = ReqRelationProfile::where('type_profile', 'D')
+                ->where('status', 1)
+                ->get();
+
+            $reqFD = ReqRelationProfile::where('type_profile', 'F/D')
                 ->where('status', 1)
                 ->get();
 
@@ -308,29 +315,49 @@ class FichaTecnicaComponent extends Component
                 }
             }
 
-            if (!empty($reqD)) {
-                foreach ($reqD as $itemReq) {
-                    ReqRelationProfileTable::create([
-                        'company_id' => Session::get('id_company'),
-                        'req_id' => $itemReq->req_id,
-                        'type_profile' => 'D',
-                        'status' => 9
-                    ]);
+            if ($companieFD->type_participante == 'F/D') {
+                if (!empty($reqFD)) {
+                    foreach ($reqFD as $itemReqFD) {
+                        ReqRelationProfileTable::create([
+                            'company_id' => Session::get('id_company'),
+                            'req_id' => $itemReqFD->req_id,
+                            'type_profile' => 'F/D',
+                            'status' => 9,
+                            'application_id' => $newAppD->id
+                        ]);
+                    }
+                }
+            } else {
 
+                if (!empty($reqD)) {
+                    foreach ($reqD as $itemReq) {
+                        ReqRelationProfileTable::create([
+                            'company_id' => Session::get('id_company'),
+                            'req_id' => $itemReq->req_id,
+                            'type_profile' => 'D',
+                            'status' => 9,
+                            'application_id' => $newAppD->id
+                        ]);
+                    }
+                }
+
+                if (!empty($reqF)) {
+                    foreach ($reqF as $itemReqF) {
+                        ReqRelationProfileTable::create([
+                            'company_id' => $idfabricantes,
+                            'req_id' => $itemReqF->req_id,
+                            'type_profile' => 'F',
+                            'status' => 9,
+                            'application_id' => $newAppD->id
+                        ]);
+                    }
                 }
             }
 
-            if (!empty($reqF)) {
-                foreach ($reqF as $itemReqF) {
-                    ReqRelationProfileTable::create([
-                        'company_id' => $idfabricantes,
-                        'req_id' => $itemReqF->req_id,
-                        'type_profile' => 'F',
-                        'status' => 9
-                    ]);
 
-                }
-            }
+
+
+
 
 
             $verifyFabricToOtherAplication = Application::where('distribution_id', '!=', Session::get('id_company'))
@@ -346,7 +373,6 @@ class FichaTecnicaComponent extends Component
 
                 Mail::to('henry.orellana@oceansbits.com')
                     ->send(new NotificationFabricAdmin($nameD, $nameF));
-
             }
 
 
@@ -358,12 +384,12 @@ class FichaTecnicaComponent extends Component
 
             $this->dataApplicationSelected =
                 Application::join('familia_producto', 'applications.family_id', '=', 'familia_producto.id')
-                    ->join('medicamentos', 'applications.product_id', '=', 'medicamentos.id')
-                    ->select('applications.*', 'medicamentos.descripcion', 'medicamentos.cod_medicamento')
-                    ->where('applications.family_id', $this->inputFamilyProduct)
-                    ->where('applications.distribution_id', Session::get('id_company'))
-                    ->where('applications.status', '>', 0)
-                    ->get();
+                ->join('medicamentos', 'applications.product_id', '=', 'medicamentos.id')
+                ->select('applications.*', 'medicamentos.descripcion', 'medicamentos.cod_medicamento')
+                ->where('applications.family_id', $this->inputFamilyProduct)
+                ->where('applications.distribution_id', Session::get('id_company'))
+                ->where('applications.status', '>', 0)
+                ->get();
             $this->dispatch('messages-succes-fichatec', messages: 'La ficha tecnica se ha creado correctamente');
         } catch (\Throwable $e) {
             //este metodo lo que hace es deshacer los cambios en la base de datos

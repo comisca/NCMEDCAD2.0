@@ -31,10 +31,7 @@ class ListCompanyComponent extends Component
         return 'vendor.livewire.bootstrap';
     }
 
-    public function mount()
-    {
-
-    }
+    public function mount() {}
 
 
     public function render()
@@ -46,7 +43,6 @@ class ListCompanyComponent extends Component
                 ->where('status', '>=', 0)
                 ->where('legal_name', 'like', '%' . $this->searchInput . '%')
                 ->paginate($this->pagination);
-
         } else {
             $companies = Companies::orderBy('id', 'desc')
                 ->where('status', '>=', 0)
@@ -68,11 +64,10 @@ class ListCompanyComponent extends Component
             ->where('table_name', 'companies')
             ->get();
 
-//        dd($this->documentDataDetail);
+        //        dd($this->documentDataDetail);
 
 
         $this->dispatch('detail_company', ['id' => $id]);
-
     }
 
     public function viewPdfVisor($id)
@@ -80,7 +75,6 @@ class ListCompanyComponent extends Component
 
         $this->viewVisorPdf = DocumentsTables::find($id);
         $this->dispatch('view-visor-pdf', ['idDocumentDetail' => $id]);
-
     }
 
     public function create()
@@ -93,7 +87,6 @@ class ListCompanyComponent extends Component
 
             //este metodo lo que hace es guardar los cambios en la base de datos
             DB::commit();
-
         } catch (\Throwable $e) {
             //este metodo lo que hace es deshacer los cambios en la base de datos
             DB::rollback();
@@ -110,8 +103,6 @@ class ListCompanyComponent extends Component
         $this->stateChangeGlobal = $stateChanges;
 
         $this->dispatch('changes-states-show', ['idCompanyChanges' => $id, 'stateChangeGlobal' => $stateChanges]);
-
-
     }
 
     function generatePassword($minLength = 6, $maxLength = 8)
@@ -135,42 +126,46 @@ class ListCompanyComponent extends Component
                 $company->status = 1;
                 $company->save();
 
-//                $reqAdmin = ReqRelationProfile::where('type_profile', $company->type_company)
-//                    ->where('status', 1)
-//                    ->get();
-//
-//                if (!empty($reqAdmin)) {
-//                    foreach ($reqAzdmin as $itemReq) {
-//
-//                        ReqRelationProfileTable::create([
-//                            'company_id' => $company->id,
-//                            'req_id' => $itemReq->req_id,
-//                            'type_profile' => $company->type_company,
-//                            'status' => 1
-//                        ]);
-//
-//                    }
-//                }
+                // if ($company->type_participante == 'F/D') {
+                //     $reqAdmin = ReqRelationProfile::where('type_profile', 'F/D')
+                //         ->where('status', 1)
+                //         ->get();
 
+                //     if (!empty($reqAdmin)) {
+                //         foreach ($reqAdmin as $itemReq) {
+
+                //             ReqRelationProfileTable::create([
+                //                 'company_id' => $company->id,
+                //                 'req_id' => $itemReq->req_id,
+                //                 'type_profile' => $company->type_company,
+                //                 'status' => 1
+                //             ]);
+                //         }
+                //     }
+                // }
             } else {
 
                 $password = $this->generatePassword();
                 $company = Companies::find($this->idCompanyChanges);
                 $company->status = 0;
                 $company->save();
-
             }
 
-            Mail::to($company->email)->send(new StateChanges($company->legal_name,
+            Mail::to($company->email)->send(new StateChanges(
+                $company->legal_name,
                 $this->stateChangeGlobal,
-                $this->messagesSends, $password, $company->user_name));
+                $this->messagesSends,
+                $password,
+                $company->user_name
+            ));
 
 
             DB::commit();
 
-            $this->dispatch('success_messages_changes',
-                messages: 'El estado de la empresa ha sido cambiado correctamente');
-
+            $this->dispatch(
+                'success_messages_changes',
+                messages: 'El estado de la empresa ha sido cambiado correctamente'
+            );
         } catch (\Throwable $e) {
             //este metodo lo que hace es deshacer los cambios en la base de datos
             DB::rollback();
@@ -178,7 +173,6 @@ class ListCompanyComponent extends Component
             //este metodo lo que hace es mostrar el error en la consola
             dd($e->getMessage());
         }
-
     }
 
 
@@ -195,17 +189,14 @@ class ListCompanyComponent extends Component
             //este metodo lo que hace es guardar los cambios en la base de datos
             DB::commit();
             $this->dispatch('success_messages', messages: 'La empresa ha sido aceptada correctamente');
-
-
         } catch (\Throwable $e) {
             //este metodo lo que hace es deshacer los cambios en la base de datos
             DB::rollback();
 
             //este metodo lo que hace es mostrar el error en la consola
-//               dd($e->getMessage());
+            //               dd($e->getMessage());
             $this->dispatch('error_messages', messages: 'Ocurrio un error al aceptar la empresa');
         }
-
     }
 
 
@@ -222,8 +213,6 @@ class ListCompanyComponent extends Component
             //este metodo lo que hace es guardar los cambios en la base de datos
             DB::commit();
             $this->dispatch('success_messages', messages: 'La empresa ha sido rechazada correctamente');
-
-
         } catch (\Throwable $e) {
             //este metodo lo que hace es deshacer los cambios en la base de datos
             DB::rollback();
@@ -231,7 +220,6 @@ class ListCompanyComponent extends Component
 
             //este metodo lo que hace es mostrar el error en la consola
         }
-
     }
 
 
@@ -245,7 +233,6 @@ class ListCompanyComponent extends Component
 
             //este metodo lo que hace es guardar los cambios en la base de datos
             DB::commit();
-
         } catch (\Throwable $e) {
             //este metodo lo que hace es deshacer los cambios en la base de datos
             DB::rollback();
@@ -266,7 +253,6 @@ class ListCompanyComponent extends Component
 
             //este metodo lo que hace es guardar los cambios en la base de datos
             DB::commit();
-
         } catch (\Throwable $e) {
             //este metodo lo que hace es deshacer los cambios en la base de datos
             DB::rollback();
@@ -277,10 +263,5 @@ class ListCompanyComponent extends Component
     }
 
 
-    public function resetUI()
-    {
-
-
-    }
-
+    public function resetUI() {}
 }

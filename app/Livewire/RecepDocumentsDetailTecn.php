@@ -2,27 +2,24 @@
 
 namespace App\Livewire;
 
-use App\Mail\ActaRecepcionDoc;
 use App\Mail\NotificationRequeriment;
 use App\Models\Application;
 use App\Models\Companies;
 use App\Models\DocumentApplications;
-use App\Models\DocumentsTables;
 use App\Models\NotificationsApplications;
 use App\Models\ReqApplications;
-use App\Models\ReqRelationProfile;
 use App\Models\ReqRelationProfileTable;
+use Barryvdh\DomPDF\Facade\Pdf;
+use DB;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Storage;
 use Livewire\Attributes\On;
+use Livewire\Component;
 use Livewire\WithFileUploads;
 use Livewire\WithPagination;
-use Livewire\Component;
-use Barryvdh\DomPDF\Facade\Pdf;
-use Illuminate\Support\Facades\Storage;
 use Session;
-use DB;
 
-class RecepDocumentsDetailComponent extends Component
+class RecepDocumentsDetailTecn extends Component
 {
 
     use WithPagination;
@@ -33,9 +30,8 @@ class RecepDocumentsDetailComponent extends Component
     public $apllicationI, $nameDoc, $descriptionDoc, $docFile, $reqApplicationID, $otroid;
     public $docDatas = [], $docGlobalView, $selectStates, $messagesSends, $observacionesGlobals, $sendNotificationsCompanies;
     public $dataRequisitos, $idCompany, $nameTableRelations, $dataVenceInput, $inputDateVence;
-    public $documentDataDetail, $limitObservations, $typeFD;
+    public $documentDataDetail, $limitObservations;
     public $offset = 0; //
-
     public function paginationView()
     {
         return 'vendor.livewire.bootstrap';
@@ -47,321 +43,61 @@ class RecepDocumentsDetailComponent extends Component
         $this->apllicationID = $this->otroid;
         $this->idCompany = $idCompany;
         $this->limitObservations = 1;
-        $this->selectedRequeriment = 'A';
+        $this->selectedRequeriment = 'T';
     }
 
     public function updated()
     {
 
-        $this->selectedRequeriment = 'A';
-        $company = Companies::where('id', $this->idCompany)->first();
-
-        if ($company->type_participante == 'F/D') {
-            // dd('hola');
-
-            $this->typeFD = 'F/D';
-            $dataDistribuidores = Application::join('companies', 'applications.distribution_id', '=', 'companies.id')
-                ->join(
-                    'req_relation_profile_tables',
-                    'applications.distribution_id',
-                    '=',
-                    'req_relation_profile_tables.company_id'
-                )
-                ->join('requisitos', 'requisitos.id', '=', 'req_relation_profile_tables.req_id')
-                ->where('req_relation_profile_tables.application_id', $this->apllicationID)
-                ->where('applications.id', $this->apllicationID)
-                ->where('applications.status', '>=', 1)
-                ->select(
-                    'companies.legal_name as grupo_nombre',
-                    'req_relation_profile_tables.id',
-                    'requisitos.codigo',
-                    'requisitos.descripcion',
-                    'requisitos.obligatorio',
-                    'requisitos.entregable',
-                    'requisitos.vence',
-                    'req_relation_profile_tables.date_vence',
-                    'req_relation_profile_tables.status',
-                )
-                ->orderBy('requisitos.descripcion')
-                ->get()
-                ->groupBy('grupo_nombre') // Agrupa por 'grupo_nombre' en lugar de 'grupos_requisitos.grupo'
-                ->collect(); // Convierte a colección de soporte
-            $dataFabricantes = array();
-        } else {
-            $this->typeFD = '';
-            $dataFabricantes = Application::join('companies', 'applications.fabric_id', '=', 'companies.id')
-                ->join(
-                    'req_relation_profile_tables',
-                    'applications.fabric_id',
-                    '=',
-                    'req_relation_profile_tables.company_id'
-                )
-                ->join('requisitos', 'requisitos.id', '=', 'req_relation_profile_tables.req_id')
-                ->where('req_relation_profile_tables.application_id', $this->apllicationID)
-                ->where('applications.status', '>=', 1)
-                ->select(
-                    'companies.legal_name as grupo_nombre',
-                    'req_relation_profile_tables.id',
-                    'requisitos.codigo',
-                    'requisitos.descripcion',
-                    'requisitos.obligatorio',
-                    'requisitos.entregable',
-                    'requisitos.vence',
-                    'req_relation_profile_tables.date_vence',
-                    'req_relation_profile_tables.status',
-                )
-                ->orderBy('requisitos.descripcion')
-                ->get()
-                ->groupBy('grupo_nombre') // Agrupa por 'grupo_nombre' en lugar de 'grupos_requisitos.grupo'
-                ->collect(); // Convierte a colección de soporte
-
-
-            $dataDistribuidores = Application::join('companies', 'applications.distribution_id', '=', 'companies.id')
-                ->join(
-                    'req_relation_profile_tables',
-                    'applications.distribution_id',
-                    '=',
-                    'req_relation_profile_tables.company_id'
-                )
-                ->join('requisitos', 'requisitos.id', '=', 'req_relation_profile_tables.req_id')
-                ->where('req_relation_profile_tables.application_id', $this->apllicationID)
-                ->where('applications.status', '>=', 1)
-                ->select(
-                    'companies.legal_name as grupo_nombre',
-                    'req_relation_profile_tables.id',
-                    'requisitos.codigo',
-                    'requisitos.descripcion',
-                    'requisitos.obligatorio',
-                    'requisitos.entregable',
-                    'requisitos.vence',
-                    'req_relation_profile_tables.date_vence',
-                    'req_relation_profile_tables.status',
-                )
-                ->orderBy('requisitos.descripcion')
-                ->get()
-                ->groupBy('grupo_nombre') // Agrupa por 'grupo_nombre' en lugar de 'grupos_requisitos.grupo'
-                ->collect(); // Convierte a colección de soporte
-
-        }
-
-
-
-
-        $this->dataRequisitos = [
-            'Fabricantes' => $dataFabricantes,
-            'Distribuidores' => $dataDistribuidores
-        ];
-    }
-
-    public function createActaReceive()
-    {
-
-        $company = Companies::where('id', $this->idCompany)->first();
-
-
-        $dataFabricantes = Application::join('companies', 'applications.fabric_id', '=', 'companies.id')
-            ->join(
-                'req_relation_profile_tables',
-                'applications.fabric_id',
-                '=',
-                'req_relation_profile_tables.company_id'
-            )
-            ->join('requisitos', 'requisitos.id', '=', 'req_relation_profile_tables.req_id')
-            ->where('req_relation_profile_tables.application_id', $this->apllicationID)
-            ->where('applications.status', '>=', 1)
+        $this->selectedRequeriment = 'T';
+        $this->dataRequisitos =
+            ReqApplications::join('requisitos', 'requisitos.id', '=', 'req_applications.requirement_id')
+            ->join('medicamentos', 'medicamentos.id', '=', 'req_applications.product_id')
+            ->join('grupos_requisitos', 'grupos_requisitos.id', '=', 'requisitos.grupo_requisito_id')
+            ->where('req_applications.application_id', $this->apllicationID)
+            ->where('req_applications.status', '>=', 1)
             ->select(
-                'companies.legal_name as grupo_nombre',
-                'req_relation_profile_tables.id',
+                'grupos_requisitos.grupo as grupo_nombre',
+                'req_applications.id',
                 'requisitos.codigo',
                 'requisitos.descripcion',
                 'requisitos.obligatorio',
                 'requisitos.entregable',
                 'requisitos.vence',
-                'req_relation_profile_tables.date_vence',
-                'req_relation_profile_tables.status',
+                'req_applications.date_vence',
+                'req_applications.states_req_applications',
             )
-            ->orderBy('requisitos.descripcion')
+            ->orderBy('grupos_requisitos.grupo')
             ->get()
             ->groupBy('grupo_nombre') // Agrupa por 'grupo_nombre' en lugar de 'grupos_requisitos.grupo'
             ->collect(); // Convierte a colección de soporte
-
-
-        $dataDistribuidores = Application::join('companies', 'applications.distribution_id', '=', 'companies.id')
-            ->join(
-                'req_relation_profile_tables',
-                'applications.distribution_id',
-                '=',
-                'req_relation_profile_tables.company_id'
-            )
-            ->join('requisitos', 'requisitos.id', '=', 'req_relation_profile_tables.req_id')
-            ->where('req_relation_profile_tables.application_id', $this->apllicationID)
-            ->where('applications.status', '>=', 1)
-            ->select(
-                'companies.legal_name as grupo_nombre',
-                'req_relation_profile_tables.id',
-                'requisitos.codigo',
-                'requisitos.descripcion',
-                'requisitos.obligatorio',
-                'requisitos.entregable',
-                'requisitos.vence',
-                'req_relation_profile_tables.date_vence',
-                'req_relation_profile_tables.status',
-            )
-            ->orderBy('requisitos.descripcion')
-            ->get()
-            ->groupBy('grupo_nombre') // Agrupa por 'grupo_nombre' en lugar de 'grupos_requisitos.grupo'
-            ->collect(); // Convierte a colección de soporte
-
-
-        $dataRequiurementsD = [
-            'Fabricantes' => $dataFabricantes,
-            'Distribuidores' => $dataDistribuidores
-        ];
-
-        $dataApplicant = Application::join('familia_producto', 'applications.family_id', '=', 'familia_producto.id')
-            ->join('medicamentos', 'applications.product_id', '=', 'medicamentos.id')
-            ->join('companies', 'applications.fabric_id', '=', 'companies.id')
-            ->select(
-                'applications.*',
-                'medicamentos.descripcion',
-                'medicamentos.cod_medicamento',
-                'companies.legal_name',
-                'companies.email',
-                'applications.id',
-                DB::raw('(SELECT COUNT(*) FROM req_applications WHERE req_applications.states_req_applications = 3 AND req_applications.application_id = applications.id) as req_applications_count')
-            )
-            ->where('applications.id', $this->apllicationID)
-            ->where('applications.status', '>=', 1)
-            ->first();
-
-        // Genera el PDF
-        $viewData2 = compact('dataApplicant', 'dataRequiurementsD');
-        $pdf2 = Pdf::loadView('pdfs.pdf-recepcion-doc2', $viewData2)
-            ->setPaper('a4')
-            ->setOptions([
-                'isHtml5ParserEnabled' => true,
-                'isRemoteEnabled' => true,
-                'defaultFont' => 'helvetica',
-            ]);
-
-        // Nombre del archivo PDF
-        //        $filename = 'acta-' . $id . '-event.pdf';
-
-        // Retorna el PDF como descarga
-        return response()->streamDownload(
-            function () use ($pdf2) {
-                echo $pdf2->output();
-            },
-            'acta-recepcion-doc-' . $dataApplicant->llegal_name . '-' . $dataApplicant->cod_medicamento . '.pdf'
-        );
-
-
-
-        //        Mail::to($dataPf->email)->send(new ActaRecepcionDoc());
-
-
     }
 
 
     public function render()
     {
 
-        $company = Companies::where('id', $this->idCompany)->first();
-
-        if ($company->type_participante == 'F/D') {
-
-            $this->typeFD = 'F/D';
-            $dataDistribuidores = Application::join('companies', 'applications.distribution_id', '=', 'companies.id')
-                ->join(
-                    'req_relation_profile_tables',
-                    'applications.distribution_id',
-                    '=',
-                    'req_relation_profile_tables.company_id'
-                )
-                ->join('requisitos', 'requisitos.id', '=', 'req_relation_profile_tables.req_id')
-                ->where('req_relation_profile_tables.application_id', $this->apllicationID)
-                ->where('applications.id', $this->apllicationID)
-                ->where('applications.status', '>=', 1)
-                ->select(
-                    'companies.legal_name as grupo_nombre',
-                    'req_relation_profile_tables.id',
-                    'requisitos.codigo',
-                    'requisitos.descripcion',
-                    'requisitos.obligatorio',
-                    'requisitos.entregable',
-                    'requisitos.vence',
-                    'req_relation_profile_tables.date_vence',
-                    'req_relation_profile_tables.status',
-                )
-                ->orderBy('requisitos.descripcion')
-                ->get()
-                ->groupBy('grupo_nombre') // Agrupa por 'grupo_nombre' en lugar de 'grupos_requisitos.grupo'
-                ->collect(); // Convierte a colección de soporte
-            $dataFabricantes = array();
-        } else {
-            $this->typeFD = '';
-            $dataFabricantes = Application::join('companies', 'applications.fabric_id', '=', 'companies.id')
-                ->join(
-                    'req_relation_profile_tables',
-                    'applications.fabric_id',
-                    '=',
-                    'req_relation_profile_tables.company_id'
-                )
-                ->join('requisitos', 'requisitos.id', '=', 'req_relation_profile_tables.req_id')
-                ->where('req_relation_profile_tables.application_id', $this->apllicationID)
-                ->where('applications.status', '>=', 1)
-                ->select(
-                    'companies.legal_name as grupo_nombre',
-                    'req_relation_profile_tables.id',
-                    'requisitos.codigo',
-                    'requisitos.descripcion',
-                    'requisitos.obligatorio',
-                    'requisitos.entregable',
-                    'requisitos.vence',
-                    'req_relation_profile_tables.date_vence',
-                    'req_relation_profile_tables.status',
-                )
-                ->orderBy('requisitos.descripcion')
-                ->get()
-                ->groupBy('grupo_nombre') // Agrupa por 'grupo_nombre' en lugar de 'grupos_requisitos.grupo'
-                ->collect(); // Convierte a colección de soporte
-
-
-            $dataDistribuidores = Application::join('companies', 'applications.distribution_id', '=', 'companies.id')
-                ->join(
-                    'req_relation_profile_tables',
-                    'applications.distribution_id',
-                    '=',
-                    'req_relation_profile_tables.company_id'
-                )
-                ->join('requisitos', 'requisitos.id', '=', 'req_relation_profile_tables.req_id')
-                ->where('req_relation_profile_tables.application_id', $this->apllicationID)
-                ->where('applications.status', '>=', 1)
-                ->select(
-                    'companies.legal_name as grupo_nombre',
-                    'req_relation_profile_tables.id',
-                    'requisitos.codigo',
-                    'requisitos.descripcion',
-                    'requisitos.obligatorio',
-                    'requisitos.entregable',
-                    'requisitos.vence',
-                    'req_relation_profile_tables.date_vence',
-                    'req_relation_profile_tables.status',
-                )
-                ->orderBy('requisitos.descripcion')
-                ->get()
-                ->groupBy('grupo_nombre') // Agrupa por 'grupo_nombre' en lugar de 'grupos_requisitos.grupo'
-                ->collect(); // Convierte a colección de soporte
-
-        }
-
-
-
-
-        $this->dataRequisitos = [
-            'Fabricantes' => $dataFabricantes,
-            'Distribuidores' => $dataDistribuidores
-        ];
+        $this->dataRequisitos =
+            ReqApplications::join('requisitos', 'requisitos.id', '=', 'req_applications.requirement_id')
+            ->join('medicamentos', 'medicamentos.id', '=', 'req_applications.product_id')
+            ->join('grupos_requisitos', 'grupos_requisitos.id', '=', 'requisitos.grupo_requisito_id')
+            ->where('req_applications.application_id', $this->apllicationID)
+            ->where('req_applications.status', '>=', 1)
+            ->select(
+                'grupos_requisitos.grupo as grupo_nombre',
+                'req_applications.id',
+                'requisitos.codigo',
+                'requisitos.descripcion',
+                'requisitos.obligatorio',
+                'requisitos.entregable',
+                'requisitos.vence',
+                'req_applications.date_vence',
+                'req_applications.states_req_applications',
+            )
+            ->orderBy('grupos_requisitos.grupo')
+            ->get()
+            ->groupBy('grupo_nombre') // Agrupa por 'grupo_nombre' en lugar de 'grupos_requisitos.grupo'
+            ->collect(); // Convierte a colección de soporte
 
 
         $applicationsData = Application::join('familia_producto', 'applications.family_id', '=', 'familia_producto.id')
@@ -380,31 +116,11 @@ class RecepDocumentsDetailComponent extends Component
             ->where('applications.status', '>=', 1)
             ->first();
 
-        //        $dataApplication =
-        //            ReqApplications::join('requisitos', 'requisitos.id', '=', 'req_applications.requirement_id')
-        //                ->join('medicamentos', 'medicamentos.id', '=', 'req_applications.product_id')
-        //                ->join('grupos_requisitos', 'grupos_requisitos.id', '=', 'requisitos.grupo_requisito_id')
-        //                ->where('req_applications.application_id', $this->apllicationID)
-        //                ->where('req_applications.status', '>=', 1)
-        //                ->select(
-        //                    'grupos_requisitos.grupo as grupo_nombre',
-        //                    'req_applications.id',
-        //                    'requisitos.codigo',
-        //                    'requisitos.descripcion',
-        //                    'req_applications.states_req_applications',
-        //                )
-        //                ->orderBy('grupos_requisitos.grupo')
-        //                ->get()
-        //                ->groupBy('grupo_nombre') // Agrupa por 'grupo_nombre' en lugar de 'grupos_requisitos.grupo'
-        //                ->collect(); // Convierte a colección de soporte
-
-        return view(
-            'livewire.recepcion.recep-documents-detail-component',
-            ['applicationsData' => $applicationsData]
-        )
+        return view('livewire.recepcion.recep-documents-detail-tecn', ['applicationsData' => $applicationsData])
             ->extends('layouts.master')
             ->section('content');
     }
+
 
     public function showFormChangeState($id, $nameTable)
     {
@@ -643,6 +359,7 @@ class RecepDocumentsDetailComponent extends Component
     }
 
 
+
     public function chageStateRequeriment()
     {
         $rules = [
@@ -721,6 +438,7 @@ class RecepDocumentsDetailComponent extends Component
         }
     }
 
+
     #[On('showViewObservationsJS')]
     public function showObservacionRequerimont($id, $nameTable)
     {
@@ -752,6 +470,7 @@ class RecepDocumentsDetailComponent extends Component
             ->get();
     }
 
+
     #[On('showDocumentsJS')]
     public function showDocWire($id, $nameTable)
     {
@@ -767,6 +486,7 @@ class RecepDocumentsDetailComponent extends Component
         $this->dispatch('show-doc-js');
     }
 
+
     #[On('showUpDocumentsJS')]
     public function showUpDoc($id, $nameTable, $dataVenceparameter)
     {
@@ -777,15 +497,16 @@ class RecepDocumentsDetailComponent extends Component
         $this->dispatch('showUpDoc');
     }
 
+
+
     #[On('detailCompany')]
     public function detailCompany($id)
     {
 
 
         $this->documentDataDetail = DocumentApplications::where('req_application_id', $id)
-            ->where('name_table', 'req_relation_profile_tables')
+            ->where('name_table', 'req_applications')
             ->get();
-
 
 
         $this->dispatch('detail_company', ['id' => $id]);
@@ -885,6 +606,114 @@ class RecepDocumentsDetailComponent extends Component
     }
 
 
+
+    public function showFormChangeStateA($id)
+    {
+        $this->reqApplicationID = $id;
+        $this->dispatch('showFormChangeState');
+    }
+
+
+    public function showObservacionRequerimontA($id)
+    {
+        $this->reqApplicationID = $id;
+        $this->dispatch('showFormChangeState');
+    }
+
+    public function showUpDocA($id)
+    {
+        $this->reqApplicationID = $id;
+        $this->dispatch('showFormChangeState');
+    }
+
+
+    public function viewDocAdmShow($id)
+    {
+        $this->reqApplicationID = $id;
+        $this->dispatch('showFormChangeState');
+    }
+
+
+
+
+
+
+    public function createActaReceive()
+    {
+
+
+
+        $dataRequiurementsF =
+            ReqApplications::join('requisitos', 'requisitos.id', '=', 'req_applications.requirement_id')
+            ->join('medicamentos', 'medicamentos.id', '=', 'req_applications.product_id')
+            ->join('grupos_requisitos', 'grupos_requisitos.id', '=', 'requisitos.grupo_requisito_id')
+            ->where('req_applications.application_id', $this->apllicationID)
+            ->where('req_applications.status', '>=', 1)
+            ->select(
+                'grupos_requisitos.grupo as grupo_nombre',
+                'req_applications.id',
+                'requisitos.codigo',
+                'requisitos.descripcion',
+                'requisitos.obligatorio',
+                'requisitos.entregable',
+                'requisitos.vence',
+                'req_applications.date_vence',
+                'req_applications.states_req_applications',
+            )
+            ->orderBy('grupos_requisitos.grupo')
+            ->get()
+            ->groupBy('grupo_nombre') // Agrupa por 'grupo_nombre' en lugar de 'grupos_requisitos.grupo'
+            ->collect(); // Convierte a colección de soporte
+
+        $dataApplicant = Application::join('familia_producto', 'applications.family_id', '=', 'familia_producto.id')
+            ->join('medicamentos', 'applications.product_id', '=', 'medicamentos.id')
+            ->join('companies', 'applications.fabric_id', '=', 'companies.id')
+            ->select(
+                'applications.*',
+                'medicamentos.descripcion',
+                'medicamentos.cod_medicamento',
+                'companies.legal_name',
+                'companies.email',
+                'applications.id',
+                DB::raw('(SELECT COUNT(*) FROM req_applications WHERE req_applications.states_req_applications = 3 AND req_applications.application_id = applications.id) as req_applications_count')
+            )
+            ->where('applications.id', $this->apllicationID)
+            ->where('applications.status', '>=', 1)
+            ->first();
+
+        // Genera el PDF
+        $viewData = compact('dataApplicant', 'dataRequiurementsF');
+        $pdf = Pdf::loadView('pdfs.pdf-recepcion-doc', $viewData)
+            ->setPaper('a4')
+            ->setOptions([
+                'isHtml5ParserEnabled' => true,
+                'isRemoteEnabled' => true,
+                'defaultFont' => 'helvetica',
+            ]);
+
+        // Nombre del archivo PDF
+        //        $filename = 'acta-' . $id . '-event.pdf';
+
+        // Retorna el PDF como descarga
+        return response()->streamDownload(
+            function () use ($pdf) {
+                echo $pdf->output();
+            },
+            'acta-recepcion-doc-' . $dataApplicant->llegal_name . '-' . $dataApplicant->cod_medicamento . '.pdf'
+        );
+
+
+
+        //        Mail::to($dataPf->email)->send(new ActaRecepcionDoc());
+
+
+    }
+
+
+
+
+
+
     public function create()
     {
         try {
@@ -945,32 +774,8 @@ class RecepDocumentsDetailComponent extends Component
     }
 
 
+
+
+
     public function resetUI() {}
-
-
-    public function showFormChangeStateA($id)
-    {
-        $this->reqApplicationID = $id;
-        $this->dispatch('showFormChangeState');
-    }
-
-
-    public function showObservacionRequerimontA($id)
-    {
-        $this->reqApplicationID = $id;
-        $this->dispatch('showFormChangeState');
-    }
-
-    public function showUpDocA($id)
-    {
-        $this->reqApplicationID = $id;
-        $this->dispatch('showFormChangeState');
-    }
-
-
-    public function viewDocAdmShow($id)
-    {
-        $this->reqApplicationID = $id;
-        $this->dispatch('showFormChangeState');
-    }
 }

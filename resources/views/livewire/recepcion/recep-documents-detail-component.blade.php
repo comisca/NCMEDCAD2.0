@@ -81,31 +81,6 @@
                             </div>
                         </div>
 
-                        <div class="col-xl-12 col-md-12 mb-12">
-                            <div class="col mr-2">
-                                <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
-                                    Seleciona el tipo de requerimiento:
-                                </div>
-                                <div class="form-group row">
-                                    <div class="col-md-8">
-                                        <select wire:model.live="selectedRequeriment"
-                                                class="form-control @error('productSelectInput') is-invalid @enderror">
-                                            <option value="0">Selecciona un tipo de requisito</option>
-                                            <option
-                                                value="A">Administrativos
-                                            </option>
-                                            <option
-                                                value="T">Tecnicos
-                                            </option>
-
-                                        </select>
-                                        @error('productSelectInput')
-                                        <span class="text-danger">{{$message}}</span>
-                                        @enderror
-                                    </div>
-
-                                </div>
-                            </div>
                         </div>
 
                         {{--                        <div class="col-auto">--}}
@@ -115,11 +90,14 @@
                 </div>
             </div>
         </div>
+
+        @if($typeFD == 'F/D')
         <div class="col-lg-12">
-            @if($this->selectedRequeriment == 'T')
+
+
                 @if(!empty($dataRequisitos))
                     <div class="accordion" id="accordionExample">
-                        @foreach ($dataRequisitos as $grupo => $items)
+                        @foreach ($dataRequisitos as $tipo => $empresas)
                             <div class="card">
                                 <div class="card-header" id="heading{{ $loop->index }}">
                                     <h2 class="mb-0">
@@ -129,7 +107,7 @@
                                             data-target="#collapse{{ $loop->index }}"
                                             aria-expanded="{{ $loop->first ? 'true' : 'false' }}"
                                             aria-controls="collapse{{ $loop->index }}">
-                                            {{ $grupo }}
+                                  
                                         </button>
                                     </h2>
                                 </div>
@@ -140,147 +118,154 @@
                                      data-parent="#accordionExample">
                                     <div class="card-body">
                                         <ul>
+                                                 @foreach ($empresas as $empresa => $items)
                                             @foreach ($items as $item)
+                                                  
 
                                                 <li>
+                                                    <h4> {{ $empresa }}</h4>
 
-                                                    <table class="table">
-                                                        <thead class="thead-dark">
-                                                        <tr>
-                                                            <th scope="col">#</th>
-                                                            <th scope="col">Requisito</th>
-                                                            <th scope="col">Documentacion</th>
-                                                            <th scope="col">Subir</th>
-                                                            <th scope="col">Observaciones</th>
-                                                            <th scope="col">Fecha de vencimiento</th>
-                                                            <th scope="col">Obligatorio</th>
-                                                            <th scope="col">Estado</th>
-                                                            <th scope="col">Acción</th>
-                                                        </tr>
-                                                        </thead>
-                                                        <tbody>
+                                                     <table class="table">
+                                                            <thead class="thead-dark">
+                                                            <tr>
+                                                                <th scope="col">#</th>
+                                                                <th scope="col">Requisito</th>
+                                                                <th scope="col">Documentacion</th>
+                                                                <th scope="col">Subir</th>
+                                                                <th scope="col">Observaciones</th>
+                                                                <th scope="col">Fecha de vencimiento</th>
+                                                                <th scope="col">Obligatorio</th>
+                                                                <th scope="col">Estado</th>
+                                                                <th scope="col">Acción</th>
+                                                            </tr>
+                                                            </thead>
+                                                            <tbody>
 
-                                                        <tr>
-                                                            <th scope="row">{{$item->id}}</th>
-                                                            <td> {{ $item->codigo }} - {{ $item->descripcion }}</td>
-                                                            <td>
-                                                                @if($selectedRequeriment == 'A')
+                                                            <tr>
+                                                                <th scope="row">{{$item->id}}</th>
+                                                                <td> {{ $item->codigo }} - {{ $item->descripcion }}</td>
+                                                                <td>
 
-                                                                    <a href="#"
-                                                                       onclick="confirmShowDoc({{$item->id}},
-                                                                       'req_relation_profile_tables')">
-                                                                        Ver
-                                                                        Documentos</a>
 
-                                                                @else
-
-                                                                    <a href="#"
-                                                                       onclick="confirmShowDoc({{$item->id}},
-                                                                      'req_applications')">
-                                                                        Ver
-                                                                        Documentos</a>
-
-                                                                @endif
-
-                                                            </td>
-                                                            <td>
-                                                                @if($selectedRequeriment == 'A')
-                                                                    @if($item->status  == 9)
-                                                                        <a href="#"
-                                                                           onclick="confirmUPShowDoc({{$item->id}},
-                                                                       'req_relation_profile_tables',{{$item->vence  ?? 0}})">
-                                                                            Subir
-                                                                            Documentacion</a>
-                                                                    @endif
-
-                                                                @else
-
-                                                                    @if($item->states_req_applications  == 9)
-
-                                                                        <a href="#"
-                                                                           onclick="confirmUPShowDoc({{$item->id}},
-                                                                       'req_applications',{{$item->vence  ?? 0}})">
-                                                                            Subir
-                                                                            Documentacion</a>
-                                                                    @endif
-                                                                @endif
-
-                                                            </td>
-                                                            <td>
-                                                                @if($selectedRequeriment == 'A')
-
-                                                                    <a href="#"
-                                                                       onclick="confirmViewObservation({{$item->id}},'req_relation_profile_tables')">
-                                                                        Ver
-                                                                        Observaciones</a>
-
-                                                                @else
-
-                                                                    <a href="#"
-                                                                       onclick="confirmViewObservation({{$item->id}},'req_applications')">
-                                                                        Ver
-                                                                        Observaciones</a>
-
-                                                                @endif
-
-                                                            </td>
-                                                            <td>
-                                                                @if($item->vence == 1)
-                                                                    {{--                                                                {{$item->date_vence}}--}}
-                                                                    <input type="date" value="{{$item->date_vence}}">
-                                                                @endif
-                                                            </td>
-                                                            <td>
-                                                                @if($item->obligatorio == 1)
-                                                                    <input type="checkbox" checked disabled>
-                                                                @endif
-                                                            </td>
-                                                            <td>
-                                                                @if($selectedRequeriment == 'A')
-                                                                    @if($item->status  < 6)
-                                                                        Recibido
-                                                                    @elseif($item->status  == 10)
-                                                                        Pendiente de revision
-                                                                    @elseif($item->status  == 9)
-                                                                        Observacion
-                                                                    @endif
-                                                                @else
-                                                                    @if($item->states_req_applications  < 6)
-                                                                        Recibido
-                                                                    @elseif($item->states_req_applications  == 10)
-                                                                        Pendiente de revision
-                                                                    @elseif($item->states_req_applications  == 9)
-                                                                        Observacion
-                                                                    @endif
-                                                                @endif
-
-                                                            </td>
-                                                            <td>
-                                                                @if(Session::has('id_user'))
                                                                     @if($selectedRequeriment == 'A')
+
                                                                         <a href="#"
-                                                                           wire:click="showFormChangeState({{$item->id}},'req_relation_profile_tables')"
-                                                                           type="button"
-                                                                           class="btn btn-success">Evaluacion
-                                                                        </a>
+                                                                           onclick="confirmShowDoc({{$item->id}},
+                                                                       'req_relation_profile_tables')">
+                                                                            Ver
+                                                                            Documentos</a>
+
                                                                     @else
 
                                                                         <a href="#"
-                                                                           wire:click="showFormChangeState({{$item->id}},'req_applications')"
-                                                                           type="button"
-                                                                           class="btn btn-success">Evaluacion
-                                                                        </a>
+                                                                           onclick="confirmShowDoc({{$item->id}},
+                                                                      'req_applications')">
+                                                                            Ver
+                                                                            Documentos</a>
+
                                                                     @endif
-                                                                @endif
-                                                            </td>
 
-                                                        </tr>
+                                                                </td>
+                                                                <td>
+                                                                    @if($selectedRequeriment == 'A')
+                                                                        @if($item->status  == 9)
+                                                                            <a href="#"
+                                                                               onclick="confirmUPShowDoc({{$item->id}},
+                                                                       'req_relation_profile_tables',{{$item->vence  ?? 0}})">
+                                                                                Subir
+                                                                                Documentacion</a>
+                                                                        @endif
+
+                                                                    @else
+
+                                                                        @if($item->states_req_applications  == 9)
+
+                                                                            <a href="#"
+                                                                               onclick="confirmUPShowDoc({{$item->id}},
+                                                                       'req_applications',{{$item->vence  ?? 0}})">
+                                                                                Subir
+                                                                                Documentacion</a>
+                                                                        @endif
+                                                                    @endif
+
+                                                                </td>
+                                                                <td>
+                                                                    @if($selectedRequeriment == 'A')
+
+                                                                        <a href="#"
+                                                                           onclick="confirmViewObservation({{$item->id}},'req_relation_profile_tables')">
+                                                                            Ver
+                                                                            Observaciones</a>
+
+                                                                    @else
+
+                                                                        <a href="#"
+                                                                           onclick="confirmViewObservation({{$item->id}},'req_applications')">
+                                                                            Ver
+                                                                            Observaciones</a>
+
+                                                                    @endif
+
+                                                                </td>
+                                                                <td>
+                                                                    @if($item->vence == 1)
+                                                                        {{--                                                                {{$item->date_vence}}--}}
+                                                                        <input type="date"
+                                                                               value="{{$item->date_vence}}">
+                                                                    @endif
+                                                                </td>
+                                                                <td>
+                                                                    @if($item->obligatorio == 1)
+                                                                        <input type="checkbox" checked disabled>
+                                                                    @endif
+                                                                </td>
+                                                                <td>
+                                                                    @if($selectedRequeriment == 'A')
+                                                                        @if($item->status  < 6)
+                                                                            Recibido
+                                                                        @elseif($item->status  == 10)
+                                                                            Pendiente de revision
+                                                                        @elseif($item->status  == 9)
+                                                                            Observacion
+                                                                        @endif
+                                                                    @else
+                                                                        @if($item->states_req_applications  < 6)
+                                                                            Recibido
+                                                                        @elseif($item->states_req_applications  == 10)
+                                                                            Pendiente de revision
+                                                                        @elseif($item->states_req_applications  == 9)
+                                                                            Observacion
+                                                                        @endif
+                                                                    @endif
+
+                                                                </td>
+                                                                <td>
+                                                                    @if(Session::has('id_user'))
+                                                                        @if($selectedRequeriment == 'A')
+                                                                            <a href="#"
+                                                                               wire:click="showFormChangeState({{$item->id}},'req_relation_profile_tables')"
+                                                                               type="button"
+                                                                               class="btn btn-success">Evaluacion
+                                                                            </a>
+                                                                        @else
+
+                                                                            <a href="#"
+                                                                               wire:click="showFormChangeState({{$item->id}},'req_applications')"
+                                                                               type="button"
+                                                                               class="btn btn-success">Evaluacion
+                                                                            </a>
+                                                                        @endif
+                                                                    @endif
+                                                                </td>
+
+                                                            </tr>
 
 
-                                                        </tbody>
-                                                    </table>
+                                                            </tbody>
+                                                        </table>
 
                                                 </li>
+                                            @endforeach
                                             @endforeach
                                         </ul>
                                     </div>
@@ -290,7 +275,12 @@
                     </div>
                 @endif
 
-            @else
+
+        </div>
+
+        @else
+    <div class="col-lg-12">
+       
 
                 @if(!empty($dataRequisitos))
                     <div class="accordion" id="accordionExample">
@@ -468,7 +458,7 @@
                     </div>
                 @endif
 
-            @endif
+            
 
             {{--                            <table class="table align-middle mb-0 bg-white">--}}
             {{--                                <thead class="bg-light">--}}
@@ -517,6 +507,9 @@
             {{--                                </tbody>--}}
             {{--                            </table>--}}
         </div>
+            
+        @endif
+    
 
         @include('livewire.companies.form-doc')
 

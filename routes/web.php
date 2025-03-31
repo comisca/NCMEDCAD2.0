@@ -71,17 +71,18 @@ Route::middleware(['auth:company'])->group(function () {
 
     Route::get('/companies/dashboard', \App\Livewire\DocumentsCompanyComponent::class);
     Route::get('/fichatecnica', FichaTecnicaComponent::class);
-    Route::get('/precalificacion/company/{typeid}', \App\Livewire\PreCalificacionTecnica::class);
+    Route::get('/precalificacion/company/{typeid}/{category}', \App\Livewire\PreCalificacionTecnica::class);
 });
 
 Route::get('/documents/validation/{id}', \App\Livewire\PreCalificacionTecnicaDetail::class);
 Route::get('/recepcion/doc/eval/{id}/{idCompany}', \App\Livewire\RecepDocumentsDetailComponent::class);
+Route::get('/recepcion/doc/tecni/{id}/{idCompany}', \App\Livewire\RecepDocumentsDetailTecn::class);
 Route::get('/documents/validation/pre/admin/{id}', \App\Livewire\DetailPrecaAdminComponent::class);
 
 Route::get('/precalificacion/company/admin/{id}', \App\Livewire\PreCalificacionAdministrativa::class);
 Route::get('/pre/calificacion/tecnica', \App\Livewire\ApplicationAdmin::class);
 Route::get('/pre/calificacion/Administrativas', \App\Livewire\ListPrecAdminComponent::class);
-Route::get('/recepcion/doc/list', \App\Livewire\RecepDocumentsListComponent::class);
+Route::get('/recepcion/doc/list/{category}', \App\Livewire\RecepDocumentsListComponent::class);
 Route::get('/companie/info/{id}', \App\Livewire\CompaniesDetailsComponents::class);
 
 
